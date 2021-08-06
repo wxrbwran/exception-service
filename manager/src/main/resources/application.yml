@@ -1,6 +1,6 @@
 server:
   port: 9998
-  address: 0.0.0.0
+#  address: 0.0.0.0
   servlet:
     encoding:
       force: true
@@ -40,3 +40,13 @@ eureka:
 redis:
   host: 127.0.0.1
   port: 6379
+
+feign:
+  client:
+    config:
+      dashboard:
+        connect-timeout: 5000
+        read-timeout: 10000
+      manager:
+        connect-timeout: 5000
+        read-timeout: 10000

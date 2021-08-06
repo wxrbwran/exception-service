@@ -13,9 +13,9 @@ public class IssueQuery {
 
   private String apiKey;
 
-  private Integer pageAt;
+  private Integer pageAt = 1;
 
-  private Integer pageSize;
+  private Integer pageSize = 10;
 
   private Long start;
 

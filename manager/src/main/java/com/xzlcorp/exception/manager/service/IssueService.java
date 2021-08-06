@@ -1,10 +1,16 @@
 package com.xzlcorp.exception.manager.service;
 
+import static org.mybatis.dynamic.sql.SqlBuilder.isBetween;
+import static org.mybatis.dynamic.sql.SqlBuilder.isBetweenWhenPresent;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xzlcorp.exception.common.common.Constant;
 import com.xzlcorp.exception.common.model.pojo.event.Event;
 import com.xzlcorp.exception.common.utils.ArrayListUtils;
+import com.xzlcorp.exception.common.utils.PageInfoReducer;
+import com.xzlcorp.exception.common.utils.PageInfoReducer.PageInfoReduce;
 import com.xzlcorp.exception.manager.feign.DashboardClient;
 import com.xzlcorp.exception.manager.model.bo.BugDocument;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
@@ -13,7 +19,9 @@ import com.xzlcorp.exception.manager.model.dao.IssueMapper;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
 import com.xzlcorp.exception.manager.model.vo.IssueVO;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.dynamic.sql.SqlBuilder;
@@ -35,16 +43,19 @@ public class IssueService {
   @Autowired
   private DashboardClient dashboardClient;
 
-  public List<Issue> getIssues(IssueQuery query) {
+  public PageInfoReduce getIssues(IssueQuery query) {
+    PageHelper.startPage(query.getPageAt(), query.getPageSize());
     String apiKey = dashboardClient.getApiKeyByProjectId(query.getProjectId());
     log.info("getIssues apiKey: {}", apiKey);
     SelectStatementProvider provider = SqlBuilder.select(IssueMapper.selectList)
         .from(IssueDynamicSqlSupport.issue)
         .where(IssueDynamicSqlSupport.apiKey, isEqualTo(apiKey))
+//        .and(IssueDynamicSqlSupport.updatedAt, isBetween(LocalDate.of(2020, 1, 1)).and(LocalDate.now()))
         .build()
         .render(RenderingStrategies.MYBATIS3);
     List<Issue> issues = issueMapper.selectMany(provider);
-    return issues;
+    PageInfoReduce pageInfoReduce = PageInfoReducer.reduce(issues);
+    return pageInfoReduce;
   }
 
   public List<IssueVO> handleIssueToVO(List<Issue> issueList) {

@@ -1,6 +1,7 @@
 package com.xzlcorp.exception.manager.controller;
 
 import com.xzlcorp.exception.common.common.ApiRestResponse;
+import com.xzlcorp.exception.common.utils.PageInfoReducer.PageInfoReduce;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.vo.IssueVO;
@@ -27,9 +28,12 @@ public class IssueController {
 
   @GetMapping()
   public ApiRestResponse searchIssues(IssueQuery query) {
-    List<Issue> issueList = issueService.getIssues(query);
-    List<IssueVO> issueVOList = issueService.handleIssueToVO(issueList);
-    return ApiRestResponse.success(issueVOList);
+    PageInfoReduce<Issue> issueList = issueService.getIssues(query);
+    List<IssueVO> issueVOList = issueService.handleIssueToVO(issueList.getList());
+    PageInfoReduce<IssueVO> pageInfoReduce = new PageInfoReduce<>();
+    pageInfoReduce.setList(issueVOList);
+    pageInfoReduce.setTotal(issueList.getTotal());
+    return ApiRestResponse.success(pageInfoReduce);
   }
 
   @GetMapping("{projectId}/trend")

@@ -5,6 +5,7 @@ import com.xzlcorp.exception.manager.listener.RedisReceiver;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
@@ -16,6 +17,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 public class RedisCacheConfig {
 
   @Bean
+  @Primary
   RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
       MessageListenerAdapter listenerAdapter) {
 

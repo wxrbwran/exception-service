@@ -13,27 +13,25 @@ server:
 spring:
   application:
     name: exception-zuul
+  datasource:
+    url: jdbc:postgresql://172.16.10.126:5432/bugbyebye
+    username: postgres
+    password: dev
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 30000
+      minimum-idle: 10
+      maximum-pool-size: 10
+      pool-prepared-statements: true
+      max-open-prepared-statements: 100
 
-ribbon:
-  ReadTimeout: 60000
-  SocketTimeout: 60000
-
-
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeout-in-milliseconds: 60000
 zuul:
-  max:
-    host:
-      connections: 60000
   host:
-    connect-timeout-millis: 60000
     socket-timeout-millis: 60000
-  prefix: /
+    connect-timeout-millis: 60000
+#  prefix: /
   routes:
     dashboard:
       path: /dashboard/**
@@ -44,4 +42,18 @@ zuul:
     exception-transfer:
       path: /transfer/**
       service-id: exception-transfer
-  sensitive-headers: ''
+#  sensitive-headers: ''
+
+#ribbon:
+#  ReadTimeout: 60000
+#  ConnectTimeout: 60000
+
+feign:
+  client:
+    config:
+      dashboard:
+        connect-timeout: 10000
+        read-timeout: 10000
+      manager:
+        connect-timeout: 10000
+        read-timeout: 10000
