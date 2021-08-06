@@ -1,0 +1,44 @@
+package com.xzlcorp.exception.manager.controller;
+
+import com.xzlcorp.exception.common.common.ApiRestResponse;
+import com.xzlcorp.exception.manager.model.query.IssueQuery;
+import com.xzlcorp.exception.manager.model.pojo.Issue;
+import com.xzlcorp.exception.manager.model.vo.IssueVO;
+import com.xzlcorp.exception.manager.service.IssueService;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author wuxiaoran
+ */
+@RestController
+@RequestMapping("issues")
+@Slf4j
+public class IssueController {
+
+  @Autowired
+  private IssueService issueService;
+
+  @GetMapping()
+  public ApiRestResponse searchIssues(IssueQuery query) {
+    List<Issue> issueList = issueService.getIssues(query);
+    List<IssueVO> issueVOList = issueService.handleIssueToVO(issueList);
+    return ApiRestResponse.success(issueVOList);
+  }
+
+  @GetMapping("{projectId}/trend")
+  public ApiRestResponse getProjectTrend(
+      @PathVariable("projectId") Integer projectId,
+      @RequestParam("start") long start,
+      @RequestParam("end") long end
+  ) {
+    issueService.getIssuesProjectTrend(projectId, start, end);
+    return ApiRestResponse.success();
+  }
+}

@@ -1,0 +1,39 @@
+server:
+  port: 9999
+  address: 0.0.0.0
+  servlet:
+    encoding:
+      force: true
+      charset: UTF-8
+
+
+spring:
+  application:
+    name: dashboard
+  main:
+    allow-bean-definition-overriding: true
+  # database
+  datasource:
+    url: jdbc:postgresql://172.16.10.126:5432/bugbyebye
+    username: postgres
+    password: dev
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 30000
+      minimum-idle: 10
+      maximum-pool-size: 10
+      pool-prepared-statements: true
+      max-open-prepared-statements: 100
+
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10010/eureka/

@@ -1,0 +1,47 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10010/eureka/
+
+server:
+  port: 10086
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  application:
+    name: exception-zuul
+
+ribbon:
+  ReadTimeout: 60000
+  SocketTimeout: 60000
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeout-in-milliseconds: 60000
+zuul:
+  max:
+    host:
+      connections: 60000
+  host:
+    connect-timeout-millis: 60000
+    socket-timeout-millis: 60000
+  prefix: /
+  routes:
+    dashboard:
+      path: /dashboard/**
+      service-id: dashboard
+    manager:
+      path: /manager/**
+      service-id: manager
+    exception-transfer:
+      path: /transfer/**
+      service-id: exception-transfer
+  sensitive-headers: ''

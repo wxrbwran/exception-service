@@ -1,0 +1,14 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: exception-eureka
+
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  instance:
+    hostname: localhost
