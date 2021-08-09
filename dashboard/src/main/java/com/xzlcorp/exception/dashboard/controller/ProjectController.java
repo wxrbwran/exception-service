@@ -25,7 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/projects")
+//@RequestMapping({"/projects", "dashboard/projects"})
+@RequestMapping({"/projects"})
 @Api(value = "Projects", tags = {"项目相关接口"})
 @Slf4j
 public class ProjectController {

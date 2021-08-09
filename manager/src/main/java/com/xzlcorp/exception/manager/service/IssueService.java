@@ -43,7 +43,7 @@ public class IssueService {
   @Autowired
   private DashboardClient dashboardClient;
 
-  public PageInfoReduce getIssues(IssueQuery query) {
+  public PageInfoReduce<Issue> getIssues(IssueQuery query) {
     PageHelper.startPage(query.getPageAt(), query.getPageSize());
     String apiKey = dashboardClient.getApiKeyByProjectId(query.getProjectId());
     log.info("getIssues apiKey: {}", apiKey);
@@ -51,10 +51,11 @@ public class IssueService {
         .from(IssueDynamicSqlSupport.issue)
         .where(IssueDynamicSqlSupport.apiKey, isEqualTo(apiKey))
 //        .and(IssueDynamicSqlSupport.updatedAt, isBetween(LocalDate.of(2020, 1, 1)).and(LocalDate.now()))
+        .orderBy(IssueDynamicSqlSupport.id.descending())
         .build()
         .render(RenderingStrategies.MYBATIS3);
     List<Issue> issues = issueMapper.selectMany(provider);
-    PageInfoReduce pageInfoReduce = PageInfoReducer.reduce(issues);
+    PageInfoReduce<Issue> pageInfoReduce = PageInfoReducer.reduce(issues);
     return pageInfoReduce;
   }
 

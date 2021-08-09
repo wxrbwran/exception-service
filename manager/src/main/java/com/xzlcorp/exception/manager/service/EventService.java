@@ -1,12 +1,16 @@
 package com.xzlcorp.exception.manager.service;
 
 import com.xzlcorp.exception.common.common.BrowserError;
+import com.xzlcorp.exception.common.enums.EventIndicesEnum;
 import com.xzlcorp.exception.common.model.pojo.event.Detail;
 import com.xzlcorp.exception.common.model.pojo.event.DetailAjaxReq;
 import com.xzlcorp.exception.common.model.pojo.event.Event;
 import com.xzlcorp.exception.common.model.pojo.event.MetaData;
+import com.xzlcorp.exception.common.utils.ESutils;
 import com.xzlcorp.exception.common.utils.Md5Utils;
 import com.xzlcorp.exception.manager.model.bo.AggregationDataAndMetaData;
+import com.xzlcorp.exception.manager.model.bo.EventLikeWithIssueId;
+import com.xzlcorp.exception.manager.model.bo.KafkaEmitCallback;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
 import java.security.NoSuchAlgorithmException;
@@ -35,7 +39,23 @@ public class EventService {
     // 2. 创建issue （postgres）
     Issue baseIssue = issueService.createOrUpdateIssueByIntro(request);
     // todo: 3. 创建events（elastic）
+    EventIndicesEnum indicesEnum = ESutils.getIndexOrKeyByEvent(event);
+    EventLikeWithIssueId eventLikeWithIssueId = new EventLikeWithIssueId();
+    eventLikeWithIssueId.setEvent(event);
+    eventLikeWithIssueId.setIssueId(baseIssue.getId());
+    KafkaEmitCallback kafkaEmitCallback = passEventToLogstash(indicesEnum.getKey(), eventLikeWithIssueId);
+    String topicName = kafkaEmitCallback.getTopicName();
+    String partition = kafkaEmitCallback.getPartition();
+    String baseOffset = kafkaEmitCallback.getBaseOffset();
 
+    String documentId = topicName + "-" + partition + "-" + baseOffset;
+
+    log.info("documentId: {}", documentId);
+
+  }
+
+  public KafkaEmitCallback passEventToLogstash(String key, EventLikeWithIssueId eventLikeWithIssueId) {
+    return null;
   }
 
   public CreateOrUpdateIssueByIntroRequest aggregation(Event event)
