@@ -32,7 +32,7 @@
     </dependency>
     <dependency>
       <groupId>com.xzlcorp</groupId>
-      <artifactId>common</artifactId>
+      <artifactId>exception-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>

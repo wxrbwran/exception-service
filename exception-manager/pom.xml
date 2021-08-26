@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>manager</artifactId>
+  <artifactId>exception-manager</artifactId>
 
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
@@ -33,9 +33,8 @@
     </dependency>
     <dependency>
       <groupId>com.xzlcorp</groupId>
-      <artifactId>common</artifactId>
+      <artifactId>exception-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

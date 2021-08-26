@@ -5,9 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
   <modules>
-    <module>dashboard</module>
-    <module>common</module>
-    <module>manager</module>
+    <module>exception-dashboard</module>
+    <module>exception-common</module>
+    <module>exception-manager</module>
     <module>exception-eureka</module>
     <module>exception-transfer</module>
     <module>exception-cloud-gateway</module>
@@ -137,6 +137,9 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.mybatis.generator</groupId>

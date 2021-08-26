@@ -8,7 +8,7 @@ server:
 
 spring:
   application:
-    name: manager
+    name: exception-manager
   main:
     allow-bean-definition-overriding: true
   # database

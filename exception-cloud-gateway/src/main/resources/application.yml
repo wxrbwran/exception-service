@@ -11,27 +11,26 @@ spring:
     name: exception-cloud-gateway
   cloud:
     gateway:
-#      discovery:
-#        locator:
-#          enabled: false # 开启从注册中心动态创建路由的功能，利用微服务名称进行路由
+      discovery:
+        locator:
+          enabled: false # 开启从注册中心动态创建路由的功能，利用微服务名称进行路由
       routes:
-        - id: transfer
-#          uri: http://localhost:9997
-          uri: lb://transfer
+        - id: exception-transfer
+          uri: lb://exception-transfer
           predicates:
             - Path=/transfer/** #断言,路径相匹配的进行路由
           filters:
             - RewritePath=/transfer/(?<segment>.*), /$\{segment}
 
-        - id: manager
-          uri: lb://manager
+        - id: exception-manager
+          uri: lb://exception-manager
           predicates:
             - Path=/manager/**
           filters:
             - RewritePath=/manager/(?<segment>.*), /$\{segment}
 
-        - id: dashboard
-          uri: lb://dashboard
+        - id: exception-dashboard
+          uri: lb://exception-dashboard
           predicates:
             - Path=/dashboard/**
           filters:

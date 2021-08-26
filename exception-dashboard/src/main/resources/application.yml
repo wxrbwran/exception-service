@@ -11,7 +11,7 @@ server:
 
 spring:
   application:
-    name: dashboard
+    name: exception-dashboard
   main:
     allow-bean-definition-overriding: true
   mvc:

@@ -29,9 +29,9 @@ public class TransferController {
   @PostMapping()
   public ApiRestResponse report(@RequestBody Event event, HttpServletRequest request) {
     String ipAddress = request.getRemoteAddr();
-//    log.info("ipAddress: {}", ipAddress);
+    log.info("ipAddress: {}", ipAddress);
 
-//    log.info("report: {}", event);
+    log.info("report: {}", event);
     service.handleEvent(event, ipAddress);
     return ApiRestResponse.success();
   }
