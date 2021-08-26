@@ -1,5 +1,6 @@
 package com.xzlcorp.exception.manager.service;
 
+import com.alibaba.fastjson.JSON;
 import com.xzlcorp.exception.common.common.BrowserError;
 import com.xzlcorp.exception.common.enums.EventIndicesEnum;
 import com.xzlcorp.exception.common.model.pojo.event.Detail;
@@ -8,9 +9,12 @@ import com.xzlcorp.exception.common.model.pojo.event.Event;
 import com.xzlcorp.exception.common.model.pojo.event.MetaData;
 import com.xzlcorp.exception.common.utils.ESutils;
 import com.xzlcorp.exception.common.utils.Md5Utils;
+import com.xzlcorp.exception.manager.feign.DashboardClient;
 import com.xzlcorp.exception.manager.model.bo.AggregationDataAndMetaData;
 import com.xzlcorp.exception.manager.model.bo.EventLikeWithIssueId;
 import com.xzlcorp.exception.manager.model.bo.KafkaEmitCallback;
+import com.xzlcorp.exception.manager.model.bo.KafkaMessage;
+import com.xzlcorp.exception.manager.model.pojo.Document;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
 import java.security.NoSuchAlgorithmException;
@@ -18,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 /**
  * @author wuxiaoran
@@ -30,8 +36,16 @@ public class EventService {
   @Autowired
   private IssueService issueService;
 
+  @Autowired
+  private  KafkaProducerService kafkaProducerService;
+
+  @Autowired
+  private DashboardClient dashboardClient;
+
 
   public void handleEvent(Event event) throws NoSuchAlgorithmException {
+    // 0. 分析event，根据apiKey自增org的eventCount
+    dashboardClient.increaseEventCount(event.getApiKey());
     // 1. 聚合
     CreateOrUpdateIssueByIntroRequest request =  aggregation(event);
     request.setEvent(event);
@@ -43,20 +57,57 @@ public class EventService {
     EventLikeWithIssueId eventLikeWithIssueId = new EventLikeWithIssueId();
     eventLikeWithIssueId.setEvent(event);
     eventLikeWithIssueId.setIssueId(baseIssue.getId());
-    KafkaEmitCallback kafkaEmitCallback = passEventToLogstash(indicesEnum.getKey(), eventLikeWithIssueId);
-    String topicName = kafkaEmitCallback.getTopicName();
-    String partition = kafkaEmitCallback.getPartition();
-    String baseOffset = kafkaEmitCallback.getBaseOffset();
 
-    String documentId = topicName + "-" + partition + "-" + baseOffset;
+    String topic = indicesEnum.getKey();
+    String index = indicesEnum.getIndex();
+    KafkaMessage message = new KafkaMessage();
+    message.setKey(topic);
+    message.setEvent(eventLikeWithIssueId);
+    ListenableFutureCallback<SendResult<String, String>> callback = new ListenableFutureCallback<SendResult<String, String>>() {
+      @Override
+      public void onFailure(Throwable ex) {
+        log.warn("发送消息失败：{}" , ex.getMessage());
+      }
 
-    log.info("documentId: {}", documentId);
+      @Override
+      public void onSuccess(SendResult<String, String> result) {
+        String topic = result.getRecordMetadata().topic();
+        int partition = result.getRecordMetadata().partition();
+        long offset = result.getRecordMetadata().offset();
+        log.info("消息发送成功, topic: {}", topic);
+        log.info("消息发送成功, partition: {}", partition);
+        log.info("消息发送成功, offset: {}", offset);
+
+
+        String documentId = topic + "-" + partition + "-" + offset;
+        log.info("documentId: {}", documentId);
+
+        Document document = new Document();
+        document.setDocumentId(documentId);
+        document.setIndex(index);
+        CreateOrUpdateIssueByIntroRequest request = new CreateOrUpdateIssueByIntroRequest();
+//        event, baseIssue, documentId, index
+        request.setEvent(event);
+        request.setBaseIssue(baseIssue);
+        request.setDocumentId(documentId);
+        request.setIndex(index);
+        Issue issue = issueService.createOrUpdateIssueByIntro(request);
+
+      }
+    };
+    kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(message), callback);
 
   }
 
-  public KafkaEmitCallback passEventToLogstash(String key, EventLikeWithIssueId eventLikeWithIssueId) {
-    return null;
-  }
+//  public KafkaEmitCallback passEventToLogstash(
+//      String topic,
+//      EventLikeWithIssueId eventLikeWithIssueId,
+//      String index,
+//      Event event,
+//      Issue baseIssue) {
+//
+//    return null;
+//  }
 
   public CreateOrUpdateIssueByIntroRequest aggregation(Event event)
       throws NoSuchAlgorithmException {

@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author wuxiaoran
  */
-@FeignClient("dashboard")
+@FeignClient("exception-dashboard")
 public interface DashboardClient {
 
   @GetMapping("projects/getApiKeyByProjectId")
   String getApiKeyByProjectId(@RequestParam Integer projectId);
+
+  @GetMapping("organizations/event/increase")
+  String increaseEventCount(String apiKey);
 }

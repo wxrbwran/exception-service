@@ -102,4 +102,14 @@ public class OrganizationService {
     });
     return organizationVOList;
   }
+
+  public void increaseEventCount(String apiKey) {
+    Project
+    Organization organization = organizationMapper.selectOne(c ->
+      c.where(OrganizationDynamicSqlSupport.id, isEqualTo(orgId))
+    );
+    int count = organization.getCount() + 1;
+    organization.setCount(count);
+    organizationMapper.updateByPrimaryKeySelective(organization);
+  }
 }

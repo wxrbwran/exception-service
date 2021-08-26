@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 /**
  * @author wuxiaoran
  */
-@FeignClient(value="manager")
+@FeignClient(value="exception-manager")
 public interface ManagerFeignClient {
 
 }
