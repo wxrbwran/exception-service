@@ -7,6 +7,7 @@ import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
 import com.xzlcorp.exception.dashboard.model.dao.OrganizationDynamicSqlSupport;
 import com.xzlcorp.exception.dashboard.model.dao.OrganizationMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
+import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
 import com.xzlcorp.exception.dashboard.model.request.OrganizationRequest;
 import com.xzlcorp.exception.dashboard.model.vo.OrganizationVO;
@@ -104,9 +105,9 @@ public class OrganizationService {
   }
 
   public void increaseEventCount(String apiKey) {
-    Project
+    Project project = projectService.getProjectByApiKey(apiKey);
     Organization organization = organizationMapper.selectOne(c ->
-      c.where(OrganizationDynamicSqlSupport.id, isEqualTo(orgId))
+      c.where(OrganizationDynamicSqlSupport.id, isEqualTo(project.getOrganization()))
     );
     int count = organization.getCount() + 1;
     organization.setCount(count);

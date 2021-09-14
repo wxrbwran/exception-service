@@ -181,4 +181,9 @@ public class ProjectService {
     return project;
   }
 
+  public Project getProjectByApiKey(String apiKey) {
+    return projectMapper.selectOne(c ->
+        c.where(ProjectDynamicSqlSupport.apiKey, isEqualTo(apiKey))
+    );
+  }
 }

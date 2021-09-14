@@ -92,29 +92,26 @@ public class EventService {
         request.setDocumentId(documentId);
         request.setIndex(index);
         Issue issue = issueService.createOrUpdateIssueByIntro(request);
+        // 5. 更新 organization 中的 count
+        dashboardClient.increaseEventCount(event.getApiKey());
+        // todo: 通知
+        // 6. 根据 apiKey 拿到对应的 notification 配置
 
+        // 7. 判断当前状态十分符合 notification 配置的要求，符合则通知 notifier 开始任务
       }
     };
+    log.info("发送的消息: {}", JSON.toJSONString(message));
+
     kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(message), callback);
 
   }
-
-//  public KafkaEmitCallback passEventToLogstash(
-//      String topic,
-//      EventLikeWithIssueId eventLikeWithIssueId,
-//      String index,
-//      Event event,
-//      Issue baseIssue) {
-//
-//    return null;
-//  }
 
   public CreateOrUpdateIssueByIntroRequest aggregation(Event event)
       throws NoSuchAlgorithmException {
     String type = event.getType();
     Detail detail = event.getDetail();
     String apiKey = event.getApiKey();
-    AggregationDataAndMetaData aggAndMetadata = switchErrorDetailAndGetAggregationDataAndMetaData(type, detail, apiKey);
+    AggregationDataAndMetaData<String> aggAndMetadata = switchErrorDetailAndGetAggregationDataAndMetaData(type, detail, apiKey);
     List<String> aggList = aggAndMetadata.getAgg();
 //    String[] aggStrList = aggList.toArray(new String[aggList.size()]);
     String intro = Md5Utils.getMD5String(aggList.toString());
@@ -126,8 +123,8 @@ public class EventService {
     return request;
   }
 
-  private AggregationDataAndMetaData switchErrorDetailAndGetAggregationDataAndMetaData(String type, Detail detail, String apiKey) {
-    AggregationDataAndMetaData aggAndMetadata = new AggregationDataAndMetaData();
+  private AggregationDataAndMetaData<String> switchErrorDetailAndGetAggregationDataAndMetaData(String type, Detail detail, String apiKey) {
+    AggregationDataAndMetaData<String> aggAndMetadata = new AggregationDataAndMetaData<>();
     List<String> aggList = new ArrayList<>();
     aggList.add(apiKey);
 
