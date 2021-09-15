@@ -51,8 +51,8 @@ public class EventService {
     request.setEvent(event);
     log.info("CreateOrUpdateIssueByIntroRequest, request: {}", request);
     // 2. 创建issue （postgres）
-    Issue baseIssue = issueService.createOrUpdateIssueByIntro(request);
-    // todo: 3. 创建events（elastic）
+    Issue baseIssue = issueService.createIssueByIntro(request);
+    // 3. 创建events（elastic）
     EventIndicesEnum indicesEnum = ESutils.getIndexOrKeyByEvent(event);
     EventLikeWithIssueId eventLikeWithIssueId = new EventLikeWithIssueId();
     eventLikeWithIssueId.setEvent(event);
@@ -61,7 +61,7 @@ public class EventService {
     String topic = indicesEnum.getKey();
     String index = indicesEnum.getIndex();
 
-    eventLikeWithIssueId.setTopic(topic);
+    eventLikeWithIssueId.setKey(topic);
 
 //    KafkaMessage message = new KafkaMessage();
 //    message.setKey(topic);
@@ -84,7 +84,7 @@ public class EventService {
 
         String documentId = topic + "-" + partition + "-" + offset;
         log.info("documentId: {}", documentId);
-
+        // 4. 更新 issue 的 events (postgres)
         Document document = new Document();
         document.setDocumentId(documentId);
         document.setIndex(index);
@@ -94,7 +94,7 @@ public class EventService {
         request.setBaseIssue(baseIssue);
         request.setDocumentId(documentId);
         request.setIndex(index);
-        Issue issue = issueService.createOrUpdateIssueByIntro(request);
+        Issue issue = issueService.updateIssueByIntro(request);
         // 5. 更新 organization 中的 count
         dashboardClient.increaseEventCount(event.getApiKey());
         // todo: 通知

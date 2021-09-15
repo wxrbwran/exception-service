@@ -21,7 +21,7 @@ public class Issue {
     private MetaData metadata;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private Integer[] events;
+    private String[] events;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Integer eventsCount;
@@ -89,12 +89,12 @@ public class Issue {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Integer[] getEvents() {
+    public String[] getEvents() {
         return events;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setEvents(Integer[] events) {
+    public void setEvents(String[] events) {
         this.events = events;
     }
 

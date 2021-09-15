@@ -27,7 +27,7 @@ public final class IssueDynamicSqlSupport {
     public static final SqlColumn<MetaData> metadata = issue.metadata;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public static final SqlColumn<Integer[]> events = issue.events;
+    public static final SqlColumn<String[]> events = issue.events;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<Integer> eventsCount = issue.eventsCount;
@@ -56,11 +56,11 @@ public final class IssueDynamicSqlSupport {
 
         public final SqlColumn<MetaData> metadata = column("metadata", JDBCType.OTHER, "com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler");
 
-        public final SqlColumn<Integer[]> events = column("events", JDBCType.OTHER, "com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler");
+        public final SqlColumn<String[]> events = column("events", JDBCType.ARRAY, "com.xzlcorp.exception.common.utils.mybatis.TextArrayTypeHandler");
 
         public final SqlColumn<Integer> eventsCount = column("events_count", JDBCType.INTEGER);
 
-        public final SqlColumn<Integer[]> users = column("users", JDBCType.OTHER, "com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler");
+        public final SqlColumn<Integer[]> users = column("users", JDBCType.ARRAY, "com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler");
 
         public final SqlColumn<Integer> usersCount = column("users_count", JDBCType.INTEGER);
 

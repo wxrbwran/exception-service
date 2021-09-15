@@ -2,8 +2,8 @@ package com.xzlcorp.exception.manager.controller;
 
 import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.common.utils.PageInfoReducer.PageInfoReduce;
-import com.xzlcorp.exception.manager.model.query.IssueQuery;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
+import com.xzlcorp.exception.manager.model.query.IssueQuery;
 import com.xzlcorp.exception.manager.model.vo.IssueVO;
 import com.xzlcorp.exception.manager.service.IssueService;
 import java.util.List;

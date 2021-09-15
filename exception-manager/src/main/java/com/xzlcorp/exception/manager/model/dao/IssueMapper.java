@@ -1,10 +1,11 @@
 package com.xzlcorp.exception.manager.model.dao;
 
 import static com.xzlcorp.exception.manager.model.dao.IssueDynamicSqlSupport.*;
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.*;
 
 import com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler;
 import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
+import com.xzlcorp.exception.common.utils.mybatis.TextArrayTypeHandler;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import java.util.Collection;
 import java.util.List;
@@ -79,10 +80,10 @@ public interface IssueMapper {
         @Result(column="intro", property="intro", jdbcType=JdbcType.VARCHAR),
         @Result(column="api_key", property="apiKey", jdbcType=JdbcType.VARCHAR),
         @Result(column="type", property="type", jdbcType=JdbcType.VARCHAR),
-        @Result(column="metadata", property="metadata", typeHandler= JsonbTypeHandler.class, jdbcType=JdbcType.OTHER),
-        @Result(column="events", property="events", typeHandler=IntArrayTypeHandler.class, jdbcType=JdbcType.OTHER),
+        @Result(column="metadata", property="metadata", typeHandler=JsonbTypeHandler.class, jdbcType=JdbcType.OTHER),
+        @Result(column="events", property="events", typeHandler=TextArrayTypeHandler.class, jdbcType=JdbcType.ARRAY),
         @Result(column="events_count", property="eventsCount", jdbcType=JdbcType.INTEGER),
-        @Result(column="users", property="users", typeHandler=IntArrayTypeHandler.class, jdbcType=JdbcType.OTHER),
+        @Result(column="users", property="users", typeHandler=IntArrayTypeHandler.class, jdbcType=JdbcType.ARRAY),
         @Result(column="users_count", property="usersCount", jdbcType=JdbcType.INTEGER),
         @Result(column="created_at", property="createdAt", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="updated_at", property="updatedAt", jdbcType=JdbcType.TIMESTAMP)

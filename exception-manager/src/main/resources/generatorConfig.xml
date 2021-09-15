@@ -19,7 +19,7 @@
     </commentGenerator>
     <!--数据库链接地址账号密码-->
     <jdbcConnection driverClass="org.postgresql.Driver"
-      connectionURL="jdbc:postgresql://172.16.10.126:5432/exception"
+      connectionURL="jdbc:postgresql://172.16.10.126:5432/bugbyebye"
       userId="postgres"
       password="dev">
       <property name="nullCatalogMeansCurrent" value="true"/>
@@ -29,7 +29,7 @@
       <property name="forceBigDecimals" value="false"/>
     </javaTypeResolver>
     <!--生成Model类存放位置-->
-    <javaModelGenerator targetPackage="com.xzlcorp.exception.dashboard.model.pojo"
+    <javaModelGenerator targetPackage="com.xzlcorp.exception.manager.model.pojo"
       targetProject="src/main/java">
       <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
       <property name="enableSubPackages" value="false"/>
@@ -43,21 +43,21 @@
       <property name="enableSubPackages" value="false"/>
     </sqlMapGenerator>
     <!--生成Dao类存放位置-->
-    <javaClientGenerator type="XMLMAPPER" targetPackage="com.xzlcorp.exception.dashboard.model.dao"
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.xzlcorp.exception.manager.model.dao"
       targetProject="src/main/java">
       <property name="enableSubPackages" value="false"/>
     </javaClientGenerator>
     <!--生成对应表及类名-->
 
-<!--    <table schema="s_bug" tableName="t_issue" domainObjectName="Issue">-->
-<!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
-<!--      <columnOverride column="metadata" javaType="com.xzlcorp.exception.dashboard.model.pojo.MetaData"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
-<!--      <columnOverride column="events" javaType="Integer[]"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
-<!--      <columnOverride column="users" javaType="Integer[]"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
-<!--    </table>-->
+    <table schema="s_bug" tableName="t_issue" domainObjectName="Issue">
+      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+      <columnOverride column="metadata" javaType="com.xzlcorp.exception.common.model.pojo.event.MetaData"
+        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+      <columnOverride column="events" javaType="String[]"
+        typeHandler="com.xzlcorp.exception.common.utils.mybatis.TextArrayTypeHandler"/>
+      <columnOverride column="users" javaType="Integer[]"
+        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>
+    </table>
 
 <!--    <table schema="s_bug" tableName="t_organization" domainObjectName="Organization">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
@@ -94,16 +94,16 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
 <!--    </table>-->
 
-    <table schema="s_bug" tableName="t_notification_setting" domainObjectName="NotificationSetting">
-      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-      <columnOverride column="emails" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmails"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
-      <columnOverride column="browser" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingBrowser"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+<!--    <table schema="s_bug" tableName="t_notification_setting" domainObjectName="NotificationSetting">-->
+<!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--      <columnOverride column="emails" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmails"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+<!--      <columnOverride column="browser" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingBrowser"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
 
-      <columnOverride column="webhooks" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingWebHooks"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
-    </table>
+<!--      <columnOverride column="webhooks" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingWebHooks"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+<!--    </table>-->
 
 <!--    <table schema="s_bug" tableName="t_source_map" domainObjectName="SourceMap">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
