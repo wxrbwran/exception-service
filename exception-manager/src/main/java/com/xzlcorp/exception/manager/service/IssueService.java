@@ -101,23 +101,16 @@ public class IssueService {
 
       String[] events = issue.getEvents();
       log.info("events, {}", issue.getEvents() == null);
-
-      if (issue.getEvents() == null) {
-        List<String> eventDocId = new ArrayList<>();
-        eventDocId.add((document.getDocumentId()));
-        log.info("eventDocId, {}", eventDocId);
-        issue.setEvents(eventDocId.toArray(new String[eventDocId.size()]));
-        issue.setEventsCount(1);
-
-      } else {
         // events 最多存储 100 条，超过后只更改 eventsCount
         List<String> eventsList = ArrayListUtils.toList(events);
-//          if (events.length < Constant.MAX_ISSUES_NUMBER) {
-        eventsList.add((document.getDocumentId()));
-        issue.setEvents(eventsList.toArray(new String[eventsList.size()]));
-        issue.setEventsCount(eventsList.size() + 1);
+        if (events.length < Constant.MAX_ISSUES_NUMBER) {
+          eventsList.add((document.getDocumentId()));
+          issue.setEvents(eventsList.toArray(new String[eventsList.size()]));
+          issue.setEventsCount(eventsList.size());
+        } else {
+          issue.setEventsCount(issue.getEventsCount() + 1);
+        }
 
-      }
       log.info("issue.getEvents(), {}", issue.getEvents());
 
       issueMapper.update(c ->
@@ -148,7 +141,7 @@ public class IssueService {
       issue.setApiKey(event.getApiKey());
       issue.setMetadata(request.getMetaData());
       issue.setType(event.getType());
-      issue.setEventsCount(1);
+      issue.setEventsCount(0);
       issue.setEvents(new String[]{});
       issue.setUsers(new Integer[]{Integer.parseInt(event.getUser().getId())});
       issue.setUsersCount(1);
