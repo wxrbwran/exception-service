@@ -10,6 +10,8 @@ import lombok.Data;
 public class EventLikeWithIssueId {
   private Event event;
 
+  private String topic;
+
   private Integer issueId;
 
 }

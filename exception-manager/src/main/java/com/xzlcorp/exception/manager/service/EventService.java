@@ -60,9 +60,12 @@ public class EventService {
 
     String topic = indicesEnum.getKey();
     String index = indicesEnum.getIndex();
-    KafkaMessage message = new KafkaMessage();
-    message.setKey(topic);
-    message.setEvent(eventLikeWithIssueId);
+
+    eventLikeWithIssueId.setTopic(topic);
+
+//    KafkaMessage message = new KafkaMessage();
+//    message.setKey(topic);
+//    message.setEvent(eventLikeWithIssueId);
     ListenableFutureCallback<SendResult<String, String>> callback = new ListenableFutureCallback<SendResult<String, String>>() {
       @Override
       public void onFailure(Throwable ex) {
@@ -100,9 +103,9 @@ public class EventService {
         // 7. 判断当前状态十分符合 notification 配置的要求，符合则通知 notifier 开始任务
       }
     };
-    log.info("发送的消息: {}", JSON.toJSONString(message));
+    log.info("发送的消息: {}", JSON.toJSONString(eventLikeWithIssueId));
 
-    kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(message), callback);
+    kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(eventLikeWithIssueId), callback);
 
   }
 
