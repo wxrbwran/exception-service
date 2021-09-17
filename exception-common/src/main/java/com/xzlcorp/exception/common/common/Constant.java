@@ -20,4 +20,9 @@ public class Constant {
 
   public static final Integer MAX_USERS_NUMBER = 1000;
   public static final Integer MAX_ISSUES_NUMBER = 500;
+
+  public static final String TWO_WEEK = "14d";
+  public static final String ONE_DAY = "24h";
+
+
 }

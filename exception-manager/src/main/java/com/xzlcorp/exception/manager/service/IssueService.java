@@ -1,21 +1,38 @@
 package com.xzlcorp.exception.manager.service;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.xzlcorp.exception.common.common.Constant;
+import com.xzlcorp.exception.common.enums.EventIndicesEnum;
+import com.xzlcorp.exception.common.enums.OhbugEventIndicesEnum;
 import com.xzlcorp.exception.common.model.pojo.event.Event;
 import com.xzlcorp.exception.common.utils.ArrayListUtils;
 import com.xzlcorp.exception.common.utils.PageInfoReducer;
 import com.xzlcorp.exception.common.utils.PageInfoReducer.PageInfoReduce;
+import com.xzlcorp.exception.manager.enums.IssueTrendPeriodEnum;
 import com.xzlcorp.exception.manager.feign.DashboardClient;
 import com.xzlcorp.exception.manager.model.bo.BugDocument;
 import com.xzlcorp.exception.manager.model.dao.IssueDynamicSqlSupport;
 import com.xzlcorp.exception.manager.model.dao.IssueMapper;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
+import com.xzlcorp.exception.manager.model.query.IssuesTrendQuery;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
 import com.xzlcorp.exception.manager.model.vo.IssueVO;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
+import org.elasticsearch.search.aggregations.bucket.histogram.ExtendedBounds;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.joda.time.LocalDateTime;
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
@@ -23,8 +40,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
@@ -39,6 +57,15 @@ public class IssueService {
 
   @Autowired
   private DashboardClient dashboardClient;
+
+  @Autowired
+  private RestHighLevelClient highLevelClient;
+
+  private final static String Agg_Name_Trend = "trend";
+  private final static String Format_Of_14d = "yyyy-MM-dd";
+  private final static String Format_Of_24h = "yyyy-MM-dd HH";
+
+
 
   public PageInfoReduce<Issue> getIssues(IssueQuery query) {
     PageHelper.startPage(query.getPageAt(), query.getPageSize());
@@ -66,8 +93,126 @@ public class IssueService {
     return issueVOList;
   }
 
+  private SearchResponse getTrend(QueryBuilder query, AggregationBuilder trend) {
+    SearchRequest request = new SearchRequest();
+    request.indices(OhbugEventIndicesEnum.ERROR.getKey());
+//    String aggsNameTrend = "trend";
+//    ExtendedBounds extendedBounds = new ExtendedBounds(start, end);
+    SearchSourceBuilder builder = SearchSourceBuilder.searchSource()
+        .query(query)
+        .aggregation(trend)
+//        .sort(new FieldSortBuilder(PREDEFINED.TIME_ID).order(SortOrder.DESC))
+//        .from(0)
+        .size(0);
+    log.info(" 条件查询 ： {}", builder);
+    request.source(builder);
+//
+    try {
+      SearchResponse response = highLevelClient.search(request, RequestOptions.DEFAULT);
+      log.info("response json, {}", JSON.toJSONString(response));
+      return response;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return  null;
+  }
+
+  private Map<String, QueryBuilder> getQueryMap(Date now, String issueId) {
+    Map<String, QueryBuilder> queryMap = new HashMap<>();
+    QueryBuilder queryOf14d = QueryBuilders.boolQuery()
+        .must(QueryBuilders.matchQuery("issueId", issueId))
+        .filter(QueryBuilders.rangeQuery("event.timestamp")
+            .gte(DateUtil.offsetDay(now, -13).toJdkDate())
+            .lte(new Date())
+        );
+    QueryBuilder queryOf24h = QueryBuilders.boolQuery()
+        .must(QueryBuilders.matchQuery("issueId", issueId))
+        .filter(QueryBuilders.rangeQuery("event.timestamp")
+            .gte(DateUtil.offsetHour(now, -23).toJdkDate())
+            .lte(new Date())
+        );
+    queryMap.put("14d", queryOf14d);
+    queryMap.put("24h", queryOf24h);
+
+    return queryMap;
+  }
+
+  private Map<String, AggregationBuilder> getTrendMap(Date now) {
+    Map<String, AggregationBuilder> trendMap = new HashMap<>();
+    AggregationBuilder trendOf14d = AggregationBuilders
+        .dateHistogram(Agg_Name_Trend)
+        .field("event.timestamp")
+        .calendarInterval(DateHistogramInterval.DAY)
+        .format(Format_Of_14d)
+        .minDocCount(0)
+        .extendedBounds(new ExtendedBounds(
+            DateUtil.offsetDay(now, -13).getTime(),
+            new Date().getTime()
+        ));
+    String today = DateUtil.today();
+    AggregationBuilder trendOf24h = AggregationBuilders
+        .dateHistogram(Agg_Name_Trend)
+        .field("event.timestamp")
+        .minDocCount(0)
+        .calendarInterval(DateHistogramInterval.HOUR)
+        .format(Format_Of_24h)
+        .extendedBounds(new ExtendedBounds(
+            DateUtil.parse(today + " 00:00:00").getTime(),
+            DateUtil.parse(today + " 23:59:59").getTime()
+        ));
+    trendMap.put("14d", trendOf14d);
+    trendMap.put("24h", trendOf24h);
+    return trendMap;
+  }
+
+  public SearchResponse getTrendByIssueId(Date now, String issueId, String period) {
+    Map<String, AggregationBuilder> trendMap = getTrendMap(now);
+    Map<String, QueryBuilder> queryMap = getQueryMap(now, issueId);
+    SearchResponse response = new SearchResponse();
+    switch (period) {
+      case Constant.TWO_WEEK:
+        response = getTrend(queryMap.get(Constant.TWO_WEEK), trendMap.get(Constant.TWO_WEEK));
+        break;
+      case Constant.ONE_DAY:
+        response = getTrend(queryMap.get(Constant.ONE_DAY), trendMap.get(Constant.ONE_DAY));
+        break;
+    }
+    return response;
+  }
+
+  public List<SearchResponse> getTrendByIssueIds(IssuesTrendQuery query) {
+    Date now = new Date();
+    List<SearchResponse> list = new ArrayList<>();
+    Stream.of(query.getIds()).forEach(issueId -> {
+      SearchResponse response = getTrendByIssueId(now, issueId, query.getPeriod());
+      list.add(response);
+    });
+    return list;
+  }
+
   public void getIssuesProjectTrend(Integer projectId, long start, long end) {
     String apiKey = dashboardClient.getApiKeyByProjectId(projectId);
+    log.info("getIssuesProjectTrend, apiKey: {}", apiKey);
+    long timeDiffInHours = (end - start) / 1000 / 60 /60;
+    long twoWeekHours = 312;
+    ExtendedBounds extendedBounds = new ExtendedBounds(start, end);
+    QueryBuilder query = QueryBuilders.boolQuery()
+        .must(QueryBuilders.matchQuery("event.apiKey", apiKey))
+        .filter(QueryBuilders.rangeQuery("event.timestamp")
+            .gte(new Date(start)).lte(new Date(end))
+        );
+    AggregationBuilder trend = AggregationBuilders
+        .dateHistogram(Agg_Name_Trend)
+        .field("event.timestamp")
+        .minDocCount(0)
+        .calendarInterval(timeDiffInHours >= twoWeekHours ?
+            DateHistogramInterval.DAY : DateHistogramInterval.HOUR)
+        .extendedBounds(extendedBounds)
+        .subAggregation(AggregationBuilders
+            .cardinality("distinct")
+            .field("issueId")
+        );
+    SearchResponse response = getTrend(query, trend);
     // todo：从es中查询趋势
   }
 
@@ -118,6 +263,7 @@ public class IssueService {
               .set(IssueDynamicSqlSupport.events).equalTo(issue.getEvents())
               .set(IssueDynamicSqlSupport.users).equalTo(issue.getUsers())
               .set(IssueDynamicSqlSupport.usersCount).equalTo(issue.getUsersCount())
+              .set(IssueDynamicSqlSupport.updatedAt).equalTo(new Date())
               .where(IssueDynamicSqlSupport.id, isEqualTo(issue.getId()))
       );
     }

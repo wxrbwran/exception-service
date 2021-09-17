@@ -29,6 +29,11 @@ spring:
       maximum-pool-size: 10
       pool-prepared-statements: true
       max-open-prepared-statements: 100
+  # elasticsearch
+  data:
+    elasticsearch:
+      host: localhost
+      port: 9200
   #kafka配置
   kafka:
     #这里改为你的kafka服务器ip和端口号
@@ -46,6 +51,7 @@ spring:
       #value的Serializer类，实现类实现了接口org.apache.kafka.common.serialization.Serializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
+
 mybatis:
   mapper-locations: classpath:mappers/*.xml
   configuration:
@@ -56,9 +62,6 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:10010/eureka/
-
-
-
 feign:
   client:
     config:

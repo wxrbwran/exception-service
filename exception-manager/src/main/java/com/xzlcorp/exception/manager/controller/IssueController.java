@@ -4,16 +4,13 @@ import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.common.utils.PageInfoReducer.PageInfoReduce;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
+import com.xzlcorp.exception.manager.model.query.IssuesTrendQuery;
 import com.xzlcorp.exception.manager.model.vo.IssueVO;
 import com.xzlcorp.exception.manager.service.IssueService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author wuxiaoran
@@ -43,6 +40,12 @@ public class IssueController {
       @RequestParam("end") long end
   ) {
     issueService.getIssuesProjectTrend(projectId, start, end);
+    return ApiRestResponse.success();
+  }
+
+  @PostMapping("/trend")
+  public ApiRestResponse getTrendByIssueIds(@RequestBody IssuesTrendQuery query) {
+    issueService.getTrendByIssueIds(query);
     return ApiRestResponse.success();
   }
 }
