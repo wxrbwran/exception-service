@@ -65,8 +65,6 @@ public class IssueService {
   private final static String Format_Of_14d = "yyyy-MM-dd";
   private final static String Format_Of_24h = "yyyy-MM-dd HH";
 
-
-
   public PageInfoReduce<Issue> getIssues(IssueQuery query) {
     PageHelper.startPage(query.getPageAt(), query.getPageSize());
     String apiKey = dashboardClient.getApiKeyByProjectId(query.getProjectId());
@@ -96,20 +94,17 @@ public class IssueService {
   private SearchResponse getTrend(QueryBuilder query, AggregationBuilder trend) {
     SearchRequest request = new SearchRequest();
     request.indices(OhbugEventIndicesEnum.ERROR.getKey());
-//    String aggsNameTrend = "trend";
-//    ExtendedBounds extendedBounds = new ExtendedBounds(start, end);
     SearchSourceBuilder builder = SearchSourceBuilder.searchSource()
         .query(query)
         .aggregation(trend)
 //        .sort(new FieldSortBuilder(PREDEFINED.TIME_ID).order(SortOrder.DESC))
-//        .from(0)
         .size(0);
     log.info(" 条件查询 ： {}", builder);
     request.source(builder);
-//
     try {
       SearchResponse response = highLevelClient.search(request, RequestOptions.DEFAULT);
       log.info("response json, {}", JSON.toJSONString(response));
+//      response.getAggregations().get(Agg_Name_Trend)
       return response;
     } catch (Exception e) {
       e.printStackTrace();
@@ -118,18 +113,23 @@ public class IssueService {
   }
 
   private Map<String, QueryBuilder> getQueryMap(Date now, String issueId) {
+    long start14d = DateUtil.offsetDay(now, -13).toTimestamp().getTime();
+    long start24h = DateUtil.offsetHour(now, -23).toTimestamp().getTime();
+
+    long end = now.getTime();
+
     Map<String, QueryBuilder> queryMap = new HashMap<>();
     QueryBuilder queryOf14d = QueryBuilders.boolQuery()
         .must(QueryBuilders.matchQuery("issueId", issueId))
         .filter(QueryBuilders.rangeQuery("event.timestamp")
-            .gte(DateUtil.offsetDay(now, -13).toJdkDate())
-            .lte(new Date())
+            .gte(start14d)
+            .lte(end)
         );
     QueryBuilder queryOf24h = QueryBuilders.boolQuery()
         .must(QueryBuilders.matchQuery("issueId", issueId))
         .filter(QueryBuilders.rangeQuery("event.timestamp")
-            .gte(DateUtil.offsetHour(now, -23).toJdkDate())
-            .lte(new Date())
+            .gte(start24h)
+            .lte(end)
         );
     queryMap.put("14d", queryOf14d);
     queryMap.put("24h", queryOf24h);
@@ -139,6 +139,12 @@ public class IssueService {
 
   private Map<String, AggregationBuilder> getTrendMap(Date now) {
     Map<String, AggregationBuilder> trendMap = new HashMap<>();
+
+    long start14d = DateUtil.offsetDay(now, -13).toTimestamp().getTime();
+    long start24h = DateUtil.offsetHour(now, -23).toTimestamp().getTime();
+
+    long end = now.getTime();
+
     AggregationBuilder trendOf14d = AggregationBuilders
         .dateHistogram(Agg_Name_Trend)
         .field("event.timestamp")
@@ -146,8 +152,8 @@ public class IssueService {
         .format(Format_Of_14d)
         .minDocCount(0)
         .extendedBounds(new ExtendedBounds(
-            DateUtil.offsetDay(now, -13).getTime(),
-            new Date().getTime()
+            start14d,
+            end
         ));
     String today = DateUtil.today();
     AggregationBuilder trendOf24h = AggregationBuilders
@@ -157,8 +163,8 @@ public class IssueService {
         .calendarInterval(DateHistogramInterval.HOUR)
         .format(Format_Of_24h)
         .extendedBounds(new ExtendedBounds(
-            DateUtil.parse(today + " 00:00:00").getTime(),
-            DateUtil.parse(today + " 23:59:59").getTime()
+            start24h,
+            end
         ));
     trendMap.put("14d", trendOf14d);
     trendMap.put("24h", trendOf24h);
@@ -190,7 +196,8 @@ public class IssueService {
     return list;
   }
 
-  public void getIssuesProjectTrend(Integer projectId, long start, long end) {
+  public SearchResponse getIssuesProjectTrend(Integer projectId, long start, long end) {
+    // 从es中查询趋势
     String apiKey = dashboardClient.getApiKeyByProjectId(projectId);
     log.info("getIssuesProjectTrend, apiKey: {}", apiKey);
     long timeDiffInHours = (end - start) / 1000 / 60 /60;
@@ -199,7 +206,7 @@ public class IssueService {
     QueryBuilder query = QueryBuilders.boolQuery()
         .must(QueryBuilders.matchQuery("event.apiKey", apiKey))
         .filter(QueryBuilders.rangeQuery("event.timestamp")
-            .gte(new Date(start)).lte(new Date(end))
+            .gte(start).lte(end)
         );
     AggregationBuilder trend = AggregationBuilders
         .dateHistogram(Agg_Name_Trend)
@@ -213,7 +220,7 @@ public class IssueService {
             .field("issueId")
         );
     SearchResponse response = getTrend(query, trend);
-    // todo：从es中查询趋势
+    return  response;
   }
 
   public Issue updateIssueByIntro(CreateOrUpdateIssueByIntroRequest request) {

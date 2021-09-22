@@ -9,6 +9,7 @@ import com.xzlcorp.exception.manager.model.vo.IssueVO;
 import com.xzlcorp.exception.manager.service.IssueService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.search.SearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,13 +40,13 @@ public class IssueController {
       @RequestParam("start") long start,
       @RequestParam("end") long end
   ) {
-    issueService.getIssuesProjectTrend(projectId, start, end);
-    return ApiRestResponse.success();
+    SearchResponse res = issueService.getIssuesProjectTrend(projectId, start, end);
+    return ApiRestResponse.success(res);
   }
 
   @PostMapping("/trend")
   public ApiRestResponse getTrendByIssueIds(@RequestBody IssuesTrendQuery query) {
-    issueService.getTrendByIssueIds(query);
-    return ApiRestResponse.success();
+    List<SearchResponse> lists = issueService.getTrendByIssueIds(query);
+    return ApiRestResponse.success(lists);
   }
 }
