@@ -12,6 +12,7 @@ import com.xzlcorp.exception.common.utils.PageInfoReducer;
 import com.xzlcorp.exception.common.utils.PageInfoReducer.PageInfoReduce;
 import com.xzlcorp.exception.manager.enums.IssueTrendPeriodEnum;
 import com.xzlcorp.exception.manager.feign.DashboardClient;
+import com.xzlcorp.exception.manager.model.bo.Bucket;
 import com.xzlcorp.exception.manager.model.bo.BugDocument;
 import com.xzlcorp.exception.manager.model.dao.IssueDynamicSqlSupport;
 import com.xzlcorp.exception.manager.model.dao.IssueMapper;
@@ -63,7 +64,7 @@ public class IssueService {
 
   private final static String Agg_Name_Trend = "trend";
   private final static String Format_Of_14d = "yyyy-MM-dd";
-  private final static String Format_Of_24h = "yyyy-MM-dd HH";
+  private final static String Format_Of_24h = "yyyy-MM-dd HH:mm:ss";
 
   public PageInfoReduce<Issue> getIssues(IssueQuery query) {
     PageHelper.startPage(query.getPageAt(), query.getPageSize());
@@ -91,7 +92,7 @@ public class IssueService {
     return issueVOList;
   }
 
-  private SearchResponse getTrend(QueryBuilder query, AggregationBuilder trend) {
+  private Map<String, Object> getTrend(QueryBuilder query, AggregationBuilder trend, String issueId) {
     SearchRequest request = new SearchRequest();
     request.indices(OhbugEventIndicesEnum.ERROR.getKey());
     SearchSourceBuilder builder = SearchSourceBuilder.searchSource()
@@ -105,7 +106,14 @@ public class IssueService {
       SearchResponse response = highLevelClient.search(request, RequestOptions.DEFAULT);
       log.info("response json, {}", JSON.toJSONString(response));
 //      response.getAggregations().get(Agg_Name_Trend)
-      return response;
+      log.info("response buckets, {}", JSON.toJSONString(response.getAggregations().asMap()));
+//      List<Bucket> buckets = response.getAggregations().asMap()
+      Map<String, Object> resMap = new HashMap<>();
+      resMap.put("response", response);
+      if (issueId != null) {
+        resMap.put("issueId", issueId);
+      }
+      return resMap;
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -155,7 +163,6 @@ public class IssueService {
             start14d,
             end
         ));
-    String today = DateUtil.today();
     AggregationBuilder trendOf24h = AggregationBuilders
         .dateHistogram(Agg_Name_Trend)
         .field("event.timestamp")
@@ -171,32 +178,33 @@ public class IssueService {
     return trendMap;
   }
 
-  public SearchResponse getTrendByIssueId(Date now, String issueId, String period) {
+  public Map<String, Object> getTrendByIssueId(Date now, String issueId, String period) {
     Map<String, AggregationBuilder> trendMap = getTrendMap(now);
     Map<String, QueryBuilder> queryMap = getQueryMap(now, issueId);
-    SearchResponse response = new SearchResponse();
+//    SearchResponse response = new SearchResponse();
+    Map<String, Object> resMap = new HashMap<>();
     switch (period) {
       case Constant.TWO_WEEK:
-        response = getTrend(queryMap.get(Constant.TWO_WEEK), trendMap.get(Constant.TWO_WEEK));
+        resMap = getTrend(queryMap.get(Constant.TWO_WEEK), trendMap.get(Constant.TWO_WEEK), issueId);
         break;
       case Constant.ONE_DAY:
-        response = getTrend(queryMap.get(Constant.ONE_DAY), trendMap.get(Constant.ONE_DAY));
+        resMap = getTrend(queryMap.get(Constant.ONE_DAY), trendMap.get(Constant.ONE_DAY), issueId);
         break;
     }
-    return response;
+    return resMap;
   }
 
-  public List<SearchResponse> getTrendByIssueIds(IssuesTrendQuery query) {
+  public List<Map<String, Object>> getTrendByIssueIds(IssuesTrendQuery query) {
     Date now = new Date();
-    List<SearchResponse> list = new ArrayList<>();
+    List<Map<String, Object>> list = new ArrayList<>();
     Stream.of(query.getIds()).forEach(issueId -> {
-      SearchResponse response = getTrendByIssueId(now, issueId, query.getPeriod());
-      list.add(response);
+      Map<String, Object> resMap = getTrendByIssueId(now, issueId, query.getPeriod());
+      list.add(resMap);
     });
     return list;
   }
 
-  public SearchResponse getIssuesProjectTrend(Integer projectId, long start, long end) {
+  public Map<String, Object> getIssuesProjectTrend(Integer projectId, long start, long end) {
     // 从es中查询趋势
     String apiKey = dashboardClient.getApiKeyByProjectId(projectId);
     log.info("getIssuesProjectTrend, apiKey: {}", apiKey);
@@ -219,8 +227,9 @@ public class IssueService {
             .cardinality("distinct")
             .field("issueId")
         );
-    SearchResponse response = getTrend(query, trend);
-    return  response;
+
+    Map<String, Object> resMap = getTrend(query, trend, null);
+    return  resMap;
   }
 
   public Issue updateIssueByIntro(CreateOrUpdateIssueByIntroRequest request) {
