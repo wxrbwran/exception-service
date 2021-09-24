@@ -5,7 +5,10 @@ import com.xzlcorp.exception.dashboard.model.pojo.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.xzlcorp.exception.dashboard.model.request.UpdateUserRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,14 @@ public class UserService {
 
   public User update(User user) {
     userMapper.updateByPrimaryKeySelective(user);
+    return user;
+  }
+
+  public User updateUserById(Integer userId, UpdateUserRequest request) {
+    User user = new User();
+    BeanUtils.copyProperties(request, user);
+    user.setId(userId);
+    user = update(user);
     return user;
   }
 

@@ -4,6 +4,7 @@ import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
+import com.xzlcorp.exception.dashboard.model.request.UpdateUserRequest;
 import com.xzlcorp.exception.dashboard.model.vo.OrganizationVO;
 import com.xzlcorp.exception.dashboard.model.vo.ProjectVO;
 import com.xzlcorp.exception.dashboard.model.vo.UserVO;
@@ -16,10 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author wuxiaoran
@@ -56,6 +54,12 @@ public class UserController {
     userVO.setProjects(projects);
 
     return ApiRestResponse.success(userVO);
+  }
+
+  @PatchMapping("{userId}")
+  public ApiRestResponse<User> updateUserInfo(@PathVariable Integer userId, @RequestBody UpdateUserRequest request) {
+    User user = userService.updateUserById(userId, request);
+    return ApiRestResponse.success(user);
   }
 
 }
