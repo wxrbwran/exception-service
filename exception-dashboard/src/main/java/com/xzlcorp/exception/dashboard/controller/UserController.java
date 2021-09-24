@@ -12,9 +12,11 @@ import com.xzlcorp.exception.dashboard.service.OrganizationService;
 import com.xzlcorp.exception.dashboard.service.ProjectService;
 import com.xzlcorp.exception.dashboard.service.UserService;
 import io.swagger.annotations.Api;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author wuxiaoran
  */
-
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @Api(value = "User", tags = {"用户信息相关接口"})
@@ -40,21 +42,32 @@ public class UserController {
   @GetMapping("{userId}")
   public ApiRestResponse getUserInfo(@PathVariable Integer userId) {
     User user = userService.getUserInfoById(userId);
-    UserVO userVO = new UserVO();
-    BeanUtils.copyProperties(user, userVO);
-    // 设置user的orgs
+    UserVO userVO = userService.handleUser2VO(user);
 
-    List<OrganizationVO> organizationVOList = organizationService.handleOrganizationToVO(user);
+    // 设置user的机构信息
+    List<Integer> orgIds = userVO.getOrganizationIds();
+    List<Organization> organizations = organizationService.getOrganizations(orgIds);
+    log.info("organizations, {}", organizations);
+    List<OrganizationVO> organizationVOList = organizationService.handleOrganization2ToVOList(organizations);
+    log.info("organizationVOList, {}", organizationVOList);
+    // 处理机构的人员信息，项目信息，管理员信息。
+    organizationService.handleOrganizationUsersAndProjectsAndAdmin(organizations, organizationVOList);
 
-    // 设置user的projects
-    List<ProjectVO> projects = projectService
-        .getProjects(Arrays.asList(user.getProjects()));
+
+    // 设置user的项目信息
+    Integer[] projectIds = user.getProjects();
+    List<Project> projects = projectService.getProjects(projectIds);
+    log.info("projects, {}", projects);
+    List<ProjectVO> projectVOList = projectService.handleProjects2VOList(projects);
+    log.info("projectVOList, {}", projectVOList);
 
     userVO.setOrganizations(organizationVOList);
-    userVO.setProjects(projects);
+    userVO.setProjects(projectVOList);
 
     return ApiRestResponse.success(userVO);
   }
+
+
 
   @PatchMapping("{userId}")
   public ApiRestResponse<User> updateUserInfo(@PathVariable Integer userId, @RequestBody UpdateUserRequest request) {

@@ -1,6 +1,7 @@
 package com.xzlcorp.exception.dashboard.service;
 
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.isIn;
 
 import com.xzlcorp.exception.common.exception.XzlCorpException;
 import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
@@ -10,11 +11,14 @@ import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
 import com.xzlcorp.exception.dashboard.model.request.OrganizationRequest;
+import com.xzlcorp.exception.dashboard.model.request.UpdateOrganizationRequest;
 import com.xzlcorp.exception.dashboard.model.vo.OrganizationVO;
 import com.xzlcorp.exception.dashboard.model.vo.ProjectVO;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import com.xzlcorp.exception.dashboard.model.vo.UserVO;
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
@@ -69,11 +73,8 @@ public class OrganizationService {
   }
 
   public List<Organization> getOrganizations(List<Integer> orgIds) {
-    List<Organization> organizationList = new ArrayList<>();
-    orgIds.forEach(orgId -> {
-      Organization organization = getOrganizationById(orgId);
-      organizationList.add(organization);
-    });
+    List<Organization> organizationList = organizationMapper.select(c ->
+        c.where(OrganizationDynamicSqlSupport.id, isIn(orgIds)));
     return organizationList;
   }
 
@@ -81,28 +82,20 @@ public class OrganizationService {
     organizationMapper.updateByPrimaryKeySelective(organization);
   }
 
-  public List<OrganizationVO> handleOrganizationToVO(User user) {
+  public List<OrganizationVO> handleOrganization2ToVOList(
+      List<Organization> organizations
+  ) {
     // 设置user的orgs
     List<OrganizationVO> organizationVOList = new ArrayList<>();
-    List<Organization> organizations = getOrganizations(Arrays.asList(user.getOrganizations()));
     organizations.forEach(organization -> {
       OrganizationVO organizationVO = new OrganizationVO();
       BeanUtils.copyProperties(organization, organizationVO);
-      // 设置org的admin详情
-      Integer adminId = organization.getAdmin();
-      User adminUser = userService.getUserInfoById(adminId);
-      organizationVO.setAdmin(adminUser);
-      // 设置org的projects详情
-      List<Integer> projects = new ArrayList<>();
-      if (organization.getProjects() != null) {
-        projects.addAll(Arrays.asList(organization.getProjects()));
-        List<ProjectVO> projectVOList = projectService.getProjects(projects);
-        organizationVO.setProjects(projectVOList);
-      }
       organizationVOList.add(organizationVO);
     });
     return organizationVOList;
   }
+
+
 
   public void increaseEventCount(String apiKey) {
     Project project = projectService.getProjectByApiKey(apiKey);
@@ -112,5 +105,63 @@ public class OrganizationService {
     int count = organization.getCount() + 1;
     organization.setCount(count);
     organizationMapper.updateByPrimaryKeySelective(organization);
+  }
+
+  public Organization updateOrganizationById(Integer orgId, UpdateOrganizationRequest request) {
+    Organization organization = new Organization();
+    BeanUtils.copyProperties(request, organization);
+    organization.setId(orgId);
+    organizationMapper.updateByPrimaryKeySelective(organization);
+    return organization;
+  }
+
+  public void deleteOrganizationById(Integer orgId) {
+    organizationMapper.deleteByPrimaryKey(orgId);
+  }
+
+  public void handleOrganizationUsersAndProjectsAndAdmin(List<Organization> organizations, List<OrganizationVO> organizationVOList) {
+//    Map<Integer, UserVO> userMap = new HashMap<>();
+    organizations.forEach(organization -> {
+      Integer orgId = organization.getId();
+      OrganizationVO organizationVO = organizationVOList
+          .stream()
+          .filter(orgVO -> orgVO.getId().equals(orgId))
+          .collect(Collectors.toList())
+          .get(0);
+      // 添加admin
+      Integer adminId = organization.getAdmin();
+      UserVO adminVO = new UserVO();
+//      if (userMap.get(adminId) != null) {
+//        adminVO = userMap.get(adminId);
+//      } else {
+      adminVO = userService.getUserInfoByIdSimple(adminId);
+//        userMap.put(adminId, adminVO);
+//      }
+      organizationVO.setAdmin(adminVO);
+      // 添加admin end
+
+      // 添加users
+      Integer[] userIds = organization.getUsers();
+      List<User> users = userService.getUserInfoByIds(userIds);
+      organizationVO.setUsers(userService.handleUsers2VOList(users));
+      // 添加users end
+
+      // 添加PROJECTS
+      Integer[] projectIds = organization.getProjects();
+      List<Project> projects = projectService.getProjects(projectIds);
+      organizationVO.setProjects(projectService.handleProjects2VOList(projects));
+      // 添加PROJECTS end
+
+    });
+
+//    organizationVO.setAdmin(adminUser);
+//    // 设置org的projects详情
+//    List<Integer> projects = new ArrayList<>();
+//    if (organization.getProjects() != null) {
+//      projects.addAll(Arrays.asList(organization.getProjects()));
+//      List<ProjectVO> projectVOList = projectService
+//          .handleProjects2VOList(projectService.getProjects(projects));
+//      organizationVO.setProjects(projectVOList);
+//    }
   }
 }

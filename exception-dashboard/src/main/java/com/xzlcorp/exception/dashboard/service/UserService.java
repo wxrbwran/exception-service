@@ -1,12 +1,17 @@
 package com.xzlcorp.exception.dashboard.service;
 
+import static org.mybatis.dynamic.sql.SqlBuilder.isIn;
+
+import com.xzlcorp.exception.dashboard.model.dao.UserDynamicSqlSupport;
 import com.xzlcorp.exception.dashboard.model.dao.UserMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.xzlcorp.exception.dashboard.model.request.UpdateUserRequest;
+import com.xzlcorp.exception.dashboard.model.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +30,40 @@ public class UserService {
   public User getUserInfoById(Integer id) {
     User user = userMapper.selectByPrimaryKey(id);
     return user;
+  }
+
+  public List<User> getUserInfoByIds(Integer[] userIds) {
+    List<User> users = userMapper.select(c ->
+        c.where(UserDynamicSqlSupport.id, isIn(userIds)));
+    return users;
+  }
+
+  public UserVO getUserInfoByIdSimple(Integer id) {
+    User user = userMapper.selectByPrimaryKey(id);
+    UserVO userVO = new UserVO();
+    BeanUtils.copyProperties(user, userVO);
+    return userVO;
+  }
+
+  public UserVO handleUser2VO(User user) {
+    UserVO userVO = new UserVO();
+    BeanUtils.copyProperties(user, userVO);
+    if (user.getProjects() != null) {
+      userVO.setProjectIds(Arrays.stream(user.getProjects()).collect(Collectors.toList()));
+    }
+    if (user.getOrganizations() != null) {
+      userVO.setOrganizationIds(Arrays.stream(user.getOrganizations()).collect(Collectors.toList()));
+    }
+    return userVO;
+  }
+
+  public List<UserVO> handleUsers2VOList(List<User> users) {
+    List<UserVO> userVOList = new ArrayList<>();
+    users.forEach(user -> {
+      UserVO userVO = handleUser2VO(user);
+      userVOList.add(userVO);
+    });
+    return userVOList;
   }
 
   public User update(User user) {
@@ -73,4 +112,7 @@ public class UserService {
     user.setOrganizations(newOrganizations);
     update(user);
   }
+
+
+
 }

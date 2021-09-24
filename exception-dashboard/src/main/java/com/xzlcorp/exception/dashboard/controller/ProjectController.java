@@ -2,6 +2,7 @@ package com.xzlcorp.exception.dashboard.controller;
 
 import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
+import com.xzlcorp.exception.dashboard.model.request.EditProjectRequest;
 import com.xzlcorp.exception.dashboard.model.request.OrganizationRequest;
 import com.xzlcorp.exception.dashboard.model.request.ProjectRequest;
 import com.xzlcorp.exception.dashboard.model.vo.OrganizationVO;
@@ -13,12 +14,7 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author wuxiaoran
@@ -37,6 +33,14 @@ public class ProjectController {
   @PostMapping()
   public ApiRestResponse create(@Valid @RequestBody ProjectRequest request) {
     ProjectVO projectVO = projectService.save(request);
+    return ApiRestResponse.success(projectVO);
+  }
+
+  @PatchMapping("{projectId}")
+  public ApiRestResponse updateProjectById(
+      @PathVariable Integer projectId,
+      @Valid @RequestBody EditProjectRequest request) {
+    ProjectVO projectVO = projectService.update(projectId, request);
     return ApiRestResponse.success(projectVO);
   }
 

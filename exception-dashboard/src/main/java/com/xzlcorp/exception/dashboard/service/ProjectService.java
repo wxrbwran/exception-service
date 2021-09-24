@@ -1,6 +1,7 @@
 package com.xzlcorp.exception.dashboard.service;
 
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.isIn;
 
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
@@ -15,6 +16,7 @@ import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSetti
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmail;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmails;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingWebHooks;
+import com.xzlcorp.exception.dashboard.model.request.EditProjectRequest;
 import com.xzlcorp.exception.dashboard.model.request.NotificationSettingRequest;
 import com.xzlcorp.exception.dashboard.model.request.ProjectRequest;
 import com.xzlcorp.exception.dashboard.model.vo.ProjectVO;
@@ -160,20 +162,37 @@ public class ProjectService {
 
   public ProjectVO save(ProjectRequest request) {
     Project project = createProjectObject(request);
+    return handleProject2VO(project);
+  }
+
+  public ProjectVO update(Integer projectId, EditProjectRequest request) {
+    Project project = new Project();
+    BeanUtils.copyProperties(request, project);
+    project.setId(projectId);
+    projectMapper.updateByPrimaryKeySelective(project);
+    return handleProject2VO(project);
+  }
+
+  public ProjectVO handleProject2VO(Project project) {
     ProjectVO projectVO = new ProjectVO();
     BeanUtils.copyProperties(project, projectVO);
     return projectVO;
   }
 
-  public List<ProjectVO> getProjects(List<Integer> projectIds) {
+  public List<ProjectVO> handleProjects2VOList(List<Project> projects) {
     List<ProjectVO> projectVOList = new ArrayList<>();
-    projectIds.forEach(projectId -> {
-      Project project = projectMapper.selectByPrimaryKey(projectId);
+    projects.forEach(project -> {
       ProjectVO projectVO = new ProjectVO();
       BeanUtils.copyProperties(project, projectVO);
       projectVOList.add(projectVO);
     });
     return projectVOList;
+  }
+
+  public List<Project> getProjects(Integer[] projectIds) {
+    List<Project> projectList = projectMapper.select(c ->
+        c.where(ProjectDynamicSqlSupport.id, isIn(projectIds)));
+    return projectList;
   }
 
   public Project getProjectById(Integer projectId) {
@@ -186,4 +205,6 @@ public class ProjectService {
         c.where(ProjectDynamicSqlSupport.apiKey, isEqualTo(apiKey))
     );
   }
+
+
 }

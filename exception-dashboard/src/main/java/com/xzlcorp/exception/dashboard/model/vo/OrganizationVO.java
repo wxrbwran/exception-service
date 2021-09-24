@@ -17,11 +17,11 @@ public class OrganizationVO {
 
   private String introduction;
 
-  private User admin;
+  private UserVO admin;
 
   private List<ProjectVO> projects;
 
   private Integer count;
 
-  private Integer[] users;
+  private List<UserVO> users;
 }

@@ -20,8 +20,10 @@ public class UserVO {
 
   private Boolean activated;
 
+  private List<Integer> organizationIds;
   private List<OrganizationVO> organizations;
 
+  private List<Integer> projectIds;
   private List<ProjectVO> projects;
 
 

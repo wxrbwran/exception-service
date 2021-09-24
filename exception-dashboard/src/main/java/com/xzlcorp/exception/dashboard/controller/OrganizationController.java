@@ -3,6 +3,7 @@ package com.xzlcorp.exception.dashboard.controller;
 import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.request.OrganizationRequest;
+import com.xzlcorp.exception.dashboard.model.request.UpdateOrganizationRequest;
 import com.xzlcorp.exception.dashboard.model.vo.OrganizationVO;
 import com.xzlcorp.exception.dashboard.model.vo.UserVO;
 import com.xzlcorp.exception.dashboard.service.OrganizationService;
@@ -13,12 +14,7 @@ import javax.validation.Valid;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author wuxiaoran
@@ -45,4 +41,16 @@ public class OrganizationController {
     organizationService.increaseEventCount(apiKey);
   }
 
+  @ApiOperation(value = "更新机构信息")
+  @PutMapping("{orgId}")
+  public ApiRestResponse updateOrganizationById(@PathVariable Integer orgId, @RequestBody UpdateOrganizationRequest request) {
+    return ApiRestResponse.success(organizationService.updateOrganizationById(orgId, request));
+  }
+
+  @ApiOperation(value = "删除机构")
+  @DeleteMapping("{orgId}")
+  public ApiRestResponse deleteOrganizationById(@PathVariable Integer orgId) {
+    organizationService.deleteOrganizationById(orgId);
+    return ApiRestResponse.success();
+  }
 }
