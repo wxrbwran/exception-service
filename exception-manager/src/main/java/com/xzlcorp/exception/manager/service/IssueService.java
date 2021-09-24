@@ -62,6 +62,7 @@ public class IssueService {
   @Autowired
   private RestHighLevelClient highLevelClient;
 
+  private final static long One_Day_Mills = 86400000;
   private final static String Agg_Name_Trend = "trend";
   private final static String Format_Of_14d = "yyyy-MM-dd";
   private final static String Format_Of_24h = "yyyy-MM-dd HH:mm:ss";
@@ -120,11 +121,11 @@ public class IssueService {
     return  null;
   }
 
-  private Map<String, QueryBuilder> getQueryMap(Date now, String issueId) {
-    long start14d = DateUtil.offsetDay(now, -13).toTimestamp().getTime();
-    long start24h = DateUtil.offsetHour(now, -23).toTimestamp().getTime();
+  private Map<String, QueryBuilder> getQueryMap(long now, String issueId) {
+    long start14d = now - (One_Day_Mills * 14);
+    long start24h = now - One_Day_Mills;
 
-    long end = now.getTime();
+    long end = now;
 
     Map<String, QueryBuilder> queryMap = new HashMap<>();
     QueryBuilder queryOf14d = QueryBuilders.boolQuery()
@@ -145,13 +146,13 @@ public class IssueService {
     return queryMap;
   }
 
-  private Map<String, AggregationBuilder> getTrendMap(Date now) {
+  private Map<String, AggregationBuilder> getTrendMap(long now) {
     Map<String, AggregationBuilder> trendMap = new HashMap<>();
 
-    long start14d = DateUtil.offsetDay(now, -13).toTimestamp().getTime();
-    long start24h = DateUtil.offsetHour(now, -23).toTimestamp().getTime();
+    long start14d = now - (One_Day_Mills * 14);
+    long start24h = now - One_Day_Mills;
 
-    long end = now.getTime();
+    long end = now;
 
     AggregationBuilder trendOf14d = AggregationBuilders
         .dateHistogram(Agg_Name_Trend)
@@ -178,7 +179,7 @@ public class IssueService {
     return trendMap;
   }
 
-  public Map<String, Object> getTrendByIssueId(Date now, String issueId, String period) {
+  public Map<String, Object> getTrendByIssueId(long now, String issueId, String period) {
     Map<String, AggregationBuilder> trendMap = getTrendMap(now);
     Map<String, QueryBuilder> queryMap = getQueryMap(now, issueId);
 //    SearchResponse response = new SearchResponse();
@@ -195,7 +196,7 @@ public class IssueService {
   }
 
   public List<Map<String, Object>> getTrendByIssueIds(IssuesTrendQuery query) {
-    Date now = new Date();
+    long now = System.currentTimeMillis();
     List<Map<String, Object>> list = new ArrayList<>();
     Stream.of(query.getIds()).forEach(issueId -> {
       Map<String, Object> resMap = getTrendByIssueId(now, issueId, query.getPeriod());
