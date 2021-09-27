@@ -1,6 +1,7 @@
 package com.xzlcorp.exception.dashboard.controller;
 
 import com.xzlcorp.exception.common.common.ApiRestResponse;
+import com.xzlcorp.exception.dashboard.model.request.BindUserRequest;
 import com.xzlcorp.exception.dashboard.model.request.InviteRequest;
 import com.xzlcorp.exception.dashboard.model.vo.InviteVO;
 import com.xzlcorp.exception.dashboard.service.InviteService;
@@ -42,4 +43,9 @@ public class InviteController {
     return ApiRestResponse.success(inviteService.getInviteByUUID(uuid));
   }
 
+  @PostMapping("bind")
+  @ApiOperation(value = "invite/bind", notes = "绑定邀请的用户与组织/项目", httpMethod = "POST")
+  public ApiRestResponse bindUserWithOrganizationAndProject(@Valid @RequestBody BindUserRequest request) {
+    return inviteService.bindUserWithOrganizationAndProject(request);
+  }
 }

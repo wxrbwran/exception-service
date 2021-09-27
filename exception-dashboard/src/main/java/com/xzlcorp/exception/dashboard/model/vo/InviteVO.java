@@ -2,6 +2,8 @@ package com.xzlcorp.exception.dashboard.model.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class InviteVO {
   private String uuid;
@@ -11,4 +13,6 @@ public class InviteVO {
   private UserVO inviter;
 
   private OrganizationVO organization;
+
+  private List<ProjectVO> projects;
 }

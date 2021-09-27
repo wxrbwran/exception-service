@@ -6,6 +6,7 @@ import static org.mybatis.dynamic.sql.SqlBuilder.isIn;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 import com.xzlcorp.exception.common.common.Constant;
+import com.xzlcorp.exception.common.utils.UniqueList;
 import com.xzlcorp.exception.dashboard.model.dao.ProjectDynamicSqlSupport;
 import com.xzlcorp.exception.dashboard.model.dao.ProjectMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
@@ -21,11 +22,10 @@ import com.xzlcorp.exception.dashboard.model.request.NotificationSettingRequest;
 import com.xzlcorp.exception.dashboard.model.request.ProjectRequest;
 import com.xzlcorp.exception.dashboard.model.vo.ProjectVO;
 import com.xzlcorp.exception.dashboard.model.vo.UserVO;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
@@ -207,4 +207,11 @@ public class ProjectService {
   }
 
 
+  public void addUser(Integer projectId, List<Integer> userIds) {
+    Project project = getProjectById(projectId);
+    List<Integer> users = Arrays.stream(project.getUsers()).collect(Collectors.toList());
+    List<Integer> userIdSet = UniqueList.toUnique(users, userIds);
+    project.setUsers(userIdSet.toArray(new Integer[userIdSet.size()]));
+    projectMapper.insertSelective(project);
+  }
 }

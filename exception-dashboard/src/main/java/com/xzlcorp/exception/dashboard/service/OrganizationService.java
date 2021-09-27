@@ -5,6 +5,7 @@ import static org.mybatis.dynamic.sql.SqlBuilder.isIn;
 
 import com.xzlcorp.exception.common.exception.XzlCorpException;
 import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
+import com.xzlcorp.exception.common.utils.UniqueList;
 import com.xzlcorp.exception.dashboard.model.dao.OrganizationDynamicSqlSupport;
 import com.xzlcorp.exception.dashboard.model.dao.OrganizationMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
@@ -169,5 +170,13 @@ public class OrganizationService {
 //          .handleProjects2VOList(projectService.getProjects(projects));
 //      organizationVO.setProjects(projectVOList);
 //    }
+  }
+
+  public void addUser(Integer organizationId, List<Integer> userIds) {
+    Organization organization = getOrganizationById(organizationId);
+    List<Integer> users = Arrays.stream(organization.getUsers()).collect(Collectors.toList());
+    List<Integer> userIdSet = UniqueList.toUnique(users, userIds);
+    organization.setUsers(userIdSet.toArray(new Integer[userIdSet.size()]));
+    organizationMapper.insertSelective(organization);
   }
 }
