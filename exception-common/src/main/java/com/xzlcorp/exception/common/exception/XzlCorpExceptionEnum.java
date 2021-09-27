@@ -27,6 +27,7 @@ public enum XzlCorpExceptionEnum {
   TOKEN_OUT_DATE(10017, "token已过期，请重新授权"),
   EMAIL_EXISTED(10018, "邮箱已存在"),
   INVALID_EMAIL_PASSWORD(10019, "邮箱或密码错误"),
+  INVITE_NOT_EXIST(10020, "邀请地址不存在"),
 
 
   //  SYSTEM_ERROR

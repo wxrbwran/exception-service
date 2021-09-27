@@ -69,7 +69,7 @@ public interface InviteMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @ResultMap("InviteResult")
-    Optional<Invite> selectOne(SelectStatementProvider selectStatement);
+    Invite selectOne(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
@@ -150,7 +150,7 @@ public interface InviteMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default Optional<Invite> selectOne(SelectDSLCompleter completer) {
+    default Invite selectOne(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectOne(this::selectOne, selectList, invite, completer);
     }
 
@@ -165,7 +165,7 @@ public interface InviteMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default Optional<Invite> selectByPrimaryKey(Integer id_) {
+    default Invite selectByPrimaryKey(Integer id_) {
         return selectOne(c ->
             c.where(id, isEqualTo(id_))
         );

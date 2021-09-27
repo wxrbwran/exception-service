@@ -44,24 +44,30 @@ public class UserController {
     User user = userService.getUserInfoById(userId);
     UserVO userVO = userService.handleUser2VO(user);
 
-    // 设置user的机构信息
+    // 设置user的机构信息 organization
     List<Integer> orgIds = userVO.getOrganizationIds();
-    List<Organization> organizations = organizationService.getOrganizations(orgIds);
-    log.info("organizations, {}", organizations);
-    List<OrganizationVO> organizationVOList = organizationService.handleOrganization2ToVOList(organizations);
-    log.info("organizationVOList, {}", organizationVOList);
-    // 处理机构的人员信息，项目信息，管理员信息。
-    organizationService.handleOrganizationUsersAndProjectsAndAdmin(organizations, organizationVOList);
-
-
-    // 设置user的项目信息
-    Integer[] projectIds = user.getProjects();
-    List<Project> projects = projectService.getProjects(projectIds);
-    log.info("projects, {}", projects);
-    List<ProjectVO> projectVOList = projectService.handleProjects2VOList(projects);
-    log.info("projectVOList, {}", projectVOList);
-
+    List<OrganizationVO> organizationVOList = new ArrayList<>();
+    if (orgIds != null && orgIds.size() > 0) {
+      List<Organization> organizations = organizationService.getOrganizations(orgIds);
+      log.info("organizations, {}", organizations);
+      organizationVOList = organizationService.handleOrganization2ToVOList(organizations);
+      log.info("organizationVOList, {}", organizationVOList);
+      // 处理机构的人员信息，项目信息，管理员信息。
+      organizationService.handleOrganizationUsersAndProjectsAndAdmin(organizations, organizationVOList);
+    }
     userVO.setOrganizations(organizationVOList);
+
+
+    // 设置user的项目信息 projects
+    List<Integer> projectIds = userVO.getProjectIds();
+    List<ProjectVO> projectVOList = new ArrayList<>();
+    if (projectIds != null && projectIds.size() > 0) {
+      List<Project> projects = projectService.getProjects(projectIds);
+      log.info("projects, {}", projects);
+      projectVOList = projectService.handleProjects2VOList(projects);
+      log.info("projectVOList, {}", projectVOList);
+    }
+
     userVO.setProjects(projectVOList);
 
     return ApiRestResponse.success(userVO);

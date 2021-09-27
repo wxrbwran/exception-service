@@ -82,6 +82,12 @@ public class OrganizationService {
     organizationMapper.updateByPrimaryKeySelective(organization);
   }
 
+  public OrganizationVO handleOrganization2ToVO(Organization organization) {
+    OrganizationVO organizationVO = new OrganizationVO();
+    BeanUtils.copyProperties(organization, organizationVO);
+    return organizationVO;
+  }
+
   public List<OrganizationVO> handleOrganization2ToVOList(
       List<Organization> organizations
   ) {
@@ -147,7 +153,7 @@ public class OrganizationService {
       // 添加users end
 
       // 添加PROJECTS
-      Integer[] projectIds = organization.getProjects();
+      List<Integer> projectIds = Arrays.asList(organization.getProjects());
       List<Project> projects = projectService.getProjects(projectIds);
       organizationVO.setProjects(projectService.handleProjects2VOList(projects));
       // 添加PROJECTS end

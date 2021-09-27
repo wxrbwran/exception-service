@@ -22,15 +22,8 @@ public class RedisReceiver implements MessageListener {
   @SneakyThrows
   @Override
   public void onMessage(Message message, byte[] pattern) {
-//    log.info("onMessage message: {}", message);
-//    log.info("onMessage message.toString: {}", message.toString());
-
-//    Event event = (Event) message.getBody();
-//    log.info("onMessage event: {}", event.toString());
     Event event = JSON.parseObject(message.toString(), Event.class);
     log.info("onMessage event received");
     eventService.handleEvent(event);
-//    log.info("onMessage getChannel: {}", message.getChannel());
-
   }
 }

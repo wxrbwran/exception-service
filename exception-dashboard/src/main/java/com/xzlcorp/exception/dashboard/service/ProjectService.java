@@ -189,7 +189,7 @@ public class ProjectService {
     return projectVOList;
   }
 
-  public List<Project> getProjects(Integer[] projectIds) {
+  public List<Project> getProjects(List<Integer> projectIds) {
     List<Project> projectList = projectMapper.select(c ->
         c.where(ProjectDynamicSqlSupport.id, isIn(projectIds)));
     return projectList;

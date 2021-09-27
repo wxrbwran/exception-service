@@ -24,5 +24,8 @@ public class Constant {
   public static final String TWO_WEEK = "14d";
   public static final String ONE_DAY = "24h";
 
+  public static final long ONE_DAY_MILLS_SECOND = 86400000;
+
+
 
 }
