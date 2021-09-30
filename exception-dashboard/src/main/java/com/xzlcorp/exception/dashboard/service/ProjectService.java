@@ -212,6 +212,6 @@ public class ProjectService {
     List<Integer> users = Arrays.stream(project.getUsers()).collect(Collectors.toList());
     List<Integer> userIdSet = UniqueList.toUnique(users, userIds);
     project.setUsers(userIdSet.toArray(new Integer[userIdSet.size()]));
-    projectMapper.insertSelective(project);
+    projectMapper.updateByPrimaryKeySelective(project);
   }
 }

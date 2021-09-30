@@ -177,6 +177,6 @@ public class OrganizationService {
     List<Integer> users = Arrays.stream(organization.getUsers()).collect(Collectors.toList());
     List<Integer> userIdSet = UniqueList.toUnique(users, userIds);
     organization.setUsers(userIdSet.toArray(new Integer[userIdSet.size()]));
-    organizationMapper.insertSelective(organization);
+    organizationMapper.updateByPrimaryKeySelective(organization);
   }
 }

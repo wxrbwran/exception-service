@@ -105,6 +105,7 @@ public class InviteService {
     List<Integer> userProjects = ArrayToList.toList(user.getProjects());
     userProjects = UniqueList.toUnique(userProjects, Arrays.asList(invite.getProjects()));
     user.setProjects(userProjects.toArray(new Integer[userProjects.size()]));
+    userService.update(user);
 
     Integer[] projectIds = invite.getProjects();
     Integer organizationId = invite.getOrganization();
