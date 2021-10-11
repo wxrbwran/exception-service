@@ -1,11 +1,22 @@
 package com.xzlcorp.exception.dashboard.service;
 
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+import com.xzlcorp.exception.common.common.ApiRestResponse;
+import com.xzlcorp.exception.common.exception.XzlCorpException;
+import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
+import com.xzlcorp.exception.dashboard.model.dao.NotificationRuleDynamicSqlSupport;
+import com.xzlcorp.exception.dashboard.model.dao.NotificationRuleMapper;
 import com.xzlcorp.exception.dashboard.model.dao.NotificationSettingMapper;
+import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRule;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSetting;
+import com.xzlcorp.exception.dashboard.model.request.AddNotificationRuleRequest;
+import com.xzlcorp.exception.dashboard.model.request.EditNotificationRuleRequest;
 import com.xzlcorp.exception.dashboard.model.request.NotificationSettingRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author wuxiaoran
@@ -13,13 +24,55 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotificationService {
 
+  private final static int MAX_RULES_NUMBER = 10;
+  private final static int MAX_EMAILS_NUMBER = 20;
+  private final static int MAX_WEBHOOKS_NUMBER = 10;
+
   @Autowired
   NotificationSettingMapper notificationSettingMapper;
+
+  @Autowired
+  NotificationRuleMapper notificationRuleMapper;
 
   public NotificationSetting createNotificationSetting(NotificationSettingRequest request) {
     NotificationSetting notificationSetting = new NotificationSetting();
     BeanUtils.copyProperties(request, notificationSetting);
     notificationSettingMapper.insertSelective(notificationSetting);
     return notificationSetting;
+  }
+
+  public ApiRestResponse createNotificationRule(AddNotificationRuleRequest request) {
+    List<NotificationRule> rules = getNotificationRules(request.getProjectId());
+    if (rules != null && rules.size() < MAX_RULES_NUMBER) {
+      NotificationRule rule = new NotificationRule();
+      BeanUtils.copyProperties(request, rule);
+      rule.setProject(request.getProjectId());
+      rule.setLevel(request.getLevel());
+      notificationRuleMapper.insertSelective(rule);
+      return ApiRestResponse.success(rule);
+    }
+    throw new XzlCorpException(XzlCorpExceptionEnum.TOO_MUCH);
+  }
+
+  public List<NotificationRule> getNotificationRules(Integer projectId) {
+    List<NotificationRule> notificationRuleList = notificationRuleMapper.select(c ->
+      c.where(NotificationRuleDynamicSqlSupport.project, isEqualTo(projectId))
+          .orderBy(NotificationRuleDynamicSqlSupport.id)
+    );
+    return notificationRuleList;
+  }
+
+
+  public ApiRestResponse updateNotificationRule(Integer ruleId, EditNotificationRuleRequest request) {
+    NotificationRule rule = new NotificationRule();
+    rule.setId(ruleId);
+    BeanUtils.copyProperties(request, rule);
+    notificationRuleMapper.updateByPrimaryKeySelective(rule);
+    return ApiRestResponse.success(rule);
+  }
+
+  public ApiRestResponse deleteNotificationRule(Integer ruleId) {
+    notificationRuleMapper.deleteByPrimaryKey(ruleId);
+    return ApiRestResponse.success(ruleId);
   }
 }

@@ -28,6 +28,7 @@ public enum XzlCorpExceptionEnum {
   EMAIL_EXISTED(10018, "邮箱已存在"),
   INVALID_EMAIL_PASSWORD(10019, "邮箱或密码错误"),
   INVITE_NOT_EXIST(10020, "邀请地址不存在"),
+  TOO_MUCH(10021, "超过最大数量"),
 
 
   //  SYSTEM_ERROR

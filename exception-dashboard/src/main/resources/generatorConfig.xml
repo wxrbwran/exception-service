@@ -83,27 +83,27 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
 <!--    </table>-->
 
-<!--    <table schema="s_bug" tableName="t_notification_rule" domainObjectName="NotificationRule">-->
-<!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
-<!--      <columnOverride column="data" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRuleData"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
-<!--      <columnOverride column="white_list" javaType="com.xzlcorp.exception.dashboard.model.pojo.WhiteBlackList"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
-
-<!--      <columnOverride column="black_list" javaType="com.xzlcorp.exception.dashboard.model.pojo.WhiteBlackList"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
-<!--    </table>-->
-
-    <table schema="s_bug" tableName="t_notification_setting" domainObjectName="NotificationSetting">
+    <table schema="s_bug" tableName="t_notification_rule" domainObjectName="NotificationRule">
       <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-      <columnOverride column="emails" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmails"
+      <columnOverride column="data" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRuleData"
         typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
-      <columnOverride column="browser" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingBrowser"
+      <columnOverride column="white_list" javaType="com.xzlcorp.exception.dashboard.model.pojo.WhiteBlackList"
         typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
 
-      <columnOverride column="webhooks" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingWebHooks"
+      <columnOverride column="black_list" javaType="com.xzlcorp.exception.dashboard.model.pojo.WhiteBlackList"
         typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
     </table>
+
+<!--    <table schema="s_bug" tableName="t_notification_setting" domainObjectName="NotificationSetting">-->
+<!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--      <columnOverride column="emails" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmails"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+<!--      <columnOverride column="browser" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingBrowser"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+
+<!--      <columnOverride column="webhooks" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingWebHooks"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+<!--    </table>-->
 
 <!--    <table schema="s_bug" tableName="t_source_map" domainObjectName="SourceMap">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
