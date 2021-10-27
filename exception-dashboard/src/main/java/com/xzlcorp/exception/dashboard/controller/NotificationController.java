@@ -2,6 +2,7 @@ package com.xzlcorp.exception.dashboard.controller;
 
 import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRule;
+import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSetting;
 import com.xzlcorp.exception.dashboard.model.request.AddNotificationRuleRequest;
 import com.xzlcorp.exception.dashboard.model.request.EditNotificationRuleRequest;
 import com.xzlcorp.exception.dashboard.service.NotificationService;
@@ -46,4 +47,12 @@ public class NotificationController {
   public ApiRestResponse deleteNotificationRule(@PathVariable("ruleId") Integer ruleId) {
     return notificationService.deleteNotificationRule(ruleId);
   }
+
+  @GetMapping("setting")
+  @ApiOperation(value = "notification/setting", notes = "获取通知设置", httpMethod = "GET")
+  public ApiRestResponse getNotificationSetting(@RequestParam Integer projectId) {
+    NotificationSetting setting = notificationService.getNotificationSetting(projectId);
+    return ApiRestResponse.success(setting);
+  }
+
 }

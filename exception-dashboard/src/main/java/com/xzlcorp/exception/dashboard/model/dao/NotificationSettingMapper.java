@@ -69,7 +69,7 @@ public interface NotificationSettingMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @ResultMap("NotificationSettingResult")
-    Optional<NotificationSetting> selectOne(SelectStatementProvider selectStatement);
+    NotificationSetting selectOne(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
@@ -142,7 +142,7 @@ public interface NotificationSettingMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default Optional<NotificationSetting> selectOne(SelectDSLCompleter completer) {
+    default NotificationSetting selectOne(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectOne(this::selectOne, selectList, notificationSetting, completer);
     }
 
@@ -157,7 +157,7 @@ public interface NotificationSettingMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default Optional<NotificationSetting> selectByPrimaryKey(Integer id_) {
+    default NotificationSetting selectByPrimaryKey(Integer id_) {
         return selectOne(c ->
             c.where(id, isEqualTo(id_))
         );

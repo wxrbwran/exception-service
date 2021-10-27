@@ -7,6 +7,7 @@ import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
 import com.xzlcorp.exception.dashboard.model.dao.NotificationRuleDynamicSqlSupport;
 import com.xzlcorp.exception.dashboard.model.dao.NotificationRuleMapper;
 import com.xzlcorp.exception.dashboard.model.dao.NotificationSettingMapper;
+import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRule;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSetting;
 import com.xzlcorp.exception.dashboard.model.request.AddNotificationRuleRequest;
@@ -29,10 +30,13 @@ public class NotificationService {
   private final static int MAX_WEBHOOKS_NUMBER = 10;
 
   @Autowired
-  NotificationSettingMapper notificationSettingMapper;
+  private NotificationSettingMapper notificationSettingMapper;
 
   @Autowired
-  NotificationRuleMapper notificationRuleMapper;
+  private NotificationRuleMapper notificationRuleMapper;
+
+  @Autowired
+  private ProjectService projectService;
 
   public NotificationSetting createNotificationSetting(NotificationSettingRequest request) {
     NotificationSetting notificationSetting = new NotificationSetting();
@@ -74,5 +78,12 @@ public class NotificationService {
   public ApiRestResponse deleteNotificationRule(Integer ruleId) {
     notificationRuleMapper.deleteByPrimaryKey(ruleId);
     return ApiRestResponse.success(ruleId);
+  }
+
+  public NotificationSetting getNotificationSetting(Integer projectId) {
+    Project project = projectService.getProjectById(projectId);
+    NotificationSetting setting = notificationSettingMapper.selectOne(c ->
+        c.where(NotificationRuleDynamicSqlSupport.id, isEqualTo(project.getNotificationSetting())));
+    return setting;
   }
 }
