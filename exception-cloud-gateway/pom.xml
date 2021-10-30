@@ -42,7 +42,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>com.xzlcorp.exception.eureka.ExceptionEurekaApplication</mainClass>
+          <mainClass>com.xzlcorp.exception.gateway.ExceptionGatewayApplication</mainClass>
         </configuration>
         <executions>
           <execution>
