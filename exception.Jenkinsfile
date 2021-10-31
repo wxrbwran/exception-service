@@ -37,7 +37,7 @@ pipeline {
                     }
                     // 引入sonarqube服务器环境
                     withSonarQubeEnv('sonarqube-server') {
-                      sh "${scannerHome}/bin/sonar-scanner "
+                      sh "${scannerHome}/bin/sonar-scanner -X"
                     }
               }
             }
