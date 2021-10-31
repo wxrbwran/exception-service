@@ -19,9 +19,9 @@ spring:
       request-timeout: 20000
   # database
   datasource:
-    url: jdbc:postgresql://172.16.10.126:5432/bugbyebye
+    url: jdbc:postgresql://192.168.6.194:5432/dev
     username: postgres
-    password: dev
+    password: 123456
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
     hikari:

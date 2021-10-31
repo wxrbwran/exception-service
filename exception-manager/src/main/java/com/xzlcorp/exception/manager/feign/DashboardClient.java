@@ -14,5 +14,5 @@ public interface DashboardClient {
   String getApiKeyByProjectId(@RequestParam Integer projectId);
 
   @GetMapping("organizations/event/increase")
-  String increaseEventCount(String apiKey);
+  String increaseEventCount(@RequestParam String apiKey);
 }

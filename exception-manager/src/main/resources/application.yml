@@ -13,13 +13,13 @@ spring:
     allow-bean-definition-overriding: true
   # redis
   redis:
-    host: 127.0.0.1
+    host: 192.168.6.194
     port: 6379
   # database
   datasource:
-    url: jdbc:postgresql://172.16.10.126:5432/bugbyebye
+    url: jdbc:postgresql://192.168.6.194:5432/dev
     username: postgres
-    password: dev
+    password: 123456
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
     hikari:
@@ -32,7 +32,7 @@ spring:
   # elasticsearch
   data:
     elasticsearch:
-      host: localhost
+      host: 192.168.6.150
       port: 9200
   #kafka配置
   kafka:

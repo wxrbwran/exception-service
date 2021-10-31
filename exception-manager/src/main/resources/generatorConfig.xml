@@ -19,9 +19,9 @@
     </commentGenerator>
     <!--数据库链接地址账号密码-->
     <jdbcConnection driverClass="org.postgresql.Driver"
-      connectionURL="jdbc:postgresql://172.16.10.126:5432/bugbyebye"
+      connectionURL="jdbc:postgresql://192.168.6.194:5432/dev"
       userId="postgres"
-      password="dev">
+      password="123456">
       <property name="nullCatalogMeansCurrent" value="true"/>
     </jdbcConnection>
     <!-- 非必需，类型处理器，在数据库类型和java类型之间的转换控制-->
@@ -49,15 +49,15 @@
     </javaClientGenerator>
     <!--生成对应表及类名-->
 
-    <table schema="s_bug" tableName="t_issue" domainObjectName="Issue">
-      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-      <columnOverride column="metadata" javaType="com.xzlcorp.exception.common.model.pojo.event.MetaData"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
-      <columnOverride column="events" javaType="String[]"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.TextArrayTypeHandler"/>
-      <columnOverride column="users" javaType="Integer[]"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>
-    </table>
+<!--    <table schema="s_bug" tableName="t_issue" domainObjectName="Issue">-->
+<!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--      <columnOverride column="metadata" javaType="com.xzlcorp.exception.common.model.pojo.event.MetaData"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+<!--      <columnOverride column="events" javaType="String[]"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.TextArrayTypeHandler"/>-->
+<!--      <columnOverride column="users" javaType="Integer[]"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
+<!--    </table>-->
 
 <!--    <table schema="s_bug" tableName="t_organization" domainObjectName="Organization">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
