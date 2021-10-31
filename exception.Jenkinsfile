@@ -32,12 +32,13 @@ pipeline {
       stages {
           stage('check code') {
               steps {
-                    script {
-                      scannerHome = tool 'sonarqube-scanner'
-                    }
+//                     script {
+//                       scannerHome = tool 'sonarqube-scanner'
+//                     }
                     // 引入sonarqube服务器环境
-                    withSonarQubeEnv('sonarqube-server') {
-                      sh "${scannerHome}/bin/sonar-scanner -X"
+                    withSonarQubeEnv() {
+//                       sh "${scannerHome}/bin/sonar-scanner"
+                      sh "mvn clean verify sonar:sonar"
                     }
               }
             }
