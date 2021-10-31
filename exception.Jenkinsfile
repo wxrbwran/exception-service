@@ -36,8 +36,8 @@ pipeline {
 //                       scannerHome = tool 'sonarqube-scanner'
 //                     }
                     // 引入sonarqube服务器环境
-                    withSonarQubeEnv() {
-//                       sh "${scannerHome}/bin/sonar-scanner"
+                    withSonarQubeEnv('sonarqube-server') {
+//                       sh "${scannerHome}/bin/sonar-scanner -X"
                       sh "mvn clean verify sonar:sonar"
                     }
               }
