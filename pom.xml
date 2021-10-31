@@ -25,7 +25,7 @@
   <description>前端异常监控</description>
   <properties>
     <java.version>11</java.version>
-    <sonar.projectKey>backend_exception-service_AXzUX8y4Cgq56jMkNLpg</sonar.projectKey>
+<!--    <sonar.projectKey>backend_exception-service_AXzUX8y4Cgq56jMkNLpg</sonar.projectKey>-->
   </properties>
   <dependencyManagement>
     <dependencies>
