@@ -30,10 +30,21 @@ pipeline {
     }
 
       stages {
+          stage('check code') {
+              steps {
+                    script {
+                      scannerHome = tool 'sonarqube-scanner'
+                    }
+                    // 引入sonarqube服务器环境
+                    withSonarQubeEnv('sonarqube-server') {
+                      sh "${scannerHome}/bin/sonar-scanner "
+                    }
+              }
+            }
           stage('build') {
             steps {
               script {
-//                 sh "mvn clean package"
+    //                 sh "mvn clean package"
                 sh "ls -la"
               }
             }
