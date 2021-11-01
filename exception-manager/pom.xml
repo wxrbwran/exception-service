@@ -63,6 +63,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <mainClass>com.xzlcorp.exception.manager.ManagerApplication</mainClass>
+          <outputDirectory>../target</outputDirectory>
         </configuration>
         <executions>
           <execution>

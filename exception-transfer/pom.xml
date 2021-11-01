@@ -44,6 +44,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <mainClass>com.xzlcorp.exception.transfer.ExceptionTransferApplication</mainClass>
+          <outputDirectory>../target</outputDirectory>
         </configuration>
         <executions>
           <execution>
