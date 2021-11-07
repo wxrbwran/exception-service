@@ -86,7 +86,7 @@ node {
          "exception-manager",
          "exception-transfer"
         ].each {
-            sh "${mvnHome}/bin/mvn -f ${it} dockerfile:bui;d"
+            sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
         }
 
     }
