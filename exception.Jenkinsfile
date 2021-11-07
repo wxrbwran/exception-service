@@ -56,26 +56,20 @@
 //             }
 //       }
 // }
+def mvnHome = tool 'MAVEN3.6.3'
+def scannerHome = tool 'sonarqube-scanner';
 
 node {
-    stage("拉代码") {
-//   git branch: "${env.BRANCH_NAME}", credentialsId: 'ssh-gitlab-ubuntu105', url: 'git@192.168.6.225:backend/exception-service.git'
-        echo env.BRANCH_NAME
-        sh "ls -la"
-//         checkout([
-//             $class: 'GitSCM',
-//              branches: [[name: "*/${env.BRANCH_NAME}"]],
-//              extensions: [],
-//              userRemoteConfigs: [[credentialsId: 'ssh-gitlab-ubuntu105', url: 'git@192.168.6.225:backend/exception-service.git']]
-//          ])
-    }
-    stage("代码审查") {
-         def scannerHome = tool 'sonarqube-scanner';
-         def mvnHome = tool 'MAVEN3.6.3'
-         withSonarQubeEnv('sonarqube-server') {
-            sh "${mvnHome}/bin/mvn clean verify sonar:sonar"
-        }
-    }
+//     stage("拉代码") {
+//         echo env.BRANCH_NAME
+//         sh "ls -la"
+//     }
+//     stage("代码审查") {
+//
+//          withSonarQubeEnv('sonarqube-server') {
+//             sh "${mvnHome}/bin/mvn clean verify sonar:sonar"
+//         }
+//     }
     stage("编译安装common项目") {
         sh "mvn -f exception-common clean install"
     }
