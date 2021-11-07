@@ -3,7 +3,6 @@ pipeline {
           label 'master'
       }
 
-
       tools {
           jdk 'JDK11'
           maven 'MAVEN3.6.3'
@@ -32,12 +31,7 @@ pipeline {
       stages {
           stage('check code') {
               steps {
-//                     script {
-//                       scannerHome = tool 'sonarqube-scanner'
-//                     }
-                    // 引入sonarqube服务器环境
                     withSonarQubeEnv('sonarqube-server') {
-//                       sh "${scannerHome}/bin/sonar-scanner -X"
                       sh "mvn clean verify sonar:sonar"
                     }
               }
@@ -45,17 +39,18 @@ pipeline {
           stage('build') {
             steps {
               script {
+                println(env.BRANCH_NAME)
                 sh "git status"
                 sh "ls -la"
               }
             }
           }
-//           stage('clean') {
-//               steps {
-//                 script {
-//                   cleanWs()
-//                 }
-//               }
-//             }
+          stage('clean') {
+              steps {
+                script {
+                  cleanWs()
+                }
+              }
+            }
       }
 }
