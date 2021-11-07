@@ -69,6 +69,11 @@ node {
 //              userRemoteConfigs: [[credentialsId: 'ssh-gitlab-ubuntu105', url: 'git@192.168.6.225:backend/exception-service.git']]
 //          ])
     }
+    stage("代码审查") {
+         withSonarQubeEnv('sonarqube-server') {
+          sh "mvn clean verify sonar:sonar"
+        }
+    }
 }
 
 
