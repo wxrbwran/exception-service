@@ -56,8 +56,7 @@
 //             }
 //       }
 // }
-def mvnHome = tool 'MAVEN3.6.3'
-def scannerHome = tool 'sonarqube-scanner';
+
 
 node {
 //     stage("拉代码") {
@@ -65,13 +64,15 @@ node {
 //         sh "ls -la"
 //     }
 //     stage("代码审查") {
-//
+//          def mvnHome = tool 'MAVEN3.6.3'
+//          def scannerHome = tool 'sonarqube-scanner';
 //          withSonarQubeEnv('sonarqube-server') {
 //             sh "${mvnHome}/bin/mvn clean verify sonar:sonar"
 //         }
 //     }
     stage("编译安装common项目") {
-        sh "mvn -f exception-common clean install"
+        def mvnHome = tool 'MAVEN3.6.3'
+        sh "${mvnHome}/bin/mvn -f exception-common clean install"
     }
 }
 
