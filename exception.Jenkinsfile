@@ -59,7 +59,7 @@
 
 node {
     stage("拉代码") {
-        git branch: "${env.BRANCH_NAME}", credentialsId: 'ssh-gitlab-ubuntu105', url: 'git@192.168.6.225:backend/exception-service.git'
+//   git branch: "${env.BRANCH_NAME}", credentialsId: 'ssh-gitlab-ubuntu105', url: 'git@192.168.6.225:backend/exception-service.git'
         echo env.BRANCH_NAME
         sh "ls -la"
 //         checkout([
