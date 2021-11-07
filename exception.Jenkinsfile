@@ -59,10 +59,11 @@
 
 
 node {
-//     stage("拉代码") {
-//         echo env.BRANCH_NAME
-//         sh "ls -la"
-//     }
+    stage("拉代码") {
+        echo env.BRANCH_NAME
+        git branch: "${env.BRANCH_NAME}", credentialsId: 'ssh-gitlab-ubuntu105', url: 'git@192.168.6.225:backend/exception-service.git'
+        sh "ls -la"
+    }
 //     stage("代码审查") {
 //          def mvnHome = tool 'MAVEN3.6.3'
 //          def scannerHome = tool 'sonarqube-scanner';
