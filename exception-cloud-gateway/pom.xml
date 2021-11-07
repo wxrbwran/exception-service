@@ -43,7 +43,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <mainClass>com.xzlcorp.exception.gateway.ExceptionGatewayApplication</mainClass>
-          <outputDirectory>../target</outputDirectory>
+<!--          <outputDirectory>../target</outputDirectory>-->
         </configuration>
         <executions>
           <execution>
@@ -63,7 +63,7 @@
           </repository>
           <tag>${project.version}</tag>
           <buildArgs>
-            <PKG>target/${project.artifactId}.jar</PKG>
+            <PKG>target/${project.artifactId}-${project.version}.jar</PKG>
           </buildArgs>
         </configuration>
       </plugin>
