@@ -71,8 +71,9 @@ node {
     }
     stage("代码审查") {
          def scannerHome = tool 'sonarqube-scanner';
+         def mvnHome = tool 'MAVEN3.6.3'
          withSonarQubeEnv('sonarqube-server') {
-            sh "${scannerHome}/bin/sonar-scanner -X"
+            sh "${mvnHome}/bin/mvn clean verify sonar:sonar"
         }
     }
 }
