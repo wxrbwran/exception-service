@@ -76,7 +76,7 @@ node {
     }
     stage("编译打包微服务工程") {
         def mvnHome = tool 'MAVEN3.6.3'
-        sh "${mvnHome}/bin/mvn -f exception-common clean package"
+        sh "${mvnHome}/bin/mvn clean package"
     }
 }
 
