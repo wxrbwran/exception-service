@@ -76,6 +76,9 @@ node {
             sh "${mvnHome}/bin/mvn clean verify sonar:sonar"
         }
     }
+    stage("编译安装common项目") {
+        sh "mvn -f exception-common clean install"
+    }
 }
 
 
