@@ -45,7 +45,7 @@ pipeline {
           stage('build') {
             steps {
               script {
-    //                 sh "mvn clean package"
+                sh "git status"
                 sh "ls -la"
               }
             }
