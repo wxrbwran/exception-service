@@ -70,8 +70,9 @@ node {
 //          ])
     }
     stage("代码审查") {
+         def scannerHome = tool 'sonarqube-scanner';
          withSonarQubeEnv('sonarqube-server') {
-          sh "mvn clean verify sonar:sonar"
+            sh "${scannerHome}/bin/sonar-scanner -X"
         }
     }
 }
