@@ -60,7 +60,7 @@
         <version>1.4.10</version>
         <configuration>
           <repository>
-            ${project.artifactId}
+            ${harbor}/${project.artifactId}
           </repository>
           <tag>${project.version}</tag>
           <buildArgs>
