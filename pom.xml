@@ -25,6 +25,7 @@
   <description>前端异常监控</description>
   <properties>
     <java.version>11</java.version>
+    <harbor>192.168.6.150:8085</harbor>
 <!--    <sonar.projectKey>backend_exception-service_AXzUX8y4Cgq56jMkNLpg</sonar.projectKey>-->
   </properties>
   <dependencyManagement>

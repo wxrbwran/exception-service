@@ -89,7 +89,6 @@ node {
         ].each {
             sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
         }
-
     }
 }
 
