@@ -79,7 +79,7 @@
         <version>1.4.10</version>
         <configuration>
           <repository>
-            ${harbor}/${project.artifactId}
+            ${harbor}/${harborRepo}/${project.artifactId}
           </repository>
           <tag>${project.version}</tag>
           <buildArgs>

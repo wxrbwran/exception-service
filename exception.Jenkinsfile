@@ -57,7 +57,7 @@
 //       }
 // }
 def HarborUrl = "192.168.6.150:8085"
-def HarborProject = "tensquare";
+def HarborRepo = "tensquare";
 def HarborAccount = "harbor-account"
 def ProjectVersion = "0.0.1-SNAPSHOT"
 
@@ -97,7 +97,7 @@ node {
              "exception-transfer"
             ].each {
                 sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
-                sh "docker push ${HarborUrl}/${it}:${ProjectVersion}"
+                sh "docker push ${HarborUrl}/${HarborRepo}/${it}:${ProjectVersion}"
             }
         }
 
