@@ -89,7 +89,7 @@ node {
             passwordVariable: 'password',
             usernameVariable: 'username'
         )]) {
-            sh "docker login -u ${username} -p ${password} ${HarborUrl}"
+            sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
             ["exception-cloud-gateway",
              "exception-dashboard",
              "exception-eureka",
