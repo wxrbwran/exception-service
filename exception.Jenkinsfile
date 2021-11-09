@@ -56,7 +56,10 @@
 //             }
 //       }
 // }
-
+def HarborUrl = "192.168.6.150:8085"
+def HarborProject = "tensquare";
+def HarborAccount = "harbor-account"
+def ProjectVersion = "0.0.1-SNAPSHOT"
 
 node {
     stage("拉代码") {
@@ -81,14 +84,23 @@ node {
     }
     stage("构建docker镜像") {
         def mvnHome = tool 'MAVEN3.6.3'
-        ["exception-cloud-gateway",
-         "exception-dashboard",
-         "exception-eureka",
-         "exception-manager",
-         "exception-transfer"
-        ].each {
-            sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
+        withCredentials([usernamePassword(
+            credentialsId: 'harbor-account',
+            passwordVariable: 'password',
+            usernameVariable: 'username'
+        )]) {
+            sh "docker login -u ${username} -p ${password} ${HarborUrl}"
+            ["exception-cloud-gateway",
+             "exception-dashboard",
+             "exception-eureka",
+             "exception-manager",
+             "exception-transfer"
+            ].each {
+                sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
+                sh "docker push ${HarborUrl}/${it}:${ProjectVersion}"
+            }
         }
+
     }
 }
 
