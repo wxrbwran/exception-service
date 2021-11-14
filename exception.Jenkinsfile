@@ -75,6 +75,9 @@ def projectPorts = [
     "exception-transfer": 9997
 ]
 node {
+    stage("清理") {
+        cleanWs()
+    }
     stage("拉代码") {
         echo env.BRANCH_NAME
         git branch: "${env.BRANCH_NAME}", credentialsId: 'ssh-gitlab-ubuntu105', url: 'git@192.168.6.225:backend/exception-service.git'
