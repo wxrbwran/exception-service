@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface DashboardClient {
 
   @GetMapping("projects/getApiKeyByProjectId")
-  String getApiKeyByProjectId(@RequestParam Integer projectId);
+  String getApiKeyByProjectId(@RequestParam("projectId") Integer projectId);
 
   @GetMapping("organizations/event/increase")
-  String increaseEventCount(@RequestParam String apiKey);
+  String increaseEventCount(@RequestParam("apiKey") String apiKey);
 }
