@@ -112,7 +112,7 @@ node {
     stage("部署服务器拉取镜像") {
         sshagent(['ubuntu174']) {
             // some block
-            projectPorts.each {
+            projects.each {
                 def port = projectPorts[it]
                 sh "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}"
             }
