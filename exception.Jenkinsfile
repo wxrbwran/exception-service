@@ -105,8 +105,10 @@ node {
             sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
             projects.each {
                 sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
+
                 sh "docker push ${HarborUrl}/${HarborRepo}/${it}:${ProjectVersion}"
             }
+            sh "docker image prune -f"
         }
     }
     stage("部署服务器拉取镜像") {
@@ -116,7 +118,7 @@ node {
 //                 sshPublisher(publishers: [sshPublisherDesc(configName: "ubuntu174", transfers: [sshTransfer(cleanRemote: false, excludes: '',
 //                  execCommand: "ip addr && /home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
                 def port = projectPorts[it]
-                sh "ssh xiaoran@192.168.6.174 '/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}'"
+                sh "ssh xiaoran@192.168.6.174 '/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}' && docker image prune -f"
             }
         }
     }
