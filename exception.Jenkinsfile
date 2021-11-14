@@ -115,9 +115,8 @@ node {
 //                 def port = projectPorts[it]
 //                 sshPublisher(publishers: [sshPublisherDesc(configName: "ubuntu174", transfers: [sshTransfer(cleanRemote: false, excludes: '',
 //                  execCommand: "ip addr && /home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-                def port = projectPorts[it]
-                sh 'ssh -o StrictHostKeyChecking=no -l root@192.168.6.174 bash /home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}'
-            }
+            def port = projectPorts[it]
+            sh 'ssh -o StrictHostKeyChecking=no -l root@192.168.6.174 bash /home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}'
         }
     }
 }
