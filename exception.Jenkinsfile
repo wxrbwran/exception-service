@@ -67,7 +67,7 @@ def projects = [
     "exception-manager",
     "exception-transfer"
 ]
-define projectPorts = [
+def projectPorts = [
     "exception-cloud-gateway": 10086,
     "exception-eureka": 10010,
     "exception-dashboard": 9999,
