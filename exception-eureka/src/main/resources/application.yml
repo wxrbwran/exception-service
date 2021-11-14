@@ -11,8 +11,8 @@ eureka:
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   instance:
-    hostname: 192.168.6.150
-    prefer-ip-address: true
+    hostname: 192.168.6.174
+#    prefer-ip-address: true
 feign:
   client:
     config:
