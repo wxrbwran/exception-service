@@ -110,13 +110,16 @@ node {
 //         }
 //     }
     stage("部署服务器拉取镜像") {
-        sshagent(credentials: ['ubuntu174']) {
+//         sshagent(credentials: ['ubuntu174']) {
             projects.each {
                 def port = projectPorts[it]
-                sh 'ip addr'
-                sh "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}"
+                sshPublisher(publishers: [sshPublisherDesc(configName: "${currentServerName}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                 execCommand: "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+//                 def port = projectPorts[it]
+//                 sh 'ip addr'
+//                 sh "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}"
             }
-        }
+//         }
     }
 }
 
