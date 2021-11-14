@@ -60,7 +60,20 @@ def HarborUrl = "192.168.6.150:8085"
 def HarborRepo = "tensquare";
 def HarborAccount = "harbor-account"
 def ProjectVersion = "0.0.1-SNAPSHOT"
-
+def projects = [
+    "exception-cloud-gateway",
+    "exception-dashboard",
+    "exception-eureka",
+    "exception-manager",
+    "exception-transfer"
+]
+define projectPorts = [
+    "exception-cloud-gateway": 10086,
+    "exception-eureka": 10010,
+    "exception-dashboard": 9999,
+    "exception-manager": 9998,
+    "exception-transfer": 9997
+]
 node {
     stage("拉代码") {
         echo env.BRANCH_NAME
@@ -90,17 +103,40 @@ node {
             usernameVariable: 'username'
         )]) {
             sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
-            ["exception-cloud-gateway",
-             "exception-dashboard",
-             "exception-eureka",
-             "exception-manager",
-             "exception-transfer"
-            ].each {
+            projects.each {
                 sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
                 sh "docker push ${HarborUrl}/${HarborRepo}/${it}:${ProjectVersion}"
+                sh "docker image prune"
             }
         }
-
+    }
+    stage("部署服务器拉取镜像") {
+        projectPorts.each {
+            sshPublisher(
+                publishers: [
+                    sshPublisherDesc(
+                        configName: 'ubuntu174',
+                        transfers: [sshTransfer(
+                            cleanRemote: false,
+                            excludes: '',
+                            execCommand: "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${projectPorts[it]}",
+                            execTimeout: 120000,
+                            flatten: false,
+                            makeEmptyDirs: false,
+                            noDefaultExcludes: false,
+                            patternSeparator: '[, ]+',
+                            remoteDirectory: '',
+                            remoteDirectorySDF: false,
+                            removePrefix: '',
+                            sourceFiles: ''
+                        )],
+                        usePromotionTimestamp: false,
+                        useWorkspaceInPromotion: false,
+                        verbose: false
+                    )
+                ]
+            )
+        }
     }
 }
 
