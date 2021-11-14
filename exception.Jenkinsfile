@@ -87,55 +87,34 @@ node {
 //             sh "${mvnHome}/bin/mvn clean verify sonar:sonar"
 //         }
 //     }
-    stage("编译安装common项目") {
-        def mvnHome = tool 'MAVEN3.6.3'
-        sh "${mvnHome}/bin/mvn -f exception-common clean install"
-    }
-    stage("编译打包微服务工程") {
-        def mvnHome = tool 'MAVEN3.6.3'
-        sh "${mvnHome}/bin/mvn clean package"
-    }
-    stage("构建docker镜像") {
-        def mvnHome = tool 'MAVEN3.6.3'
-        withCredentials([usernamePassword(
-            credentialsId: 'harbor-account',
-            passwordVariable: 'password',
-            usernameVariable: 'username'
-        )]) {
-            sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
-            projects.each {
-                sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
-                sh "docker push ${HarborUrl}/${HarborRepo}/${it}:${ProjectVersion}"
-                sh "docker image prune"
-            }
-        }
-    }
+//     stage("编译安装common项目") {
+//         def mvnHome = tool 'MAVEN3.6.3'
+//         sh "${mvnHome}/bin/mvn -f exception-common clean install"
+//     }
+//     stage("编译打包微服务工程") {
+//         def mvnHome = tool 'MAVEN3.6.3'
+//         sh "${mvnHome}/bin/mvn clean package"
+//     }
+//     stage("构建docker镜像") {
+//         def mvnHome = tool 'MAVEN3.6.3'
+//         withCredentials([usernamePassword(
+//             credentialsId: 'harbor-account',
+//             passwordVariable: 'password',
+//             usernameVariable: 'username'
+//         )]) {
+//             sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
+//             projects.each {
+//                 sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
+//                 sh "docker push ${HarborUrl}/${HarborRepo}/${it}:${ProjectVersion}"
+//             }
+//         }
+//     }
     stage("部署服务器拉取镜像") {
-        projectPorts.each {
-            sshPublisher(
-                publishers: [
-                    sshPublisherDesc(
-                        configName: 'ubuntu174',
-                        transfers: [sshTransfer(
-                            cleanRemote: false,
-                            excludes: '',
-                            execCommand: "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${projectPorts[it]}",
-                            execTimeout: 120000,
-                            flatten: false,
-                            makeEmptyDirs: false,
-                            noDefaultExcludes: false,
-                            patternSeparator: '[, ]+',
-                            remoteDirectory: '',
-                            remoteDirectorySDF: false,
-                            removePrefix: '',
-                            sourceFiles: ''
-                        )],
-                        usePromotionTimestamp: false,
-                        useWorkspaceInPromotion: false,
-                        verbose: false
-                    )
-                ]
-            )
+        sshagent(['ubuntu174']) {
+            // some block
+            projectPorts.each {
+                sh "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${projectPorts[it]}"
+            }
         }
     }
 }
