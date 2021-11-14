@@ -114,6 +114,9 @@ node {
             // some block
             projects.each {
                 def port = projectPorts[it]
+                sh 'ip addr'
+                sh "pwd"
+                sh "ls -la"
                 sh "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}"
             }
         }
