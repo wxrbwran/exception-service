@@ -113,7 +113,8 @@ node {
         sshagent(['ubuntu174']) {
             // some block
             projectPorts.each {
-                sh "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${projectPorts[it]}"
+                def port = projectPorts[it]
+                sh "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}"
             }
         }
     }
