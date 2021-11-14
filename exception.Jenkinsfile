@@ -110,13 +110,10 @@ node {
 //         }
 //     }
     stage("部署服务器拉取镜像") {
-        sshagent(['ubuntu174']) {
-            // some block
+        sshagent(credentials: ['ubuntu174']) {
             projects.each {
                 def port = projectPorts[it]
                 sh 'ip addr'
-                sh "pwd"
-                sh "ls -la"
                 sh "/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}"
             }
         }
