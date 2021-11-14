@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:13-alpine3.9
 ARG PKG
 COPY ${PKG} app.jar
 ENTRYPOINT [ "java", "-jar", "app.jar" ]
