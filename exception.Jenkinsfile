@@ -57,7 +57,6 @@
 //       }
 // }
 def HarborUrl = "192.168.6.150:8085"
-def HarborRepo = "tensquare";
 def HarborAccount = "harbor-account"
 def ProjectVersion = "0.0.1-SNAPSHOT"
 def projects = [
@@ -75,8 +74,6 @@ def projectPorts = [
     "exception-transfer": 9997
 ]
 
-
-
 node {
     def ActiveProfile = env.BRANCH_NAME
     def ServerUserByEnv = [
@@ -87,6 +84,8 @@ node {
         "dev": "192.168.6.174",
         "test": "192.168.6.182"
     ]
+    def HarborRepo = env.BRANCH_NAME;
+    
 
     stage("清理") {
         cleanWs()
@@ -135,7 +134,9 @@ node {
 //                  execCommand: "ip addr && /home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
                 def ProjectName = it
                 def Port = projectPorts[it]
-                sh "ssh xiaoran@192.168.6.174 '/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $ProjectName $ProjectVersion $Port $ActiveProfile' && docker image prune -f"
+                def user = ServerUserByEnv[ActiveProfile]
+                def host = ServerHostByEnv[ActiveProfile]
+                sh "ssh ${user}@${host} '/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $ProjectName $ProjectVersion $Port $ActiveProfile' && docker image prune -f"
             }
         }
     }
