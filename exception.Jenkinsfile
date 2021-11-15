@@ -84,6 +84,7 @@ node {
         "dev": "192.168.6.174",
         "test": "192.168.6.182"
     ]
+    def OriginVersion = "0.0.1-SNAPSHOT"
     def ProjectVersion = "0.0.1-${ActiveProfile}-SNAPSHOT"
 
     stage("清理") {
@@ -118,8 +119,10 @@ node {
         )]) {
             sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
             projects.each {
+                def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
                 sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
-                sh "docker push ${HarborUrl}/${HarborRepo}/${it}:${ProjectVersion}"
+                sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
+                sh "docker push ${ImageName}${ProjectVersion}"
             }
             sh "docker image prune -f"
         }
