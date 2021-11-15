@@ -138,6 +138,7 @@ node {
                 def Port = projectPorts[it]
                 def user = ServerUserByEnv[ActiveProfile]
                 def host = ServerHostByEnv[ActiveProfile]
+                sh 'ip addr'
                 sh "ssh ${user}@${host} '/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $ProjectName $ProjectVersion $Port $ActiveProfile' && docker image prune -f"
             }
         }
