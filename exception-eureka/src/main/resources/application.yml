@@ -1,24 +1,46 @@
-server:
-  port: 10010
 spring:
   application:
     name: exception-eureka
 
+server:
+  port: 10010
+
+# 单机版
+# eureka:
+#   client:
+#     fetch-registry: false
+#     register-with-eureka: true
+#     service-url:
+#       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+#   instance:
+#     hostname: 192.168.6.174
+# feign:
+#   client:
+#     config:
+#       dashboard:
+#         connect-timeout: 5000
+#         read-timeout: 10000
+#       manager:
+#         connect-timeout: 5000
+#         read-timeout: 10000
+
+# 集群版
+---
+spring:
+  profiles: dev
 eureka:
-  client:
-    fetch-registry: false
-    register-with-eureka: true
-    service-url:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   instance:
     hostname: 192.168.6.174
-#    prefer-ip-address: true
-feign:
   client:
-    config:
-      dashboard:
-        connect-timeout: 5000
-        read-timeout: 10000
-      manager:
-        connect-timeout: 5000
-        read-timeout: 10000
+    service-url:
+      defaultZone: http://192.168.6.174:${server.port}/eureka/, http://192.168.6.194:${server.port}/eureka/
+
+---
+spring:
+  profiles: test
+eureka:
+  instance:
+    hostname: 192.168.6.194
+  client:
+    service-url:
+      defaultZone: http://192.168.6.174:${server.port}/eureka/, http://192.168.6.194:${server.port}/eureka/
