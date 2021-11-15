@@ -122,6 +122,7 @@ node {
                 def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
                 sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
                 sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
+                sh "docker rmi ${ImageName}${OriginVersion}"
                 sh "docker push ${ImageName}${ProjectVersion}"
             }
             sh "docker image prune -f"
