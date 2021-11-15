@@ -74,7 +74,20 @@ def projectPorts = [
     "exception-manager": 9998,
     "exception-transfer": 9997
 ]
+
+
+
 node {
+    def ActiveProfile = env.BRANCH_NAME
+    def ServerUserByEnv = [
+        "dev": "xiaoran",
+        "test": "xiaoran"
+    ]
+    def ServerHostByEnv = [
+        "dev": "192.168.6.174",
+        "test": "192.168.6.182"
+    ]
+
     stage("清理") {
         cleanWs()
     }
@@ -115,13 +128,14 @@ node {
         }
     }
     stage("部署服务器拉取镜像") {
-        sshagent(credentials: ['ubuntu174']) {
+        sshagent(credentials: ["node-${ActiveProfile}"]) {
             projects.each {
 //                 def port = projectPorts[it]
 //                 sshPublisher(publishers: [sshPublisherDesc(configName: "ubuntu174", transfers: [sshTransfer(cleanRemote: false, excludes: '',
 //                  execCommand: "ip addr && /home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-                def port = projectPorts[it]
-                sh "ssh xiaoran@192.168.6.174 '/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}' && docker image prune -f"
+                def ProjectName = it
+                def Port = projectPorts[it]
+                sh "ssh xiaoran@192.168.6.174 '/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $ProjectName $ProjectVersion $Port $ActiveProfile' && docker image prune -f"
             }
         }
     }
