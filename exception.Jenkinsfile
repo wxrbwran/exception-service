@@ -75,7 +75,7 @@ def projectPorts = [
 def HarborRepo = "tensquare";
 
 node {
-    def ActiveProfile = env.BRANCH_NAME
+    def ActiveProfile = "--spring.profiles.active=${env.BRANCH_NAME}"
     def ServerUserByEnv = [
         "dev": "xiaoran",
         "test": "xiaoran"
@@ -85,7 +85,7 @@ node {
         "test": "192.168.6.182"
     ]
     def OriginVersion = "0.0.1-SNAPSHOT"
-    def ProjectVersion = "0.0.1-${ActiveProfile}-SNAPSHOT"
+    def ProjectVersion = "0.0.1-${env.BRANCH_NAME}-SNAPSHOT"
 
     stage("清理") {
         cleanWs()
@@ -136,8 +136,8 @@ node {
 //                  execCommand: "ip addr && /home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $it $ProjectVersion ${port}", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
                 def ProjectName = it
                 def Port = projectPorts[it]
-                def user = ServerUserByEnv[ActiveProfile]
-                def host = ServerHostByEnv[ActiveProfile]
+                def user = ServerUserByEnv[env.BRANCH_NAME]
+                def host = ServerHostByEnv[env.BRANCH_NAME]
                 sh "ssh -o StrictHostKeyChecking=no -l ${user} ${host}  '/home/xiaoran/sh/deploy.sh $HarborUrl $HarborRepo $ProjectName $ProjectVersion $Port $ActiveProfile' && docker image prune -f"
             }
         }
