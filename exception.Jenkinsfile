@@ -66,8 +66,8 @@ def projects = [
     "exception-transfer"
 ]
 def projectPorts = [
-    "exception-cloud-gateway": 10086,
     "exception-eureka": 10010,
+    "exception-cloud-gateway": 10086,
     "exception-dashboard": 9999,
     "exception-manager": 9998,
     "exception-transfer": 9997
