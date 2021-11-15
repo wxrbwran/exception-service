@@ -1,14 +1,6 @@
 server:
   port: 10086
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://192.168.6.174:10010/eureka/, http://192.168.6.194:10010/eureka/
-  instance:
-    hostname: 192.168.6.174
-    #    prefer-ip-address: true
-
 spring:
   application:
     name: exception-cloud-gateway
@@ -38,4 +30,21 @@ spring:
             - Path=/dashboard/**
           filters:
             - RewritePath=/dashboard/(?<segment>.*), /$\{segment}
-
+---
+spring:
+  profiles: dev
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.6.174:10010/eureka/
+  instance:
+    hostname: 192.168.6.174
+---
+spring:
+  profiles: test
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.6.194:10010/eureka/
+  instance:
+    hostname: 192.168.6.194

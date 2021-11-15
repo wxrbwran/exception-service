@@ -17,9 +17,9 @@ spring:
     port: 6379
   # database
   datasource:
-    url: jdbc:postgresql://192.168.6.194:5432/dev
-    username: postgres
-    password: 123456
+    # url: jdbc:postgresql://192.168.6.194:5432/dev
+    # username: postgres
+    # password: 123456
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
     hikari:
@@ -51,20 +51,12 @@ spring:
       #value的Serializer类，实现类实现了接口org.apache.kafka.common.serialization.Serializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
-
 mybatis:
   mapper-locations: classpath:mappers/*.xml
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://192.168.6.174:10010/eureka/, http://192.168.6.194:10010/eureka/
-  instance:
-    #    prefer-ip-address: true
-    hostname: 192.168.6.174
 feign:
   client:
     config:
@@ -74,3 +66,29 @@ feign:
       manager:
         connect-timeout: 5000
         read-timeout: 10000
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:postgresql://192.168.6.194:5432/dev
+    username: postgres
+    password: 123456
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.6.174:10010/eureka/
+  instance:
+    hostname: 192.168.6.174
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:postgresql://192.168.6.194:5432/dev
+    username: postgres
+    password: 123456
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.6.194:10010/eureka/
+  instance:
+    hostname: 192.168.6.194

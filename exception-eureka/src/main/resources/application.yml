@@ -24,7 +24,7 @@ server:
 #         connect-timeout: 5000
 #         read-timeout: 10000
 
-# 集群版
+# 区分环境版
 ---
 spring:
   profiles: dev
@@ -33,7 +33,7 @@ eureka:
     hostname: 192.168.6.174
   client:
     service-url:
-      defaultZone: http://192.168.6.174:${server.port}/eureka/, http://192.168.6.194:${server.port}/eureka/
+      defaultZone: http://192.168.6.174:${server.port}/eureka/
 
 ---
 spring:
@@ -43,4 +43,4 @@ eureka:
     hostname: 192.168.6.194
   client:
     service-url:
-      defaultZone: http://192.168.6.174:${server.port}/eureka/, http://192.168.6.194:${server.port}/eureka/
+      defaultZone: http://192.168.6.194:${server.port}/eureka/

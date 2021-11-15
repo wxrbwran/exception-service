@@ -19,9 +19,9 @@ spring:
       request-timeout: 20000
   # database
   datasource:
-    url: jdbc:postgresql://192.168.6.194:5432/dev
-    username: postgres
-    password: 123456
+    # url: jdbc:postgresql://192.168.6.194:5432/dev
+    # username: postgres
+    # password: 123456
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
     hikari:
@@ -38,14 +38,6 @@ mybatis:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://192.168.6.174:10010/eureka/, http://192.168.6.194:10010/eureka/
-  instance:
-    hostname: 192.168.6.174
-    #    prefer-ip-address: true
-
 feign:
   client:
     config:
@@ -55,3 +47,30 @@ feign:
       manager:
         connect-timeout: 5000
         read-timeout: 10000
+
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:postgresql://192.168.6.194:5432/dev
+    username: postgres
+    password: 123456
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.6.174:10010/eureka/
+  instance:
+    hostname: 192.168.6.174
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:postgresql://192.168.6.194:5432/dev
+    username: postgres
+    password: 123456
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.6.194:10010/eureka/
+  instance:
+    hostname: 192.168.6.194
