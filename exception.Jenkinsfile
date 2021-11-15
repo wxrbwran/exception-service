@@ -58,7 +58,6 @@
 // }
 def HarborUrl = "192.168.6.150:8085"
 def HarborAccount = "harbor-account"
-def ProjectVersion = "0.0.1-SNAPSHOT"
 def projects = [
     "exception-cloud-gateway",
     "exception-dashboard",
@@ -73,6 +72,7 @@ def projectPorts = [
     "exception-manager": 9998,
     "exception-transfer": 9997
 ]
+def HarborRepo = "tensquare";
 
 node {
     def ActiveProfile = env.BRANCH_NAME
@@ -84,8 +84,7 @@ node {
         "dev": "192.168.6.174",
         "test": "192.168.6.182"
     ]
-    def HarborRepo = env.BRANCH_NAME;
-    
+    def ProjectVersion = "0.0.1-${ActiveProfile}-SNAPSHOT"
 
     stage("清理") {
         cleanWs()
@@ -120,7 +119,6 @@ node {
             sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
             projects.each {
                 sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
-
                 sh "docker push ${HarborUrl}/${HarborRepo}/${it}:${ProjectVersion}"
             }
             sh "docker image prune -f"
