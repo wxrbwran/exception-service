@@ -129,7 +129,7 @@ node {
     //     }
     // }
     stage("部署服务器拉取镜像") {
-        sshagent(credentials: ["node-${ActiveProfile}"]) {
+        sshagent(credentials: ["jenkins-private"]) {
             projects.each {
 //                 def port = projectPorts[it]
 //                 sshPublisher(publishers: [sshPublisherDesc(configName: "ubuntu174", transfers: [sshTransfer(cleanRemote: false, excludes: '',
