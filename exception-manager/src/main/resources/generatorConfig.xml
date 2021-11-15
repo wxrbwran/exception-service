@@ -19,7 +19,7 @@
     </commentGenerator>
     <!--数据库链接地址账号密码-->
     <jdbcConnection driverClass="org.postgresql.Driver"
-      connectionURL="jdbc:postgresql://192.168.6.194:5432/dev"
+      connectionURL="jdbc:postgresql://192.168.6.182:5432/dev"
       userId="postgres"
       password="123456">
       <property name="nullCatalogMeansCurrent" value="true"/>

@@ -19,7 +19,7 @@ spring:
       request-timeout: 20000
   # database
   datasource:
-    # url: jdbc:postgresql://192.168.6.194:5432/dev
+    # url: jdbc:postgresql://192.168.6.182:5432/dev
     # username: postgres
     # password: 123456
     type: com.zaxxer.hikari.HikariDataSource
@@ -52,7 +52,7 @@ feign:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:postgresql://192.168.6.194:5432/dev
+    url: jdbc:postgresql://192.168.6.182:5432/dev
     username: postgres
     password: 123456
 eureka:
@@ -65,12 +65,12 @@ eureka:
 spring:
   profiles: test
   datasource:
-    url: jdbc:postgresql://192.168.6.194:5432/dev
+    url: jdbc:postgresql://192.168.6.182:5432/dev
     username: postgres
     password: 123456
 eureka:
   client:
     service-url:
-      defaultZone: http://192.168.6.194:10010/eureka/
+      defaultZone: http://192.168.6.182:10010/eureka/
   instance:
-    hostname: 192.168.6.194
+    hostname: 192.168.6.182
