@@ -53,7 +53,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
         // 第1步
         stage('拉取代码'){
           echo env.BRANCH_NAME
-          git branch: "${env.BRANCH_NAME}", credentialsId: 'gitlab-private', url: 'ssh://git@192.168.6.194:9022/back/exception-service.git'
+          checkout([$class: 'GitSCM', branches: [[name: env.BRANCH_NAME]], extensions: [], userRemoteConfigs: [[credentialsId: 'git-private', url: 'ssh://git@192.168.6.194:9022/back/exception-service.git']]])
           sh "ls -la"
         }
         // 第2步
