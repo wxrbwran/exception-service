@@ -60,6 +60,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
         //编译并安装公共工程
         stage("编译安装common项目") {
 //             sh "mvn clean compile"
+            sh "mvn -v"
             sh "mvn -f exception-common clean install"
         }
         // 第3步
