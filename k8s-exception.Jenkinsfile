@@ -1,12 +1,23 @@
-  def git_auth = "9d9a2707-eab7-4dc9-b106-e52f329cbc95" //构建版本的名称
-  def tag = "latest"
-  //Harbor私服地址
-  def harbor_url = "192.168.6.150:8085"
-  //Harbor的项目名称
-  def harbor_project_name = "tensquare"
-  //Harbor的凭证
-  def harbor_auth = "71eff071-ec17-4219-bae1-5d0093e3d060"
-  podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
+def HarborUrl = "192.168.6.150:8085"
+def HarborAccount = "harbor-account"
+def projects = [
+    "exception-cloud-gateway",
+    "exception-dashboard",
+    "exception-eureka",
+    "exception-manager",
+    "exception-transfer"
+]
+def projectPorts = [
+    "exception-eureka": 10010,
+    "exception-cloud-gateway": 10086,
+    "exception-dashboard": 9999,
+    "exception-manager": 9998,
+    "exception-transfer": 9997
+]
+def HarborRepo = "tensquare";
+def K8sHarbor = "k8s-harbor";
+
+podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
       containerTemplate(
           name: 'jnlp',
           image: "wxrbw/jenkins-slave-maven:latest"
@@ -28,6 +39,17 @@
     ],
   ) {
     node("jenkins-slave"){
+      def ActiveProfile = "--spring.profiles.active=${env.BRANCH_NAME}"
+      def ServerUserByEnv = [
+          "dev": "xiaoran",
+          "test": "xiaoran"
+      ]
+      def ServerHostByEnv = [
+          "dev": "192.168.6.174",
+          "test": "192.168.6.182"
+      ]
+      def OriginVersion = "0.0.1-SNAPSHOT"
+      def ProjectVersion = "0.0.1-${env.BRANCH_NAME}-SNAPSHOT"
         // 第1步
         stage('拉取代码'){
           echo env.BRANCH_NAME
@@ -55,14 +77,14 @@
                 sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
                 projects.each {
                     def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
-                    sh "${mvnHome}/bin/mvn -f ${it} dockerfile:build"
+                    sh "mvn -f ${it} dockerfile:build"
                     sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
                     sh "docker rmi ${ImageName}${OriginVersion}"
                     sh "docker push ${ImageName}${ProjectVersion}"
                     //部署到K8S
                     sh """
                       sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
-                      sed -i 's#\$SECRET_NAME#${secret_name}#' ${it}/deploy.yml
+                      sed -i 's#\$SECRET_NAME#${K8sHarbor}#' ${it}/deploy.yml
                     """
                     kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
                 }
