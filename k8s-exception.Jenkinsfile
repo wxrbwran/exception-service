@@ -64,7 +64,7 @@
                       sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
                       sed -i 's#\$SECRET_NAME#${secret_name}#' ${it}/deploy.yml
                     """
-                    kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "${k8s_auth}"
+                    kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
                 }
                 sh "docker image prune -f"
                 //给镜像打标签
