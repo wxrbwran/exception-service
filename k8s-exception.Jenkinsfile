@@ -1,11 +1,11 @@
-def HarborUrl = "192.168.6.150:8085"
+def HarborUrl = "192.168.6.194:8085"
 def HarborAccount = "harbor-account"
 def projects = [
-    "exception-cloud-gateway",
-    "exception-dashboard",
     "exception-eureka",
-    "exception-manager",
-    "exception-transfer"
+//     "exception-cloud-gateway",
+//     "exception-dashboard",
+//     "exception-manager",
+//     "exception-transfer"
 ]
 def projectPorts = [
     "exception-eureka": 10010,
@@ -82,11 +82,11 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
                     sh "docker rmi ${ImageName}${OriginVersion}"
                     sh "docker push ${ImageName}${ProjectVersion}"
                     //部署到K8S
-                    sh """
-                      sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
-                      sed -i 's#\$SECRET_NAME#${K8sHarbor}#' ${it}/deploy.yml
-                    """
-                    kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
+//                     sh """
+//                       sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
+//                       sed -i 's#\$SECRET_NAME#${K8sHarbor}#' ${it}/deploy.yml
+//                     """
+//                     kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
                 }
                 sh "docker image prune -f"
                 //给镜像打标签
