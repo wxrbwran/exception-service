@@ -56,14 +56,14 @@
 //             }
 //       }
 // }
-def HarborUrl = "192.168.6.150:8085"
+def HarborUrl = "192.168.6.194:8085"
 def HarborAccount = "harbor-account"
 def projects = [
-    "exception-cloud-gateway",
-    "exception-dashboard",
     "exception-eureka",
-    "exception-manager",
-    "exception-transfer"
+//     "exception-cloud-gateway",
+//     "exception-dashboard",
+//     "exception-manager",
+//     "exception-transfer"
 ]
 def projectPorts = [
     "exception-eureka": 10010,
@@ -86,13 +86,14 @@ node {
     ]
     def OriginVersion = "0.0.1-SNAPSHOT"
     def ProjectVersion = "0.0.1-${env.BRANCH_NAME}-SNAPSHOT"
+    def mvnHome = tool 'MAVEN3.6.3'
 
     stage("清理") {
         cleanWs()
     }
     stage("拉代码") {
         echo env.BRANCH_NAME
-        git branch: "${env.BRANCH_NAME}", credentialsId: 'ssh-gitlab-ubuntu105', url: 'git@192.168.6.225:backend/exception-service.git'
+        git branch: "${env.BRANCH_NAME}", credentialsId: 'gitlab-account', url: 'ssh://git@192.168.6.194:9022/back/exception-service.git'
         sh "ls -la"
     }
 //     stage("代码审查") {
@@ -103,15 +104,12 @@ node {
 //         }
 //     }
     stage("编译安装common项目") {
-        def mvnHome = tool 'MAVEN3.6.3'
         sh "${mvnHome}/bin/mvn -f exception-common clean install"
     }
     stage("编译打包微服务工程") {
-        def mvnHome = tool 'MAVEN3.6.3'
         sh "${mvnHome}/bin/mvn clean package"
     }
     stage("构建docker镜像") {
-        def mvnHome = tool 'MAVEN3.6.3'
         withCredentials([usernamePassword(
             credentialsId: 'harbor-account',
             passwordVariable: 'password',
