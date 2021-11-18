@@ -86,12 +86,12 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
                     // sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
                     def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
                     sh "docker login -u ${username} -p ${password}"
-                    sh "docker tag ${ImageName}${OriginVersion} wxrbw/${it}${ProjectVersion}"
+                    sh "docker tag ${ImageName}${OriginVersion} wxrbw/${it}:${ProjectVersion}"
                     sh "docker rmi ${ImageName}${OriginVersion}"
-                    sh "docker push wxrbw/${it}${ProjectVersion}"  
+                    sh "docker push wxrbw/${it}:${ProjectVersion}"  
                     //部署到K8S
                     sh """
-                      sed -i 's#\$IMAGE_NAME#wxrbw/${it}${ProjectVersion}#' ${it}/deploy.yml
+                      sed -i 's#\$IMAGE_NAME#wxrbw/${it}:${ProjectVersion}#' ${it}/deploy.yml
                       sed -i 's#\$SECRET_NAME#${K8sDockerSecret}#' ${it}/deploy.yml
                     """
                     kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
