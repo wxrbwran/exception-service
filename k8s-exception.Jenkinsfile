@@ -16,6 +16,8 @@ def projectPorts = [
 ]
 def HarborRepo = "tensquare";
 def K8sHarborSecret = "k8s-harbor";
+def K8sDockerSecret = "k8s-docker";
+
 
 podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
       containerTemplate(
@@ -90,7 +92,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
                     //部署到K8S
                     sh """
                       sed -i 's#\$IMAGE_NAME#wxrbw/${it}${ProjectVersion}#' ${it}/deploy.yml
-                      sed -i 's#\$SECRET_NAME#${K8sHarborSecret}#' ${it}/deploy.yml
+                      sed -i 's#\$SECRET_NAME#${K8sDockerSecret}#' ${it}/deploy.yml
                     """
                     kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
                     sh "docker image prune -f"
