@@ -75,11 +75,12 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
                 passwordVariable: 'password',
                 usernameVariable: 'username'
           )]) {
+              sh "mvn -f ${it} dockerfile:build"
               container('docker') {
                 sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
                 projects.each {
                     def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
-                    sh "mvn -f ${it} dockerfile:build"
+                    
                     sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
                     sh "docker rmi ${ImageName}${OriginVersion}"
                     sh "docker push ${ImageName}${ProjectVersion}"
