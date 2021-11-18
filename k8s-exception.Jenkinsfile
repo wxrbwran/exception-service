@@ -86,7 +86,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
                     sh "docker image prune -f"
                     //部署到K8S
                     sh """
-                      sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
+                      sed -i 's#\$IMAGE_NAME#${ImageName}${ProjectVersion}#' ${it}/deploy.yml
                       sed -i 's#\$SECRET_NAME#${K8sHarborSecret}#' ${it}/deploy.yml
                     """
                     kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
