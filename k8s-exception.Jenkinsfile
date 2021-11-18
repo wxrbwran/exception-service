@@ -15,7 +15,7 @@ def projectPorts = [
     "exception-transfer": 9997
 ]
 def HarborRepo = "tensquare";
-def K8sHarbor = "k8s-harbor";
+def K8sHarborSecret = "k8s-harbor";
 
 podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
       containerTemplate(
@@ -87,11 +87,11 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
                   }
               }
               //部署到K8S
-              // sh """
-              //   sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
-              //   sed -i 's#\$SECRET_NAME#${K8sHarbor}#' ${it}/deploy.yml
-              // """
-              // kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
+              sh """
+                sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
+                sed -i 's#\$SECRET_NAME#${K8sHarborSecret}#' ${it}/deploy.yml
+              """
+              kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
           }
       }
     }
