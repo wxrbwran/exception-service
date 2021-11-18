@@ -69,49 +69,45 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
         }
         // 第4步
         stage('构建镜像，部署项目'){
-          //把选择的项目信息转为数组
-          withCredentials([usernamePassword(
+           projects.each {
+             withCredentials([usernamePassword(
                 credentialsId: 'harbor-account',
                 passwordVariable: 'password',
                 usernameVariable: 'username'
-          )]) {
-              sh "mvn -f ${it} dockerfile:build"
-              container('docker') {
-                sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
-                projects.each {
+              )]) {
+                  sh "mvn -f ${it} dockerfile:build"
+                  container('docker') {
                     def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
-                    
+                    sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
                     sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
                     sh "docker rmi ${ImageName}${OriginVersion}"
-                    sh "docker push ${ImageName}${ProjectVersion}"
-                    //部署到K8S
-//                     sh """
-//                       sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
-//                       sed -i 's#\$SECRET_NAME#${K8sHarbor}#' ${it}/deploy.yml
-//                     """
-//                     kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
-                }
-                sh "docker image prune -f"
-                //给镜像打标签
-                // sh "docker tag ${imageName} ${harbor_url}/${harbor_project_name}/${imageName}"
-                // //登录Harbor，并上传镜像
-                // withCredentials([usernamePassword(
-                //   credentialsId: "${harbor_auth}",
-                //   passwordVariable: 'password',
-                //   usernameVariable: 'username')]){
-                //   //登录
-                //   sh "docker login -u ${username} -p ${password} ${harbor_url}"
-                //   //上传镜像
-                //   sh "docker push ${harbor_url}/${harbor_project_name}/${imageName}"
-                // }
-                // //删除本地镜像
-                // sh "docker rmi -f ${imageName}"
-                // sh "docker rmi -f ${harbor_url}/${harbor_project_name}/${imageName}"
+                    sh "docker push ${ImageName}${ProjectVersion} "  
+                    sh "docker image prune -f"
+                  }
               }
-              
+              //部署到K8S
+              // sh """
+              //   sed -i 's#\$IMAGE_NAME#${ImageName}#' ${it}/deploy.yml
+              //   sed -i 's#\$SECRET_NAME#${K8sHarbor}#' ${it}/deploy.yml
+              // """
+              // kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
           }
-           
       }
     }
 }
   
+  //给镜像打标签
+  // sh "docker tag ${imageName} ${harbor_url}/${harbor_project_name}/${imageName}"
+  // //登录Harbor，并上传镜像
+  // withCredentials([usernamePassword(
+  //   credentialsId: "${harbor_auth}",
+  //   passwordVariable: 'password',
+  //   usernameVariable: 'username')]){
+  //   //登录
+  //   sh "docker login -u ${username} -p ${password} ${harbor_url}"
+  //   //上传镜像
+  //   sh "docker push ${harbor_url}/${harbor_project_name}/${imageName}"
+  // }
+  // //删除本地镜像
+  // sh "docker rmi -f ${imageName}"
+  // sh "docker rmi -f ${harbor_url}/${harbor_project_name}/${imageName}"
