@@ -75,6 +75,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
                 passwordVariable: 'password',
                 usernameVariable: 'username'
               )]) {
+                  sh 'whoami'
                   sh "mvn -f ${it} dockerfile:build"
                   container('docker') {
                     def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
