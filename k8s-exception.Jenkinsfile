@@ -71,25 +71,29 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
         stage('构建镜像，部署项目'){
            projects.each {
              withCredentials([usernamePassword(
-                credentialsId: 'harbor-account',
+                // credentialsId: 'harbor-account',
+                credentialsId: 'docker-account',
                 passwordVariable: 'password',
                 usernameVariable: 'username'
               )]) {
                   sh 'whoami'
                   sh "mvn -f ${it} dockerfile:build"
                   container('docker') {
+                    // 暂时使用docker hub, 本地harbor无ssl，k8s报错。
+                    // def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
+                    // sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
                     def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
-                    sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
-                    sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
+                    sh "docker login -u ${username} -p ${password}"
+                    sh "docker tag ${ImageName}${OriginVersion} wxrbw/${it}${ProjectVersion}"
                     sh "docker rmi ${ImageName}${OriginVersion}"
-                    sh "docker push ${ImageName}${ProjectVersion} "  
-                    sh "docker image prune -f"
+                    sh "docker push wxrbw/${it}${ProjectVersion}"  
                     //部署到K8S
                     sh """
-                      sed -i 's#\$IMAGE_NAME#${ImageName}${ProjectVersion}#' ${it}/deploy.yml
+                      sed -i 's#\$IMAGE_NAME#wxrbw/${it}${ProjectVersion}#' ${it}/deploy.yml
                       sed -i 's#\$SECRET_NAME#${K8sHarborSecret}#' ${it}/deploy.yml
                     """
                     kubernetesDeploy configs: "${it}/deploy.yml", kubeconfigId: "k8s-config"
+                    sh "docker image prune -f"
                   }
               }
           }
