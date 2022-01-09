@@ -16,11 +16,12 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.3.10.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <!-- lookup parent from repository -->
+    <relativePath/>
   </parent>
   <groupId>com.xzlcorp</groupId>
   <artifactId>exception-service</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>exception-service</name>
   <description>前端异常监控</description>
   <properties>
@@ -118,7 +119,7 @@
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>RELEASE</version>
+      <version>23.0.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -154,6 +155,7 @@
       <plugin>
         <groupId>org.mybatis.generator</groupId>
         <artifactId>mybatis-generator-maven-plugin</artifactId>
+        <version>1.4.0</version>
       </plugin>
     </plugins>
   </build>
