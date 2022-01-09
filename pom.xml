@@ -16,7 +16,8 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.3.10.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <!-- lookup parent from repository -->
+    <relativePath/>
   </parent>
   <groupId>com.xzlcorp</groupId>
   <artifactId>exception-service</artifactId>
@@ -148,6 +149,7 @@
       <plugin>
         <groupId>org.mybatis.generator</groupId>
         <artifactId>mybatis-generator-maven-plugin</artifactId>
+        <version>1.4.0</version>
       </plugin>
       <plugin>
         <groupId>com.spotify</groupId>
