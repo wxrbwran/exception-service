@@ -1,0 +1,22 @@
+#server:
+#  port: 9997
+#  #  address: 0.0.0.0
+#  servlet:
+#    encoding:
+#      force: true
+#      charset: UTF-8
+
+spring:
+  application:
+    name: exception-transfer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 121.37.67.93
+        port: 8848
+        group: dev
+      config:
+        server-addr: 121.37.67.93
+        port: 8848
+        file-extension: yaml
+

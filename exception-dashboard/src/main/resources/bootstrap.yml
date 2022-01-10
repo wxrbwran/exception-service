@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: exception-dashboard
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 121.37.67.93
+        port: 8848
+        group: dev
+      config:
+        server-addr: 121.37.67.93
+        port: 8848
+        file-extension: yaml
+

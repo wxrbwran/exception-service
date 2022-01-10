@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -19,9 +20,10 @@ import org.springframework.context.annotation.ComponentScan;
 })
 @EnableFeignClients
 @SpringBootApplication
-public class DashboardApplication {
+@EnableDiscoveryClient
+public class ExceptionDashboardApplication {
   public static void main(String[] args) {
-    SpringApplication.run(DashboardApplication.class, args);
+    SpringApplication.run(ExceptionDashboardApplication.class, args);
 //    new SpringApplicationBuilder(DashboardApplication.class)
 //        .web(WebApplicationType.REACTIVE)
 //        .run(args);

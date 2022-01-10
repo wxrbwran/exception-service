@@ -1,4 +1,4 @@
-def HarborUrl = "192.168.6.194:8085"
+def HarborUrl = "121.37.67.93:8085"
 def HarborAccount = "harbor-account"
 def projects = [
     "exception-eureka",
@@ -55,7 +55,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes', containers: [
         // 第1步
         stage('拉取代码'){
           echo env.BRANCH_NAME
-          checkout([$class: 'GitSCM', branches: [[name: env.BRANCH_NAME]], extensions: [], userRemoteConfigs: [[credentialsId: 'git-private', url: 'ssh://git@192.168.6.194:9022/back/exception-service.git']]])
+          checkout([$class: 'GitSCM', branches: [[name: env.BRANCH_NAME]], extensions: [], userRemoteConfigs: [[credentialsId: 'git-private', url: 'ssh://git@121.37.67.93:9022/back/exception-service.git']]])
           sh "ls -la"
         }
         // 第2步

@@ -8,9 +8,9 @@
     <module>exception-dashboard</module>
     <module>exception-common</module>
     <module>exception-manager</module>
-    <module>exception-eureka</module>
     <module>exception-transfer</module>
     <module>exception-cloud-gateway</module>
+    <module>nacos-payment-provider</module>
   </modules>
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -25,7 +25,7 @@
   <description>前端异常监控</description>
   <properties>
     <java.version>11</java.version>
-    <harbor>192.168.6.194:8085</harbor>
+    <harbor>121.37.67.93:8085</harbor>
     <harborRepo>tensquare</harborRepo>
 <!--    <sonar.projectKey>backend_exception-service_AXzUX8y4Cgq56jMkNLpg</sonar.projectKey>-->
   </properties>
@@ -35,6 +35,14 @@
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-dependencies</artifactId>
         <version>Hoxton.SR12</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+        <version>2.2.0.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -115,10 +123,6 @@
       <artifactId>annotations</artifactId>
       <version>23.0.0</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.cloud</groupId>

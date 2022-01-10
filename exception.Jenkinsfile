@@ -56,7 +56,7 @@
 //             }
 //       }
 // }
-def HarborUrl = "192.168.6.194:8085"
+def HarborUrl = "121.37.67.93:8085"
 def HarborAccount = "harbor-account"
 def projects = [
     "exception-eureka",
@@ -93,7 +93,7 @@ node {
     }
     stage("拉代码") {
         echo env.BRANCH_NAME
-        git branch: "${env.BRANCH_NAME}", credentialsId: 'gitlab-account', url: 'ssh://git@192.168.6.194:9022/back/exception-service.git'
+        git branch: "${env.BRANCH_NAME}", credentialsId: 'gitlab-account', url: 'ssh://git@121.37.67.93:9022/back/exception-service.git'
         sh "ls -la"
     }
 //     stage("代码审查") {

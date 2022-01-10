@@ -1,0 +1,15 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: nacos-payment-rovider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 121.37.67.93
+        port: 8848
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

@@ -2,6 +2,7 @@ package com.xzlcorp.exception.manager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -14,9 +15,10 @@ import org.springframework.context.annotation.ComponentScan;
 })
 @SpringBootApplication
 @EnableFeignClients
-public class ManagerApplication {
+@EnableDiscoveryClient
+public class ExceptionManagerApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(ManagerApplication.class, args);
+    SpringApplication.run(ExceptionManagerApplication.class, args);
   }
 }
