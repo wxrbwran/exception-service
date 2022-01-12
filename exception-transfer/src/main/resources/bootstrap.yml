@@ -11,20 +11,20 @@ spring:
         server-addr: 121.37.67.93
         port: 8848
         file-extension: yaml
-        namespace: dev
-    sentinel:
-      transport:
-        dashboard: localhost:8080
-        port: 8719
-#        client-ip: 172.16.10.27
-        datasource:
-          ds1:
-            nacos:
-              server-addr: 121.37.67.93
-              dataId: exception-transfer
-              groupId: DEFAULT_GROUP
-              data-type: json
-              rule-type: flow
+        namespace: ${spring.profiles.active}
+#    sentinel:
+#      transport:
+#        dashboard: localhost:8080
+#        port: 8719
+##        client-ip: 172.16.10.27
+#        datasource:
+#          ds1:
+#            nacos:
+#              server-addr: 121.37.67.93
+#              dataId: exception-transfer
+#              groupId: DEFAULT_GROUP
+#              data-type: json
+#              rule-type: flow
 
 management:
   endpoint:
