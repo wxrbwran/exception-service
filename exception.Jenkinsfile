@@ -91,9 +91,14 @@ node {
     stage("清理") {
         cleanWs()
     }
+//     stage("拉代码") {
+//         echo env.BRANCH_NAME
+//         git branch: "${env.BRANCH_NAME}", credentialsId: 'gitlab-account', url: 'ssh://git@121.37.67.93:9022/back/exception-service.git'
+//         sh "ls -la"
+//     }
     stage("拉代码") {
         echo env.BRANCH_NAME
-        git branch: "${env.BRANCH_NAME}", credentialsId: 'gitlab-account', url: 'ssh://git@121.37.67.93:9022/back/exception-service.git'
+        git branch: "${env.BRANCH_NAME}", credentialsId: 'gitee-account', url: 'https://gitee.com/wu-xiaoran/exception-service.git'
         sh "ls -la"
     }
 //     stage("代码审查") {
