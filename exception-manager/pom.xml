@@ -85,7 +85,7 @@
     <version>2.6.2</version>
         <configuration>
           <mainClass>com.xzlcorp.exception.manager.ExceptionManagerApplication</mainClass>
-<!--          <outputDirectory>../target</outputDirectory>-->
+          <outputDirectory>../target</outputDirectory>
         </configuration>
         <executions>
           <execution>
