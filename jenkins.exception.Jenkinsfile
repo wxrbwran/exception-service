@@ -80,20 +80,23 @@ pipeline {
             }
             stage("构建docker镜像") {
                 steps {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'harbor-account',
-                        passwordVariable: 'password',
-                        usernameVariable: 'username'
-                    )]) {
-                        sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
-                        projects.each {
-                            def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
-                            sh "mvn -f ${it} dockerfile:build"
-                            sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
-                            sh "docker rmi ${ImageName}${OriginVersion}"
-                            sh "docker push ${ImageName}${ProjectVersion}"
+                     script {
+                        withCredentials([usernamePassword(
+                            credentialsId: 'harbor-account',
+                            passwordVariable: 'password',
+                            usernameVariable: 'username'
+                        )]) {
+                      
+                            sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
+                            projects.each {
+                                def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
+                                sh "mvn -f ${it} dockerfile:build"
+                                sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
+                                sh "docker rmi ${ImageName}${OriginVersion}"
+                                sh "docker push ${ImageName}${ProjectVersion}"
+                            }
+                            sh "docker image prune -f"
                         }
-                        sh "docker image prune -f"
                     }
                 }
             }
