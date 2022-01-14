@@ -1,26 +1,24 @@
 // 声明式
 
 // def mvnHome = tool 'MAVEN3.6.3'
+def projects = [
+    "exception-cloud-gateway",
+    "exception-dashboard",
+    "exception-manager",
+    "exception-transfer"
+]
+def projectPorts = [
+    "exception-cloud-gateway": 10086,
+    "exception-dashboard": 9999,
+    "exception-manager": 9998,
+    "exception-transfer": 9997
+]
 
 pipeline {
 
     environment {
         HarborUrl="registry.cn-beijing.aliyuncs.com"
          HarborRepo = "wxr_dev";
-
-         projects = [
-        "exception-cloud-gateway",
-        "exception-dashboard",
-        "exception-manager",
-        "exception-transfer"
-        ]
-         projectPorts = [
-        "exception-cloud-gateway": 10086,
-        "exception-dashboard": 9999,
-        "exception-manager": 9998,
-        "exception-transfer": 9997
-        ]
-
          ActiveProfile = "--spring.profiles.active=${env.BRANCH_NAME}"
          OriginVersion = "0.0.1-SNAPSHOT"
          ProjectVersion = "0.0.1-${env.BRANCH_NAME}-SNAPSHOT"
