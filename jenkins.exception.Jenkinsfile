@@ -61,7 +61,7 @@ pipeline {
         stage("拉代码") {
             steps {
                 echo env.BRANCH_NAME
-                git branch: "${env.BRANCH_NAME}", credentialsId: 'gitee-account', url: 'https://gitee.com/wu-xiaoran/exception-service.git'
+                git branch: "${env.BRANCH_NAME}", credentialsId: 'gitea-account', url: 'http://192.168.68.194:5010/backend/exception-service.git'
                 sh "ls -la"
             }
 
