@@ -24,8 +24,8 @@
   <description>前端异常监控</description>
   <properties>
     <java.version>11</java.version>
-    <harbor>121.37.67.93:8085</harbor>
-    <harborRepo>tensquare</harborRepo>
+    <harbor>registry.cn-beijing.aliyuncs.com</harbor>
+    <harborRepo>wxr_dev</harborRepo>
     <serviceVer>0.0.1</serviceVer>
 <!--    <sonar.projectKey>backend_exception-service_AXzUX8y4Cgq56jMkNLpg</sonar.projectKey>-->
   </properties>
