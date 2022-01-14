@@ -52,12 +52,18 @@ pipeline {
 
       stages {
            stage("清理") {
-                cleanWs()
+               steps {
+                 cleanWs()
+               }
             }
             stage("拉代码") {
-                echo env.BRANCH_NAME
-                git branch: "${env.BRANCH_NAME}", credentialsId: 'gitee-account', url: 'https://gitee.com/wu-xiaoran/exception-service.git'
-                sh "ls -la"
+               steps {
+                    echo env.BRANCH_NAME
+                    git branch: "${env.BRANCH_NAME}", credentialsId: 'gitee-account', url: 'https://gitee.com/wu-xiaoran/exception-service.git'
+                    sh "ls -la"
+               }
+
+               
             }
         //     stage("代码审查") {
         //          def mvnHome = tool 'MAVEN3.6.3'
@@ -68,23 +74,27 @@ pipeline {
         //     }
            
             stage("编译打包微服务工程") {
-                sh "mvn clean package"
+                steps {
+                    sh "mvn clean package"
+                }
             }
             stage("构建docker镜像") {
-                withCredentials([usernamePassword(
-                    credentialsId: 'harbor-account',
-                    passwordVariable: 'password',
-                    usernameVariable: 'username'
-                )]) {
-                    sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
-                    projects.each {
-                        def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
-                        sh "mvn -f ${it} dockerfile:build"
-                        sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
-                        sh "docker rmi ${ImageName}${OriginVersion}"
-                        sh "docker push ${ImageName}${ProjectVersion}"
+                steps {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'harbor-account',
+                        passwordVariable: 'password',
+                        usernameVariable: 'username'
+                    )]) {
+                        sh "docker login -u ${username} -p ${password} http://${HarborUrl}"
+                        projects.each {
+                            def ImageName = "${HarborUrl}/${HarborRepo}/${it}:"
+                            sh "mvn -f ${it} dockerfile:build"
+                            sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
+                            sh "docker rmi ${ImageName}${OriginVersion}"
+                            sh "docker push ${ImageName}${ProjectVersion}"
+                        }
+                        sh "docker image prune -f"
                     }
-                    sh "docker image prune -f"
                 }
             }
         //     stage("部署服务器拉取镜像") {
