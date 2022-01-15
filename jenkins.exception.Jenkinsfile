@@ -18,10 +18,10 @@ pipeline {
 
     environment {
         HarborUrl="registry.cn-beijing.aliyuncs.com"
-         HarborRepo = "wxr_dev";
-         ActiveProfile = "--spring.profiles.active=${env.BRANCH_NAME}"
-         OriginVersion = "0.0.1-SNAPSHOT"
-         ProjectVersion = "0.0.1-${env.BRANCH_NAME}-SNAPSHOT"
+        HarborRepo = "wxr_dev";
+        ActiveProfile = "--spring.profiles.active=${env.BRANCH_NAME}"
+        OriginVersion = "0.0.1-SNAPSHOT"
+        ProjectVersion = "0.0.1-${env.BRANCH_NAME}-SNAPSHOT"
     }
     agent {
         label 'master'
@@ -82,7 +82,7 @@ pipeline {
         }
         stage("构建docker镜像") {
             steps {
-                    script {
+                script {
                     withCredentials([usernamePassword(
                         credentialsId: 'harbor-account',
                         passwordVariable: 'password',

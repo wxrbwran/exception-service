@@ -34,25 +34,27 @@ pipeline {
         stage('构建镜像') {
           agent none
           steps {
-            container('sdk11') {
-              withCredentials([usernamePassword(credentialsId : 'aliyun-docker-registry' ,usernameVariable : 'DOCKER_USER_VAR' ,passwordVariable : 'DOCKER_PWD_VAR' ,)]) {
-                sh 'echo "$DOCKER_PWD_VAR" | docker login $REGISTRY -u "$DOCKER_USER_VAR" --password-stdin'
-                projects.each {
-                  def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
-                  sh "mvn -f ${it} dockerfile:build"
-                  sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
-                  sh "docker rmi ${ImageName}${OriginVersion}"
-                  sh "docker push ${ImageName}${ProjectVersion}"
-                  // sh "docker image prune -f"
-                  sh "docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/${it}:SNAPSHOT-$BUILD_NUMBER"
+            script {
+              container('sdk11') {
+                withCredentials([usernamePassword(credentialsId : 'aliyun-docker-registry' ,usernameVariable : 'DOCKER_USER_VAR' ,passwordVariable : 'DOCKER_PWD_VAR' ,)]) {
+                  sh 'echo "$DOCKER_PWD_VAR" | docker login $REGISTRY -u "$DOCKER_USER_VAR" --password-stdin'
+                  projects.each {
+                    def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
+                    sh "mvn -f ${it} dockerfile:build"
+                    sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
+                    sh "docker rmi ${ImageName}${OriginVersion}"
+                    sh "docker push ${ImageName}${ProjectVersion}"
+                    // sh "docker image prune -f"
+                    sh "docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/${it}:SNAPSHOT-$BUILD_NUMBER"
+                  }
+                  // def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
+                  // sh "mvn -f ${it} dockerfile:build"
+                  // sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
+                  // sh "docker rmi ${ImageName}${OriginVersion}"
+                  // sh "docker push ${ImageName}${ProjectVersion}"
+                  sh "docker image prune -f"
+                  // sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/service-task:SNAPSHOT-$BUILD_NUMBER'
                 }
-                // def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
-                // sh "mvn -f ${it} dockerfile:build"
-                // sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
-                // sh "docker rmi ${ImageName}${OriginVersion}"
-                // sh "docker push ${ImageName}${ProjectVersion}"
-                sh "docker image prune -f"
-                // sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/service-task:SNAPSHOT-$BUILD_NUMBER'
               }
             }
           }
@@ -73,8 +75,8 @@ pipeline {
     }
 
   
-     stage('default-4') {
-        parallel {
+    //  stage('default-4') {
+    //     parallel {
             // stage('service-sms - 部署到dev环境') {
             //     agent none
             //     steps {
@@ -106,8 +108,8 @@ pipeline {
             //   }
             // }
 
-        }
-    }
+    //     }
+    // }
   }
   environment {
     DOCKER_CREDENTIAL_ID = 'dockerhub-id'
