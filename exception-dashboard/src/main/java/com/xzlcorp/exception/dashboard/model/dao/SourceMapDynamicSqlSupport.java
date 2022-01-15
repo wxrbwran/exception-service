@@ -49,7 +49,7 @@ public final class SourceMapDynamicSqlSupport {
         public final SqlColumn<Date> updatedAt = column("updated_at", JDBCType.TIMESTAMP);
 
         public SourceMap() {
-            super("s_bug.t_source_map");
+            super("s_exception.t_source_map");
         }
     }
 }

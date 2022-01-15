@@ -68,7 +68,7 @@ public final class ProjectDynamicSqlSupport {
         public final SqlColumn<Date> updatedAt = column("updated_at", JDBCType.TIMESTAMP);
 
         public Project() {
-            super("s_bug.t_project");
+            super("s_exception.t_project");
         }
     }
 }

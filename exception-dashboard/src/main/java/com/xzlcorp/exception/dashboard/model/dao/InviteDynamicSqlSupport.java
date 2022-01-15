@@ -58,7 +58,7 @@ public final class InviteDynamicSqlSupport {
         public final SqlColumn<Integer> inviter = column("inviter", JDBCType.INTEGER);
 
         public Invite() {
-            super("s_bug.t_invite");
+            super("s_exception.t_invite");
         }
     }
 }
