@@ -1,7 +1,7 @@
 pipeline {
   agent {
     node {
-      label 'sdk11'
+      label 'maven'
     }
 
   }
@@ -9,7 +9,7 @@ pipeline {
     stage('拉取代码') {
       agent none
       steps {
-        container('sdk11') {
+        container('maven') {
           git(url: 'http://192.168.68.194:5010/backend/exception-service.git', credentialsId: 'gitee-account', branch: env.BranchName, changelog: true, poll: false)
           sh 'ls -l'
         }
@@ -20,7 +20,7 @@ pipeline {
     stage('编译项目') {
       agent none
       steps {
-        container('sdk11') {
+        container('maven') {
           sh 'ls -la'
           sh 'mvn clean package -Dmaven.test.skip=true'
         }
@@ -35,7 +35,7 @@ pipeline {
           agent none
           steps {
             script {
-              container('sdk11') {
+              container('maven') {
                 withCredentials([usernamePassword(credentialsId : 'aliyun-docker-registry' ,usernameVariable : 'DOCKER_USER_VAR' ,passwordVariable : 'DOCKER_PWD_VAR' ,)]) {
                   sh 'echo "$DOCKER_PWD_VAR" | docker login $REGISTRY -u "$DOCKER_USER_VAR" --password-stdin'
                   projects.each {
