@@ -62,7 +62,7 @@ spec:
       port: 10086
       protocol: TCP
       targetPort: 10086
-      nodePort: 30218
+      nodePort: $GATEWAY_PORT
   selector:
     app: exception-cloud-gateway
   sessionAffinity: None

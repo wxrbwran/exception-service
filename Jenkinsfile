@@ -90,6 +90,7 @@ pipeline {
                   credentialsId: env.KUBECONFIG_CREDENTIAL_ID,
                   variable: 'KUBECONFIG')
                   ]) {
+                    env.GATEWAY_PORT = env.BRANCH_NAME == 'dev' ? 30218 : 20219
                     projects.each {
                        sh "ls ./${it}/deploy/ -al"
                       sh "envsubst < ./${it}/deploy/deploy.yml | kubectl apply -f -"
