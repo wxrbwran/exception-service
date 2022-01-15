@@ -37,7 +37,7 @@ spec:
           args:
             - "--spring.profiles.active=$BRANCH_NAME"
           ports:
-            - containerPort: 8080
+            - containerPort: 10086
               protocol: TCP
           resources:
             limits:
@@ -59,9 +59,9 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 8080
+      port: 10086
       protocol: TCP
-      targetPort: 8080
+      targetPort: 10086
   selector:
     app: exception-cloud-gateway
   sessionAffinity: None

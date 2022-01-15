@@ -37,7 +37,7 @@ spec:
             - "--spring.profiles.active=$BRANCH_NAME"
           name: app
           ports:
-            - containerPort: 8080
+            - containerPort: 9999
               protocol: TCP
           resources:
             limits:
@@ -59,9 +59,9 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 8080
+      port: 9999
       protocol: TCP
-      targetPort: 8080
+      targetPort: 9999
   selector:
     app: exception-dashboard
   sessionAffinity: None
