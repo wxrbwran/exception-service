@@ -9,6 +9,7 @@ spring:
       discovery:
         server-addr: 121.37.67.93
         group: ${spring.profiles.active}
+        port: 10086
       config:
         server-addr: 121.37.67.93
         file-extension: yaml
