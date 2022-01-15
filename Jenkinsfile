@@ -10,7 +10,7 @@ pipeline {
       agent none
       steps {
         container('maven') {
-          git(url: 'http://192.168.68.194:5010/backend/exception-service.git', credentialsId: 'gitee-account', branch: env.BranchName, changelog: true, poll: false)
+          git(url: 'http://192.168.68.194:5010/backend/exception-service.git', credentialsId: 'gitee-account', branch: env.BRANCH_NAME, changelog: true, poll: false)
           sh 'ls -l'
         }
 
