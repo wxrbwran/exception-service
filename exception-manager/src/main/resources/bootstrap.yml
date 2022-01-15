@@ -11,4 +11,5 @@ spring:
         server-addr: 121.37.67.93
         port: 8848
         file-extension: yaml
+        namespace: ${spring.profiles.active}
 
