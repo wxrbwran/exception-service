@@ -34,6 +34,8 @@ spec:
  #           periodSeconds: 5
           imagePullPolicy: Always
           name: app
+          args:
+            - "--spring.profiles.active=$BRANCH_NAME"
           ports:
             - containerPort: 8080
               protocol: TCP
