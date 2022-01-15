@@ -24,7 +24,7 @@ spec:
       imagePullSecrets:
         - name: aliyun-docker-hub  #提前在项目下配置访问阿里云的账号密码
       containers:
-        - image: $REGISTRY/$ALIYUNHUB_NAMESPACE/exception-manager:BRANCH_NAME-$BUILD_NUMBER-SNAPSHOT
+        - image: $REGISTRY/$ALIYUNHUB_NAMESPACE/exception-manager:$BRANCH_NAME-$BUILD_NUMBER-SNAPSHOT
  #         readinessProbe:
  #           httpGet:
  #             path: /actuator/health
