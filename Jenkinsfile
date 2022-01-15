@@ -18,6 +18,21 @@ pipeline {
     }
 
   }
+  environment {
+    DOCKER_CREDENTIAL_ID = 'dockerhub-id'
+    GITHUB_CREDENTIAL_ID = 'github-id'
+    KUBECONFIG_CREDENTIAL_ID = 'demo-kubeconfig'
+    REGISTRY = 'registry.cn-beijing.aliyuncs.com'
+    DOCKERHUB_NAMESPACE = 'wxr_dev'
+    GITHUB_ACCOUNT = 'kubesphere'
+    APP_NAME = 'devops-java-sample'
+    ALIYUNHUB_NAMESPACE = 'wxr_dev'
+    HarborUrl = "registry.cn-beijing.aliyuncs.com"
+    HarborRepo = "wxr_dev";
+    ActiveProfile = "--spring.profiles.active=${env.BRANCH_NAME}"
+    OriginVersion = "0.0.1-SNAPSHOT"
+    ProjectVersion = "${env.BRANCH_NAME}-${BUILD_NUMBER}-SNAPSHOT"
+  }
   stages {
     stage('拉取代码') {
       agent none
@@ -43,7 +58,6 @@ pipeline {
 
     stage('default-2') {
       parallel {
-
         stage('构建镜像') {
           agent none
           steps {
@@ -55,35 +69,14 @@ pipeline {
                     def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
                     sh "mvn -f ${it} dockerfile:build"
                     sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
-                    sh "docker rmi ${ImageName}${OriginVersion}"
-                    sh "docker push ${ImageName}${ProjectVersion}"
-                    // sh "docker image prune -f"
-                    sh "docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/${it}:SNAPSHOT-$BUILD_NUMBER"
+                    sh "docker push  $${ImageName}:${ProjectVersion}"
                   }
-                  // def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
-                  // sh "mvn -f ${it} dockerfile:build"
-                  // sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
-                  // sh "docker rmi ${ImageName}${OriginVersion}"
-                  // sh "docker push ${ImageName}${ProjectVersion}"
                   sh "docker image prune -f"
-                  // sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/service-task:SNAPSHOT-$BUILD_NUMBER'
                 }
               }
             }
           }
         }
-
-        // stage('构建service-user镜像') {
-        //   agent none
-        //   steps {
-        //     container('maven') {
-        //       sh 'ls service/service-user/target'
-        //       sh 'docker build -t service-user:latest -f service/service-user/Dockerfile  ./service/service-user/'
-        //     }
-
-        //   }
-        // }
-
       }
     }
 
@@ -124,22 +117,4 @@ pipeline {
     //     }
     // }
   }
-  environment {
-    DOCKER_CREDENTIAL_ID = 'dockerhub-id'
-    GITHUB_CREDENTIAL_ID = 'github-id'
-    KUBECONFIG_CREDENTIAL_ID = 'demo-kubeconfig'
-    REGISTRY = 'registry.cn-beijing.aliyuncs.com'
-    DOCKERHUB_NAMESPACE = 'wxr_dev'
-    GITHUB_ACCOUNT = 'kubesphere'
-    APP_NAME = 'devops-java-sample'
-    ALIYUNHUB_NAMESPACE = 'wxr_dev'
-    HarborUrl = "registry.cn-beijing.aliyuncs.com"
-    HarborRepo = "wxr_dev";
-    ActiveProfile = "--spring.profiles.active=${env.BRANCH_NAME}"
-    OriginVersion = "0.0.1-SNAPSHOT"
-    ProjectVersion = "0.0.1-${env.BRANCH_NAME}-SNAPSHOT"
-  }
-//   parameters {
-//     string(name: 'TAG_NAME', defaultValue: '', description: '')
-//   }
 }
