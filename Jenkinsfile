@@ -69,7 +69,7 @@ pipeline {
                     def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
                     sh "mvn -f ${it} dockerfile:build"
                     sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
-                    sh "docker push  $${ImageName}:${ProjectVersion}"
+                    sh "docker push  ${ImageName}:${ProjectVersion}"
                   }
                   sh "docker image prune -f"
                 }
