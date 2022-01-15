@@ -8,10 +8,8 @@ spring:
     nacos:
       discovery:
         server-addr: 121.37.67.93
-        port: 8848
         group: ${spring.profiles.active}
       config:
         server-addr: 121.37.67.93
-        port: 8848
         file-extension: yaml
 
