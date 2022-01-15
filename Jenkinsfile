@@ -56,65 +56,48 @@ pipeline {
       }
     }
 
-    stage('default-2') {
-      parallel {
-        stage('构建镜像') {
-          agent none
-          steps {
-            script {
-              container('maven') {
-                withCredentials([usernamePassword(credentialsId : 'aliyun-docker-registry' ,usernameVariable : 'DOCKER_USER_VAR' ,passwordVariable : 'DOCKER_PWD_VAR' ,)]) {
-                  sh 'echo "$DOCKER_PWD_VAR" | docker login $REGISTRY -u "$DOCKER_USER_VAR" --password-stdin'
-                  projects.each {
-                    def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
-                    sh "mvn -f ${it} dockerfile:build"
-                    sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
-                    sh "docker push  ${ImageName}${ProjectVersion}"
-                  }
-                  sh "docker image prune -f"
-                }
+
+    stage('构建镜像') {
+      agent none
+      steps {
+        script {
+          container('maven') {
+            withCredentials([usernamePassword(credentialsId : 'aliyun-docker-registry' ,usernameVariable : 'DOCKER_USER_VAR' ,passwordVariable : 'DOCKER_PWD_VAR' ,)]) {
+              sh 'echo "$DOCKER_PWD_VAR" | docker login $REGISTRY -u "$DOCKER_USER_VAR" --password-stdin'
+              projects.each {
+                def ImageName = "${REGISTRY}/${DOCKERHUB_NAMESPACE}/${it}:"
+                sh "mvn -f ${it} dockerfile:build"
+                sh "docker tag ${ImageName}${OriginVersion} ${ImageName}${ProjectVersion}"
+                sh "docker push  ${ImageName}${ProjectVersion}"
               }
+              sh "docker image prune -f"
             }
           }
         }
       }
     }
 
-  
-    //  stage('default-4') {
-    //     parallel {
-            // stage('service-sms - 部署到dev环境') {
-            //     agent none
-            //     steps {
-            //      container ('maven') {
-            //           withCredentials([
-            //               kubeconfigFile(
-            //               credentialsId: env.KUBECONFIG_CREDENTIAL_ID,
-            //               variable: 'KUBECONFIG')
-            //               ]) {
-            //               sh 'ls ./service/service-sms/deploy/ -al'
-            //               sh 'envsubst < ./service/service-sms/deploy/deploy.yml | kubectl apply -f -'
-            //           }
-            //      }
-            //   }
-            // }
-            // stage('service-oss - 部署到dev环境') {
-            //     agent none
-            //     steps {
-            //      container ('maven') {
-            //           withCredentials([
-            //               kubeconfigFile(
-            //               credentialsId: env.KUBECONFIG_CREDENTIAL_ID,
-            //               variable: 'KUBECONFIG')
-            //               ]) {
-            //               sh 'ls ./service/service-oss/deploy/ -al'
-            //               sh 'envsubst < ./service/service-oss/deploy/deploy.yml | kubectl apply -f -'
-            //           }
-            //      }
-            //   }
-            // }
 
-    //     }
-    // }
+  
+
+    stage('部署') {
+        agent none
+        steps {
+          script {
+            container ('maven') {
+              withCredentials([
+                  kubeconfigFile(
+                  credentialsId: env.KUBECONFIG_CREDENTIAL_ID,
+                  variable: 'KUBECONFIG')
+                  ]) {
+                    projects.each {
+                       sh "ls ./${it}/deploy/ -al"
+                      sh "envsubst < ./${it}/deploy/deploy.yml | kubectl apply -f -"
+                    }
+                }
+            }
+          }
+      }
+    }
   }
 }
