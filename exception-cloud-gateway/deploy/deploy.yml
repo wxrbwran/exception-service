@@ -62,7 +62,8 @@ spec:
       port: 10086
       protocol: TCP
       targetPort: 10086
+      nodePort: 30218
   selector:
     app: exception-cloud-gateway
   sessionAffinity: None
-  type: ClusterIP
+  type: NodePort
