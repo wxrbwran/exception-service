@@ -1,3 +1,16 @@
+def projects = [
+    "exception-cloud-gateway",
+    "exception-dashboard",
+    "exception-manager",
+    "exception-transfer"
+]
+def projectPorts = [
+    "exception-cloud-gateway": 10086,
+    "exception-dashboard": 9999,
+    "exception-manager": 9998,
+    "exception-transfer": 9997
+]
+
 pipeline {
   agent {
     node {
