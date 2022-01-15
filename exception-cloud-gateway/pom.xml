@@ -66,7 +66,7 @@
           </repository>
           <tag>${project.version}</tag>
           <buildArgs>
-            <PKG>target/${project.artifactId}-${project.version}.jar</PKG>
+            <PKG>../target/${project.artifactId}-${project.version}.jar</PKG>
           </buildArgs>
         </configuration>
       </plugin>
