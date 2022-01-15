@@ -75,7 +75,7 @@
         <version>2.6.2</version>
         <configuration>
           <mainClass>com.xzlcorp.exception.transfer.ExceptionTransferApplication</mainClass>
-          <outputDirectory>../target</outputDirectory>
+          <!-- <outputDirectory>../target</outputDirectory> -->
         </configuration>
         <executions>
           <execution>
@@ -95,7 +95,7 @@
           </repository>
           <tag>${project.version}</tag>
           <buildArgs>
-            <PKG>../target/${project.artifactId}-${project.version}.jar</PKG>
+            <PKG>target/${project.artifactId}-${project.version}.jar</PKG>
           </buildArgs>
         </configuration>
       </plugin>
