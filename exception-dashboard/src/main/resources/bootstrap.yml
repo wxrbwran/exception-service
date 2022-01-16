@@ -8,6 +8,7 @@ spring:
       discovery:
         server-addr: 121.37.67.93
         group: ${spring.profiles.active}
+        namespace: ${spring.profiles.active}
       config:
         server-addr: 121.37.67.93
         file-extension: yaml
