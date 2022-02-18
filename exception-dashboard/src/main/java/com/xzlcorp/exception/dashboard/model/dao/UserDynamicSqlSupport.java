@@ -73,7 +73,7 @@ public final class UserDynamicSqlSupport {
         public final SqlColumn<Date> updatedAt = column("updated_at", JDBCType.TIMESTAMP);
 
         public User() {
-            super("s_bug.t_user");
+            super("s_exception.t_user");
         }
     }
 }

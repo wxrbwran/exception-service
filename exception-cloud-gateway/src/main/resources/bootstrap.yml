@@ -1,3 +1,6 @@
+server:
+  port: 10086
+
 spring:
   application:
     name: exception-cloud-gateway
@@ -5,10 +8,9 @@ spring:
     nacos:
       discovery:
         server-addr: 121.37.67.93
-        port: 8848
-        group: dev
+        group: ${spring.profiles.active}
+        namespace: ${spring.profiles.active}
       config:
         server-addr: 121.37.67.93
-        port: 8848
         file-extension: yaml
 

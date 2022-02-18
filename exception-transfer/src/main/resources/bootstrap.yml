@@ -1,3 +1,6 @@
+server:
+  port: 9997
+
 spring:
   application:
     name: exception-transfer
@@ -5,11 +8,10 @@ spring:
     nacos:
       discovery:
         server-addr: 121.37.67.93
-        port: 8848
-        group: dev
+        group: ${spring.profiles.active}
+        namespace: ${spring.profiles.active}
       config:
         server-addr: 121.37.67.93
-        port: 8848
         file-extension: yaml
         namespace: ${spring.profiles.active}
 #    sentinel:

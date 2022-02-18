@@ -51,7 +51,7 @@ public final class NotificationSettingDynamicSqlSupport {
         public final SqlColumn<Date> updatedAt = column("updated_at", JDBCType.TIMESTAMP);
 
         public NotificationSetting() {
-            super("s_bug.t_notification_setting");
+            super("s_exception.t_notification_setting");
         }
     }
 }

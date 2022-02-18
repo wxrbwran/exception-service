@@ -24,8 +24,8 @@
   <description>前端异常监控</description>
   <properties>
     <java.version>11</java.version>
-    <harbor>121.37.67.93:8085</harbor>
-    <harborRepo>tensquare</harborRepo>
+    <harbor>registry.cn-beijing.aliyuncs.com</harbor>
+    <harborRepo>wxr_dev</harborRepo>
     <serviceVer>0.0.1</serviceVer>
 <!--    <sonar.projectKey>backend_exception-service_AXzUX8y4Cgq56jMkNLpg</sonar.projectKey>-->
   </properties>
@@ -72,11 +72,11 @@
       <artifactId>mybatis-spring-boot-starter</artifactId>
       <version>1.3.2</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-log4j2</artifactId>-->
-<!--      <version>2.6.2</version>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+      <version>2.6.2</version>
+    </dependency>
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>

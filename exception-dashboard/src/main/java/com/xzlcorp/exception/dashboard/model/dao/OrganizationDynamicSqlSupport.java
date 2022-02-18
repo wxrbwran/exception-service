@@ -58,7 +58,7 @@ public final class OrganizationDynamicSqlSupport {
         public final SqlColumn<Integer[]> users = column("users", JDBCType.ARRAY, "com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler");
 
         public Organization() {
-            super("s_bug.t_organization");
+            super("s_exception.t_organization");
         }
     }
 }

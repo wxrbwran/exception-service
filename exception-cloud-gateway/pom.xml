@@ -46,7 +46,7 @@
         <version>2.6.2</version>
         <configuration>
           <mainClass>com.xzlcorp.exception.gateway.ExceptionGatewayApplication</mainClass>
-          <outputDirectory>../target</outputDirectory>
+          <!-- <outputDirectory>../target</outputDirectory> -->
         </configuration>
         <executions>
           <execution>

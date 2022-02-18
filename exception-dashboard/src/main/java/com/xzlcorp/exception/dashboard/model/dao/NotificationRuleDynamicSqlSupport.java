@@ -80,7 +80,7 @@ public final class NotificationRuleDynamicSqlSupport {
         public final SqlColumn<Date> updatedAt = column("updated_at", JDBCType.TIMESTAMP);
 
         public NotificationRule() {
-            super("s_bug.t_notification_rule");
+            super("s_exception.t_notification_rule");
         }
     }
 }

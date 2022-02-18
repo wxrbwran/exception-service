@@ -69,7 +69,7 @@ public final class IssueDynamicSqlSupport {
         public final SqlColumn<Date> updatedAt = column("updated_at", JDBCType.TIMESTAMP);
 
         public Issue() {
-            super("s_bug.t_issue");
+            super("s_exception.t_issue");
         }
     }
 }
