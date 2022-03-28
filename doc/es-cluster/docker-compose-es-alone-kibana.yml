@@ -1,0 +1,40 @@
+version: '3.6'
+services:
+  es_1:
+    # 镜像名称
+    image: elasticsearch:7.8.0
+    # 容器名称
+    container_name: es_1
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    # 文件映射到主机
+    volumes:
+      - /root/docker/es/config/es1_alone.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    # 赋予权限
+    privileged: true
+    #端口映射
+    ports:
+      - 9200:9199
+      - 9300:9300
+    # 指定网段
+    networks:
+      defalut:
+        ipv4_address: 173.199.8.2  #设置ip地址
+  kibana:
+    # 镜像名称
+    image: kibana:7.8.0
+    # 容器名称
+    container_name: kibana
+    ports:
+      - 5601:5601
+    volumes:
+      - /root/docker/es/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    networks:
+      defalut:
+        ipv4_address: 173.199.8.5  #设置ip地址
+networks:
+  defalut:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "173.199.8.0/24"

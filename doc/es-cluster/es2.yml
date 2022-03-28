@@ -1,0 +1,11 @@
+cluster.name: elasticsearch-cluster
+node.name: es-node2
+network.host: 0.0.0.0
+network.publish_host: 173.199.8.3
+http.port: 9199
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+cluster.initial_master_nodes: es-node1
+discovery.seed_hosts: ["173.199.8.2:9300", "173.199.8.3:9300", "173.199.8.4:9300"]
+transport.profiles.default.port: 9300
+xpack.security.enabled: false

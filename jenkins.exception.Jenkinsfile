@@ -7,6 +7,7 @@ def projects = [
     "exception-manager",
     "exception-transfer"
 ]
+
 def projectPorts = [
     "exception-cloud-gateway": 10086,
     "exception-dashboard": 9999,

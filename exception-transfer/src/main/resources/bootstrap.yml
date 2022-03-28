@@ -7,11 +7,11 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 121.37.67.93
+        server-addr: 103.105.200.216
         group: ${spring.profiles.active}
         namespace: ${spring.profiles.active}
       config:
-        server-addr: 121.37.67.93
+        server-addr: 103.105.200.216
         file-extension: yaml
         namespace: ${spring.profiles.active}
 #    sentinel:
@@ -22,7 +22,7 @@ spring:
 #        datasource:
 #          ds1:
 #            nacos:
-#              server-addr: 121.37.67.93
+#              server-addr: 103.105.200.216
 #              dataId: exception-transfer
 #              groupId: DEFAULT_GROUP
 #              data-type: json

@@ -1,0 +1,64 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /Users/wuxiaoran/logs/kafka-demo/collector/app-log-collector.log
+    # document_type: "_doc"
+    multiline:
+      # 指定配置的表达式 
+      pattern: '^\['
+      # 是否匹配到
+      negate: true
+      # 合并到上一行的末尾
+      match: after
+      # 最大的行数
+      max_lines: 1000
+      # 如果在规定的时间没有新的日志，就不等待后面的日志
+      timeout: 2s 
+    fields:
+      logbiz: collector
+      # 按服务划分用作kafka topic
+      logtopic: app-log-collector
+      env: dev
+
+  - type: log
+    enabled: true
+    paths:
+      - /Users/wuxiaoran/logs/kafka-demo/collector/error-log-collector.log
+    # document_type: "_doc"
+    multiline:
+      # 指定配置的表达式 
+      pattern: '^\['
+      # 是否匹配到
+      negate: true
+      # 合并到上一行的末尾
+      match: after
+      # 最大的行数
+      max_lines: 1000
+      # 如果在规定的时间没有新的日志，就不等待后面的日志
+      timeout: 2s 
+    fields:
+      logbiz: collector
+      # 按服务划分用作kafka topic
+      logtopic: error-log-collector
+      env: dev
+setup.template.settings:
+  index.number_of_shards: 3
+# output:
+  # console:
+  #   pretty: true
+  #   enable: true
+  # elasticsearch: #指定ES的配置
+  #   hosts: ["172.16.10.25:9200","172.16.10.25:9201","172.16.10.25:9202"]
+output:
+  kafka:
+    enabled: true
+    hosts: ["localhost:9092"]
+    topic: '%{[fields.logtopic]}'
+    partition.hash:
+      reachable_only: true
+    compression: gzip
+    max_message_bytes: 1000000
+    # 1: 
+    required_acks: 1
+logging.to_files: true

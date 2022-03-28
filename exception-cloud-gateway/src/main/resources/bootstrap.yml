@@ -7,10 +7,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 121.37.67.93
+        server-addr: 103.105.200.216
         group: ${spring.profiles.active}
         namespace: ${spring.profiles.active}
       config:
-        server-addr: 121.37.67.93
+        server-addr: 103.105.200.216
         file-extension: yaml
 
