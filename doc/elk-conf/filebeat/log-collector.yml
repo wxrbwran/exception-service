@@ -1,3 +1,4 @@
+# 和本项目无关
 filebeat.inputs:
   - type: log
     enabled: true

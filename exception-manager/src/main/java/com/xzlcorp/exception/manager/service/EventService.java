@@ -105,6 +105,7 @@ public class EventService {
     };
     log.info("发送的消息: {}", JSON.toJSONString(eventLikeWithIssueId));
 
+    // kafka存入消息，logstash消费，并传入es
     kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(eventLikeWithIssueId), callback);
 
   }
