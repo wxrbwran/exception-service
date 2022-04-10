@@ -14,8 +14,6 @@ import com.xzlcorp.exception.manager.enums.IssueTrendPeriodEnum;
 import com.xzlcorp.exception.manager.feign.DashboardClient;
 import com.xzlcorp.exception.manager.model.bo.Bucket;
 import com.xzlcorp.exception.manager.model.bo.BugDocument;
-import com.xzlcorp.exception.manager.model.dao.IssueDynamicSqlSupport;
-import com.xzlcorp.exception.manager.model.dao.IssueMapper;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
 import com.xzlcorp.exception.manager.model.query.IssuesTrendQuery;
@@ -34,9 +32,9 @@ import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInter
 import org.elasticsearch.search.aggregations.bucket.histogram.ExtendedBounds;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.joda.time.LocalDateTime;
-import org.mybatis.dynamic.sql.SqlBuilder;
-import org.mybatis.dynamic.sql.render.RenderingStrategies;
-import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
+//import org.mybatis.dynamic.sql.SqlBuilder;
+//import org.mybatis.dynamic.sql.render.RenderingStrategies;
+//import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +43,7 @@ import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+//import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 /**
  * @author wuxiaoran
@@ -53,8 +51,8 @@ import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 @Service
 @Slf4j
 public class IssueService {
-  @Autowired
-  private IssueMapper issueMapper;
+//  @Autowired
+//  private IssueMapper issueMapper;
 
   @Autowired
   private DashboardClient dashboardClient;
@@ -71,16 +69,16 @@ public class IssueService {
     PageHelper.startPage(query.getPageAt(), query.getPageSize());
     String apiKey = dashboardClient.getApiKeyByProjectId(query.getProjectId());
     log.info("getIssues apiKey: {}", apiKey);
-    SelectStatementProvider provider = SqlBuilder.select(IssueMapper.selectList)
-        .from(IssueDynamicSqlSupport.issue)
-        .where(IssueDynamicSqlSupport.apiKey, isEqualTo(apiKey))
-//        .and(IssueDynamicSqlSupport.updatedAt, isBetween(LocalDate.of(2020, 1, 1)).and(LocalDate.now()))
-        .orderBy(IssueDynamicSqlSupport.id.descending())
-        .build()
-        .render(RenderingStrategies.MYBATIS3);
-    List<Issue> issues = issueMapper.selectMany(provider);
-    PageInfoReduce<Issue> pageInfoReduce = PageInfoReducer.reduce(issues);
-    return pageInfoReduce;
+//    SelectStatementProvider provider = SqlBuilder.select(IssueMapper.selectList)
+//        .from(IssueDynamicSqlSupport.issue)
+//        .where(IssueDynamicSqlSupport.apiKey, isEqualTo(apiKey))
+//        .orderBy(IssueDynamicSqlSupport.id.descending())
+//        .build()
+//        .render(RenderingStrategies.MYBATIS3);
+//    List<Issue> issues = issueMapper.selectMany(provider);
+//    PageInfoReduce<Issue> pageInfoReduce = PageInfoReducer.reduce(issues);
+//    return pageInfoReduce;
+    return null;
   }
 
   public List<IssueVO> handleIssueToVO(List<Issue> issueList) {
@@ -275,14 +273,14 @@ public class IssueService {
 
       log.info("issue.getEvents(), {}", issue.getEvents());
 
-      issueMapper.update(c ->
-          c.set(IssueDynamicSqlSupport.eventsCount).equalTo(issue.getEventsCount())
-              .set(IssueDynamicSqlSupport.events).equalTo(issue.getEvents())
-              .set(IssueDynamicSqlSupport.users).equalTo(issue.getUsers())
-              .set(IssueDynamicSqlSupport.usersCount).equalTo(issue.getUsersCount())
-              .set(IssueDynamicSqlSupport.updatedAt).equalTo(new Date())
-              .where(IssueDynamicSqlSupport.id, isEqualTo(issue.getId()))
-      );
+//      issueMapper.update(c ->
+//          c.set(IssueDynamicSqlSupport.eventsCount).equalTo(issue.getEventsCount())
+//              .set(IssueDynamicSqlSupport.events).equalTo(issue.getEvents())
+//              .set(IssueDynamicSqlSupport.users).equalTo(issue.getUsers())
+//              .set(IssueDynamicSqlSupport.usersCount).equalTo(issue.getUsersCount())
+//              .set(IssueDynamicSqlSupport.updatedAt).equalTo(new Date())
+//              .where(IssueDynamicSqlSupport.id, isEqualTo(issue.getId()))
+//      );
     }
 
     return issue;
@@ -292,26 +290,27 @@ public class IssueService {
     log.info("createIssueByIntro, 1");
 
     Event event = request.getEvent();
-      SelectStatementProvider provider = SqlBuilder.select(IssueMapper.selectList)
-          .from(IssueDynamicSqlSupport.issue)
-          .where(IssueDynamicSqlSupport.intro, isEqualTo(request.getIntro()))
-          .build().render(RenderingStrategies.MYBATIS3);
-    Issue issue = issueMapper.selectOne(provider);
-    if (issue == null) {
-      // 不存在，创建
-      issue = new Issue();
-      issue.setIntro(request.getIntro());
-      issue.setApiKey(event.getApiKey());
-      issue.setMetadata(request.getMetaData());
-      issue.setType(event.getType());
-      issue.setEventsCount(0);
-      issue.setEvents(new String[]{});
-      issue.setUsers(new Integer[]{Integer.parseInt(event.getUser().getId())});
-      issue.setUsersCount(1);
-
-      issueMapper.insertSelective(issue);
-    }
-    return issue;
+//      SelectStatementProvider provider = SqlBuilder.select(IssueMapper.selectList)
+//          .from(IssueDynamicSqlSupport.issue)
+//          .where(IssueDynamicSqlSupport.intro, isEqualTo(request.getIntro()))
+//          .build().render(RenderingStrategies.MYBATIS3);
+//    Issue issue = issueMapper.selectOne(provider);
+//    if (issue == null) {
+//      // 不存在，创建
+//      issue = new Issue();
+//      issue.setIntro(request.getIntro());
+//      issue.setApiKey(event.getApiKey());
+//      issue.setMetadata(request.getMetaData());
+//      issue.setType(event.getType());
+//      issue.setEventsCount(0);
+//      issue.setEvents(new String[]{});
+//      issue.setUsers(new Integer[]{Integer.parseInt(event.getUser().getId())});
+//      issue.setUsersCount(1);
+//
+//      issueMapper.insertSelective(issue);
+//    }
+//    return issue;
+    return null;
   }
 
 }

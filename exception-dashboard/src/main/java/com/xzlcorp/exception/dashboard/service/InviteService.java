@@ -8,8 +8,6 @@ import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
 import com.xzlcorp.exception.common.utils.ArrayToList;
 import com.xzlcorp.exception.common.utils.Md5Utils;
 import com.xzlcorp.exception.common.utils.UniqueList;
-import com.xzlcorp.exception.dashboard.model.dao.InviteDynamicSqlSupport;
-import com.xzlcorp.exception.dashboard.model.dao.InviteMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.Invite;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
@@ -30,14 +28,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 @Service
 @Slf4j
 public class InviteService {
 
-  @Autowired
-  private InviteMapper inviteMapper;
+//  @Autowired
+//  private InviteMapper inviteMapper;
 
   @Autowired
   private UserService userService;
@@ -56,7 +53,9 @@ public class InviteService {
 
     String hash = Md5Utils.getMD5String(auth + "," + projects.toString() + "," + organizationId + "," + inviterId);
     log.info("createInviteUrl hash: {}", hash);
-    Invite oldInvite = inviteMapper.selectOne(c -> c.where(InviteDynamicSqlSupport.hash, isEqualTo(hash)));
+//    Invite oldInvite = inviteMapper.selectOne(c -> c.where(InviteDynamicSqlSupport.hash, isEqualTo(hash)));
+    Invite oldInvite = null;
+
     if (oldInvite != null) {
       return ApiRestResponse.success(oldInvite.getUrl());
     }
@@ -73,13 +72,14 @@ public class InviteService {
     invite.setProjects(projects.toArray(new Integer[projects.size()]));
 
     invite.setInviter(inviterId);
-    inviteMapper.insertSelective(invite);
+//    inviteMapper.insertSelective(invite);
     return ApiRestResponse.success(invite.getUrl());
   }
 
   public InviteVO getInviteByUUID(String uuid) {
-    Invite invite = inviteMapper.selectOne(c ->
-        c.where(InviteDynamicSqlSupport.uuid, isEqualTo(uuid)));
+//    Invite invite = inviteMapper.selectOne(c ->
+//        c.where(InviteDynamicSqlSupport.uuid, isEqualTo(uuid)));
+    Invite invite = null;
     if (invite != null) {
       InviteVO inviteVO = new InviteVO();
       BeanUtils.copyProperties(invite, inviteVO);
@@ -96,24 +96,24 @@ public class InviteService {
   }
 
   public ApiRestResponse bindUserWithOrganizationAndProject(BindUserRequest request) {
-    Invite invite = inviteMapper.selectOne(c ->
-        c.where(InviteDynamicSqlSupport.uuid, isEqualTo(request.getUuid())));
-    User user = userService.getUserInfoById(request.getUserId());
-    List<Integer> userOrganizations = ArrayToList.toList(user.getOrganizations());
-    userOrganizations = UniqueList.toUnique(userOrganizations, Arrays.asList(invite.getOrganization()));
-    user.setOrganizations(userOrganizations.toArray(new Integer[userOrganizations.size()]));
-    List<Integer> userProjects = ArrayToList.toList(user.getProjects());
-    userProjects = UniqueList.toUnique(userProjects, Arrays.asList(invite.getProjects()));
-    user.setProjects(userProjects.toArray(new Integer[userProjects.size()]));
-    userService.update(user);
-
-    Integer[] projectIds = invite.getProjects();
-    Integer organizationId = invite.getOrganization();
-    Integer userId = request.getUserId();
-    organizationService.addUser(organizationId, Arrays.asList(userId));
-    Arrays.asList(projectIds).forEach(projectId -> {
-      projectService.addUser(projectId, Arrays.asList(userId));
-    });
+//    Invite invite = inviteMapper.selectOne(c ->
+//        c.where(InviteDynamicSqlSupport.uuid, isEqualTo(request.getUuid())));
+//    User user = userService.getUserInfoById(request.getUserId());
+//    List<Integer> userOrganizations = ArrayToList.toList(user.getOrganizations());
+//    userOrganizations = UniqueList.toUnique(userOrganizations, Arrays.asList(invite.getOrganization()));
+//    user.setOrganizations(userOrganizations.toArray(new Integer[userOrganizations.size()]));
+//    List<Integer> userProjects = ArrayToList.toList(user.getProjects());
+//    userProjects = UniqueList.toUnique(userProjects, Arrays.asList(invite.getProjects()));
+//    user.setProjects(userProjects.toArray(new Integer[userProjects.size()]));
+//    userService.update(user);
+//
+//    Integer[] projectIds = invite.getProjects();
+//    Integer organizationId = invite.getOrganization();
+//    Integer userId = request.getUserId();
+//    organizationService.addUser(organizationId, Arrays.asList(userId));
+//    Arrays.asList(projectIds).forEach(projectId -> {
+//      projectService.addUser(projectId, Arrays.asList(userId));
+//    });
     return ApiRestResponse.success();
   }
 }

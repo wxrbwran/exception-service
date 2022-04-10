@@ -1,14 +1,9 @@
 package com.xzlcorp.exception.dashboard.service;
 
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
-import static org.mybatis.dynamic.sql.SqlBuilder.isIn;
-
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 import com.xzlcorp.exception.common.common.Constant;
 import com.xzlcorp.exception.common.utils.UniqueList;
-import com.xzlcorp.exception.dashboard.model.dao.ProjectDynamicSqlSupport;
-import com.xzlcorp.exception.dashboard.model.dao.ProjectMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
@@ -27,9 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.dynamic.sql.SqlBuilder;
-import org.mybatis.dynamic.sql.render.RenderingStrategies;
-import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,8 +33,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ProjectService {
 
-  @Autowired
-  private ProjectMapper projectMapper;
+//  @Autowired
+//  private ProjectMapper projectMapper;
 
   @Autowired
   private UserService userService;
@@ -54,15 +46,16 @@ public class ProjectService {
   private OrganizationService organizationService;
 
   public List<Project> getAllProjectsByOrganizationId(Integer organizationId, Integer userId) {
-    SelectStatementProvider provider = SqlBuilder.select(ProjectMapper.selectList)
-        .from(ProjectDynamicSqlSupport.project)
-        .where(ProjectDynamicSqlSupport.organization, isEqualTo(organizationId))
-        .build()
-        .render(RenderingStrategies.MYBATIS3);
-    
-    List<Project> projects = projectMapper.selectMany(provider);
-
-    return projects;
+//    SelectStatementProvider provider = SqlBuilder.select(ProjectMapper.selectList)
+//        .from(ProjectDynamicSqlSupport.project)
+//        .where(ProjectDynamicSqlSupport.organization, isEqualTo(organizationId))
+//        .build()
+//        .render(RenderingStrategies.MYBATIS3);
+//
+//    List<Project> projects = projectMapper.selectMany(provider);
+//
+//    return projects;
+    return null;
   }
 
   public List<ProjectVO> handleUsersInProjects(List<Project> projects) {
@@ -139,7 +132,7 @@ public class ProjectService {
     project.setOrganization(organizationId);
     project.setNotificationSetting(setting.getId());
 
-    projectMapper.insertSelective(project);
+//    projectMapper.insertSelective(project);
     userService.bindUserWithProjectId(project.getId(), adminId);
     bindOrganizationWithProjectId(project.getId(), organizationId);
     return project;
@@ -169,7 +162,7 @@ public class ProjectService {
     Project project = new Project();
     BeanUtils.copyProperties(request, project);
     project.setId(projectId);
-    projectMapper.updateByPrimaryKeySelective(project);
+//    projectMapper.updateByPrimaryKeySelective(project);
     return handleProject2VO(project);
   }
 
@@ -190,20 +183,25 @@ public class ProjectService {
   }
 
   public List<Project> getProjects(List<Integer> projectIds) {
-    List<Project> projectList = projectMapper.select(c ->
-        c.where(ProjectDynamicSqlSupport.id, isIn(projectIds)));
-    return projectList;
+//    List<Project> projectList = projectMapper.select(c ->
+//        c.where(ProjectDynamicSqlSupport.id, isIn(projectIds)));
+//    return projectList;
+    return null;
   }
 
   public Project getProjectById(Integer projectId) {
-    Project project = projectMapper.selectByPrimaryKey(projectId);
-    return project;
+//    Project project = projectMapper.selectByPrimaryKey(projectId);
+//    return project;
+    return null;
+
   }
 
   public Project getProjectByApiKey(String apiKey) {
-    return projectMapper.selectOne(c ->
-        c.where(ProjectDynamicSqlSupport.apiKey, isEqualTo(apiKey))
-    );
+//    return projectMapper.selectOne(c ->
+//        c.where(ProjectDynamicSqlSupport.apiKey, isEqualTo(apiKey))
+//    );
+    return null;
+
   }
 
 
@@ -212,6 +210,6 @@ public class ProjectService {
     List<Integer> users = Arrays.stream(project.getUsers()).collect(Collectors.toList());
     List<Integer> userIdSet = UniqueList.toUnique(users, userIds);
     project.setUsers(userIdSet.toArray(new Integer[userIdSet.size()]));
-    projectMapper.updateByPrimaryKeySelective(project);
+//    projectMapper.updateByPrimaryKeySelective(project);
   }
 }

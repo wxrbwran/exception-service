@@ -1,12 +1,8 @@
 package com.xzlcorp.exception.dashboard.service;
 
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.common.exception.XzlCorpException;
 import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
-import com.xzlcorp.exception.dashboard.model.dao.NotificationRuleDynamicSqlSupport;
-import com.xzlcorp.exception.dashboard.model.dao.NotificationRuleMapper;
-import com.xzlcorp.exception.dashboard.model.dao.NotificationSettingMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRule;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSetting;
@@ -29,11 +25,11 @@ public class NotificationService {
   private final static int MAX_EMAILS_NUMBER = 20;
   private final static int MAX_WEBHOOKS_NUMBER = 10;
 
-  @Autowired
-  private NotificationSettingMapper notificationSettingMapper;
-
-  @Autowired
-  private NotificationRuleMapper notificationRuleMapper;
+//  @Autowired
+//  private NotificationSettingMapper notificationSettingMapper;
+//
+//  @Autowired
+//  private NotificationRuleMapper notificationRuleMapper;
 
   @Autowired
   private ProjectService projectService;
@@ -41,7 +37,7 @@ public class NotificationService {
   public NotificationSetting createNotificationSetting(NotificationSettingRequest request) {
     NotificationSetting notificationSetting = new NotificationSetting();
     BeanUtils.copyProperties(request, notificationSetting);
-    notificationSettingMapper.insertSelective(notificationSetting);
+//    notificationSettingMapper.insertSelective(notificationSetting);
     return notificationSetting;
   }
 
@@ -52,18 +48,19 @@ public class NotificationService {
       BeanUtils.copyProperties(request, rule);
       rule.setProject(request.getProjectId());
       rule.setLevel(request.getLevel());
-      notificationRuleMapper.insertSelective(rule);
+//      notificationRuleMapper.insertSelective(rule);
       return ApiRestResponse.success(rule);
     }
     throw new XzlCorpException(XzlCorpExceptionEnum.TOO_MUCH);
   }
 
   public List<NotificationRule> getNotificationRules(Integer projectId) {
-    List<NotificationRule> notificationRuleList = notificationRuleMapper.select(c ->
-      c.where(NotificationRuleDynamicSqlSupport.project, isEqualTo(projectId))
-          .orderBy(NotificationRuleDynamicSqlSupport.id)
-    );
-    return notificationRuleList;
+//    List<NotificationRule> notificationRuleList = notificationRuleMapper.select(c ->
+//      c.where(NotificationRuleDynamicSqlSupport.project, isEqualTo(projectId))
+//          .orderBy(NotificationRuleDynamicSqlSupport.id)
+//    );
+//    return notificationRuleList;
+    return null;
   }
 
 
@@ -71,19 +68,20 @@ public class NotificationService {
     NotificationRule rule = new NotificationRule();
     rule.setId(ruleId);
     BeanUtils.copyProperties(request, rule);
-    notificationRuleMapper.updateByPrimaryKeySelective(rule);
+//    notificationRuleMapper.updateByPrimaryKeySelective(rule);
     return ApiRestResponse.success(rule);
   }
 
   public ApiRestResponse deleteNotificationRule(Integer ruleId) {
-    notificationRuleMapper.deleteByPrimaryKey(ruleId);
+//    notificationRuleMapper.deleteByPrimaryKey(ruleId);
     return ApiRestResponse.success(ruleId);
   }
 
   public NotificationSetting getNotificationSetting(Integer projectId) {
     Project project = projectService.getProjectById(projectId);
-    NotificationSetting setting = notificationSettingMapper.selectOne(c ->
-        c.where(NotificationRuleDynamicSqlSupport.id, isEqualTo(project.getNotificationSetting())));
-    return setting;
+//    NotificationSetting setting = notificationSettingMapper.selectOne(c ->
+//        c.where(NotificationRuleDynamicSqlSupport.id, isEqualTo(project.getNotificationSetting())));
+//    return setting;
+    return null;
   }
 }

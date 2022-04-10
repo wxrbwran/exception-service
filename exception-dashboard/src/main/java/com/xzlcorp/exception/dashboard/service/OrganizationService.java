@@ -1,13 +1,9 @@
 package com.xzlcorp.exception.dashboard.service;
 
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
-import static org.mybatis.dynamic.sql.SqlBuilder.isIn;
 
 import com.xzlcorp.exception.common.exception.XzlCorpException;
 import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
 import com.xzlcorp.exception.common.utils.UniqueList;
-import com.xzlcorp.exception.dashboard.model.dao.OrganizationDynamicSqlSupport;
-import com.xzlcorp.exception.dashboard.model.dao.OrganizationMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
@@ -20,9 +16,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.xzlcorp.exception.dashboard.model.vo.UserVO;
-import org.mybatis.dynamic.sql.SqlBuilder;
-import org.mybatis.dynamic.sql.render.RenderingStrategies;
-import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrganizationService {
 
-  @Autowired
-  private OrganizationMapper organizationMapper;
+//  @Autowired
+//  private OrganizationMapper organizationMapper;
 
   @Autowired
   private UserService userService;
@@ -47,40 +40,45 @@ public class OrganizationService {
   @Transactional(propagation = Propagation.REQUIRED)
   public Organization create(OrganizationRequest request) {
 
-    SelectStatementProvider provider = SqlBuilder.select(OrganizationMapper.selectList)
-        .from(OrganizationDynamicSqlSupport.organization)
-        .where(OrganizationDynamicSqlSupport.name, isEqualTo(request.getName()))
-        .build()
-        .render(RenderingStrategies.MYBATIS3);
-    Organization oldOrganization = organizationMapper.selectOne(provider);
-    if (oldOrganization != null) {
-      throw new XzlCorpException(XzlCorpExceptionEnum.NAME_EXISTED);
-    } else {
-      Organization organization = new Organization();
-      BeanUtils.copyProperties(request, organization);
-      Integer[] users = {request.getAdmin()};
-      organization.setUsers(users);
-      organizationMapper.insertSelective(organization);
-
-      userService.bindUserWithOrganizationId(organization.getId(), request.getAdmin());
-      return organization;
-    }
+//    SelectStatementProvider provider = SqlBuilder.select(OrganizationMapper.selectList)
+//        .from(OrganizationDynamicSqlSupport.organization)
+//        .where(OrganizationDynamicSqlSupport.name, isEqualTo(request.getName()))
+//        .build()
+//        .render(RenderingStrategies.MYBATIS3);
+//    Organization oldOrganization = organizationMapper.selectOne(provider);
+//    if (oldOrganization != null) {
+//      throw new XzlCorpException(XzlCorpExceptionEnum.NAME_EXISTED);
+//    } else {
+//      Organization organization = new Organization();
+//      BeanUtils.copyProperties(request, organization);
+//      Integer[] users = {request.getAdmin()};
+//      organization.setUsers(users);
+//      organizationMapper.insertSelective(organization);
+//
+//      userService.bindUserWithOrganizationId(organization.getId(), request.getAdmin());
+//      return organization;
+//    }
+    return null;
   }
 
 
   public Organization getOrganizationById(Integer id) {
-    Organization organization = organizationMapper.selectByPrimaryKey(id);
-    return organization;
+//    Organization organization = organizationMapper.selectByPrimaryKey(id);
+//    return organization;
+    return null;
+
   }
 
   public List<Organization> getOrganizations(List<Integer> orgIds) {
-    List<Organization> organizationList = organizationMapper.select(c ->
-        c.where(OrganizationDynamicSqlSupport.id, isIn(orgIds)));
-    return organizationList;
+//    List<Organization> organizationList = organizationMapper.select(c ->
+//        c.where(OrganizationDynamicSqlSupport.id, isIn(orgIds)));
+//    return organizationList;
+    return null;
+
   }
 
   public void update(Organization organization) {
-    organizationMapper.updateByPrimaryKeySelective(organization);
+//    organizationMapper.updateByPrimaryKeySelective(organization);
   }
 
   public OrganizationVO handleOrganization2ToVO(Organization organization) {
@@ -105,25 +103,27 @@ public class OrganizationService {
 
 
   public void increaseEventCount(String apiKey) {
-    Project project = projectService.getProjectByApiKey(apiKey);
-    Organization organization = organizationMapper.selectOne(c ->
-      c.where(OrganizationDynamicSqlSupport.id, isEqualTo(project.getOrganization()))
-    );
-    int count = organization.getCount() + 1;
-    organization.setCount(count);
-    organizationMapper.updateByPrimaryKeySelective(organization);
+//    Project project = projectService.getProjectByApiKey(apiKey);
+//    Organization organization = organizationMapper.selectOne(c ->
+//      c.where(OrganizationDynamicSqlSupport.id, isEqualTo(project.getOrganization()))
+//    );
+//    int count = organization.getCount() + 1;
+//    organization.setCount(count);
+//    organizationMapper.updateByPrimaryKeySelective(organization);
+
   }
 
   public Organization updateOrganizationById(Integer orgId, UpdateOrganizationRequest request) {
-    Organization organization = new Organization();
-    BeanUtils.copyProperties(request, organization);
-    organization.setId(orgId);
-    organizationMapper.updateByPrimaryKeySelective(organization);
-    return organization;
+//    Organization organization = new Organization();
+//    BeanUtils.copyProperties(request, organization);
+//    organization.setId(orgId);
+//    organizationMapper.updateByPrimaryKeySelective(organization);
+//    return organization;
+    return null;
   }
 
   public void deleteOrganizationById(Integer orgId) {
-    organizationMapper.deleteByPrimaryKey(orgId);
+//    organizationMapper.deleteByPrimaryKey(orgId);
   }
 
   public void handleOrganizationUsersAndProjectsAndAdmin(List<Organization> organizations, List<OrganizationVO> organizationVOList) {
@@ -177,6 +177,6 @@ public class OrganizationService {
     List<Integer> users = Arrays.stream(organization.getUsers()).collect(Collectors.toList());
     List<Integer> userIdSet = UniqueList.toUnique(users, userIds);
     organization.setUsers(userIdSet.toArray(new Integer[userIdSet.size()]));
-    organizationMapper.updateByPrimaryKeySelective(organization);
+//    organizationMapper.updateByPrimaryKeySelective(organization);
   }
 }

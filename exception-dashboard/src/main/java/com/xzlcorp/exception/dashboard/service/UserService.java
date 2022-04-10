@@ -1,9 +1,5 @@
 package com.xzlcorp.exception.dashboard.service;
 
-import static org.mybatis.dynamic.sql.SqlBuilder.isIn;
-
-import com.xzlcorp.exception.dashboard.model.dao.UserDynamicSqlSupport;
-import com.xzlcorp.exception.dashboard.model.dao.UserMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,25 +20,30 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
 
-  @Autowired
-  private UserMapper userMapper;
+//  @Autowired
+//  private UserMapper userMapper;
 
   public User getUserInfoById(Integer id) {
-    User user = userMapper.selectByPrimaryKey(id);
-    return user;
+//    User user = userMapper.selectByPrimaryKey(id);
+//    return user;
+    return null;
   }
 
   public List<User> getUserInfoByIds(Integer[] userIds) {
-    List<User> users = userMapper.select(c ->
-        c.where(UserDynamicSqlSupport.id, isIn(userIds)));
-    return users;
+//    List<User> users = userMapper.select(c ->
+//        c.where(UserDynamicSqlSupport.id, isIn(userIds)));
+//    return users;
+    return null;
+
   }
 
   public UserVO getUserInfoByIdSimple(Integer id) {
-    User user = userMapper.selectByPrimaryKey(id);
-    UserVO userVO = new UserVO();
-    BeanUtils.copyProperties(user, userVO);
-    return userVO;
+//    User user = userMapper.selectByPrimaryKey(id);
+//    UserVO userVO = new UserVO();
+//    BeanUtils.copyProperties(user, userVO);
+//    return userVO;
+    return null;
+
   }
 
   public UserVO handleUser2VO(User user) {
@@ -67,8 +68,10 @@ public class UserService {
   }
 
   public User update(User user) {
-    userMapper.updateByPrimaryKeySelective(user);
-    return user;
+//    userMapper.updateByPrimaryKeySelective(user);
+//    return user;
+    return null;
+
   }
 
   public User updateUserById(Integer userId, UpdateUserRequest request) {
@@ -112,7 +115,4 @@ public class UserService {
     user.setOrganizations(newOrganizations);
     update(user);
   }
-
-
-
 }
