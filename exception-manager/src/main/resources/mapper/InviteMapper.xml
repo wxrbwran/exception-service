@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzlcorp.exception.mapper.InviteMapper">
+
+    <resultMap id="BaseResultMap" type="com.xzlcorp.exception.domain.Invite">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="uuid" column="uuid" jdbcType="VARCHAR"/>
+            <result property="hash" column="hash" jdbcType="VARCHAR"/>
+            <result property="auth" column="auth" jdbcType="VARCHAR"/>
+            <result property="url" column="url" jdbcType="VARCHAR"/>
+            <result property="expires" column="expires" jdbcType="TIMESTAMP"/>
+            <result property="projects" column="projects" jdbcType="OTHER"/>
+            <result property="organization" column="organization" jdbcType="OTHER"/>
+            <result property="inviter" column="inviter" jdbcType="OTHER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,uuid,hash,
+        auth,url,expires,
+        projects,organization,inviter
+    </sql>
+</mapper>

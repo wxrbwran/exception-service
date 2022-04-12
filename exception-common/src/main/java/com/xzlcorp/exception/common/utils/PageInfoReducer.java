@@ -1,6 +1,5 @@
 package com.xzlcorp.exception.common.utils;
 
-import com.github.pagehelper.PageInfo;
 import java.util.List;
 
 /**
@@ -11,11 +10,12 @@ import java.util.List;
 public class PageInfoReducer {
 
   public static<T> PageInfoReduce reduce(List<T> list) {
-    PageInfo<T> pageList = new PageInfo<T>(list);
-    PageInfoReduce newList = new PageInfoReduce<T>();
-    newList.setList(list);
-    newList.setTotal(pageList.getTotal());
-    return newList;
+//    PageInfo<T> pageList = new PageInfo<T>(list);
+//    PageInfoReduce newList = new PageInfoReduce<T>();
+//    newList.setList(list);
+//    newList.setTotal(pageList.getTotal());
+//    return newList;
+    return null;
   }
 
   public static<T> PageInfoReduce reduce(List<T> list, Long total) {
