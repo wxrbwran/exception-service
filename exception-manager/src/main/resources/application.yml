@@ -51,11 +51,6 @@ spring:
       #value的Serializer类，实现类实现了接口org.apache.kafka.common.serialization.Serializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
-#mybatis:
-#  mapper-locations: classpath:mappers/*.xml
-#  configuration:
-#    map-underscore-to-camel-case: true
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

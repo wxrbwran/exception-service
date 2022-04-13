@@ -1,4 +1,4 @@
-package com.xzlcorp.exception.manager.service;
+package com.xzlcorp.exception.manager.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;

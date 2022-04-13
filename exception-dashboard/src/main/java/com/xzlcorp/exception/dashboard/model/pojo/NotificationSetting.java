@@ -7,16 +7,16 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.xzlcorp.exception.dashboard.model.pojo.SourceMapData;
+import com.xzlcorp.exception.dashboard.model.pojo.notification.*;
 import lombok.Data;
 
 /**
- * sourceMap表
- * @TableName t_source_map
+ * 通知设置表
+ * @TableName t_notification_setting
  */
-@TableName(value ="s_exception.t_source_map")
+@TableName(value ="s_exception.t_notification_setting")
 @Data
-public class SourceMap implements Serializable {
+public class NotificationSetting implements Serializable {
     /**
      * 
      */
@@ -26,22 +26,22 @@ public class SourceMap implements Serializable {
     /**
      * 
      */
-    private String apiKey;
+    private NotificationSettingEmails emails;
 
     /**
      * 
      */
-    private String appVersion;
+    private NotificationSettingBrowser browser;
 
     /**
      * 
      */
-    private String appType;
+    private NotificationSettingWebHooks webhooks;
 
     /**
-     * 所有的 sourceMap 文件信息
+     * 
      */
-    private SourceMapData data;
+    private Integer project;
 
     /**
      * 

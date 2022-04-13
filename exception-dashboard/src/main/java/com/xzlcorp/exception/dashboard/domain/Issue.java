@@ -1,26 +1,25 @@
-package com.xzlcorp.exception.dashboard.model.pojo;
+package com.xzlcorp.exception.dashboard.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.xzlcorp.exception.common.model.pojo.event.MetaData;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * 
  * @TableName t_issue
  */
-@TableName(value ="s_exception.t_issue")
+@TableName(value ="t_issue")
 @Data
 public class Issue implements Serializable {
     /**
      * 唯一主键
      */
     @TableId
-    private Integer id;
+    private Object id;
 
     /**
      * 每个event的特征hash
@@ -40,27 +39,27 @@ public class Issue implements Serializable {
     /**
      * issue 所对应的 metadata
      */
-    private MetaData metadata;
+    private Object metadata;
 
     /**
      * 所对应的 events (doc:_id)
      */
-    private String[] events;
+    private String events;
 
     /**
      *  所对应的 events count
      */
-    private Integer eventsCount;
+    private Object eventsCount;
 
     /**
      * 受此 issue 影响的用户
      */
-    private Integer[] users;
+    private Object users;
 
     /**
      * 受此 issue 影响的用户 count
      */
-    private Integer usersCount;
+    private Object usersCount;
 
     /**
      * 首条 event 的时间

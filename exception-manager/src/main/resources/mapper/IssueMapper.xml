@@ -2,18 +2,21 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xzlcorp.exception.mapper.IssueMapper">
+<mapper namespace="com.xzlcorp.exception.dashboard.mapper.IssueMapper">
 
-    <resultMap id="BaseResultMap" type="com.xzlcorp.exception.domain.Issue">
-            <id property="id" column="id" jdbcType="OTHER"/>
+    <resultMap id="BaseResultMap" type="com.xzlcorp.exception.manager.model.pojo.Issue">
+            <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="intro" column="intro" jdbcType="VARCHAR"/>
             <result property="apiKey" column="api_key" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="VARCHAR"/>
-            <result property="metadata" column="metadata" jdbcType="OTHER"/>
-            <result property="events" column="events" jdbcType="VARCHAR"/>
-            <result property="eventsCount" column="events_count" jdbcType="OTHER"/>
-            <result property="users" column="users" jdbcType="OTHER"/>
-            <result property="usersCount" column="users_count" jdbcType="OTHER"/>
+            <result property="metadata" column="metadata" jdbcType="OTHER"
+                typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+            <result property="events" column="events" jdbcType="ARRAY"
+                typeHandler="com.xzlcorp.exception.common.utils.mybatis.TextArrayTypeHandler"/>
+            <result property="eventsCount" column="events_count" jdbcType="INTEGER"/>
+            <result property="users" column="users" jdbcType="ARRAY"
+                typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>
+            <result property="usersCount" column="users_count" jdbcType="INTEGER"/>
             <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
             <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
     </resultMap>

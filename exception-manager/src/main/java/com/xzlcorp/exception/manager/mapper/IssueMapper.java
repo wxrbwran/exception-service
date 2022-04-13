@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @author wxr
 * @description 针对表【t_issue】的数据库操作Mapper
 * @createDate 2022-04-12 22:59:00
-* @Entity com.xzlcorp.exception.domain.Issue
+* @Entity
 */
 @Mapper
 public interface IssueMapper extends BaseMapper<Issue> {

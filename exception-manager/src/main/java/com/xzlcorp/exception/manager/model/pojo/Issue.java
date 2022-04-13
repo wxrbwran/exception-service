@@ -3,6 +3,10 @@ package com.xzlcorp.exception.manager.model.pojo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xzlcorp.exception.common.model.pojo.event.MetaData;
+import com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler;
+import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
+import com.xzlcorp.exception.common.utils.mybatis.TextArrayTypeHandler;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,14 +16,14 @@ import java.util.Date;
  * 
  * @TableName t_issue
  */
-@TableName(value ="t_issue")
+@TableName(value ="s_exception.t_issue")
 @Data
 public class Issue implements Serializable {
     /**
      * 唯一主键
      */
     @TableId
-    private Object id;
+    private Integer id;
 
     /**
      * 每个event的特征hash
@@ -39,27 +43,30 @@ public class Issue implements Serializable {
     /**
      * issue 所对应的 metadata
      */
-    private Object metadata;
+    @TableField(typeHandler = JsonbTypeHandler.class)
+    private MetaData metadata;
 
     /**
      * 所对应的 events (doc:_id)
      */
-    private String events;
+    @TableField(typeHandler = TextArrayTypeHandler.class)
+    private String[] events;
 
     /**
      *  所对应的 events count
      */
-    private Object eventsCount;
+    private Integer eventsCount;
 
     /**
      * 受此 issue 影响的用户
      */
-    private Object users;
+    @TableField(typeHandler = IntArrayTypeHandler.class)
+    private Integer[] users;
 
     /**
      * 受此 issue 影响的用户 count
      */
-    private Object usersCount;
+    private Integer usersCount;
 
     /**
      * 首条 event 的时间

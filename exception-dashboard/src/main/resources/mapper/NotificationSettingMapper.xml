@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzlcorp.exception.dashboard.mapper.NotificationSettingMapper">
+
+    <resultMap id="BaseResultMap" type="com.xzlcorp.exception.dashboard.model.pojo.NotificationSetting">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="emails" column="emails" jdbcType="OTHER"
+                typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+            <result property="browser" column="browser" jdbcType="OTHER"
+                    typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+            <result property="webhooks" column="webhooks" jdbcType="OTHER"
+                    typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+            <result property="project" column="project" jdbcType="INTEGER"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,emails,browser,
+        webhooks,project,created_at,
+        updated_at
+    </sql>
+</mapper>

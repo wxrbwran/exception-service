@@ -1,116 +1,66 @@
 package com.xzlcorp.exception.dashboard.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
 import java.util.Date;
-import javax.annotation.Generated;
+import lombok.Data;
 
-public class Organization {
-
+/**
+ * 组织表
+ * @TableName t_organization
+ */
+@TableName(value ="s_exception.t_organization")
+@Data
+public class Organization implements Serializable {
+    /**
+     * 唯一主键
+     */
+    @TableId
     private Integer id;
 
+    /**
+     * 名称
+     */
     private String name;
 
+    /**
+     * 简介
+     */
     private String introduction;
 
+    /**
+     * 
+     */
     private Integer admin;
 
+    /**
+     * organization 所拥有的 project (一对多)
+     */
     private Integer[] projects;
 
+    /**
+     * organization 当前承载的 event 数
+     */
     private Integer count;
 
+    /**
+     * 
+     */
     private Date createdAt;
 
+    /**
+     * 
+     */
     private Date updatedAt;
 
-
+    /**
+     * organization 所拥有的 user (多对多)
+     */
     private Integer[] users;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
-
-    public String getIntroduction() {
-        return introduction;
-    }
-
-
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction == null ? null : introduction.trim();
-    }
-
-
-    public Integer getAdmin() {
-        return admin;
-    }
-
-
-    public void setAdmin(Integer admin) {
-        this.admin = admin;
-    }
-
-
-    public Integer[] getProjects() {
-        return projects;
-    }
-
-
-    public void setProjects(Integer[] projects) {
-        this.projects = projects;
-    }
-
-
-    public Integer getCount() {
-        return count;
-    }
-
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-
-    public Integer[] getUsers() {
-        return users;
-    }
-
-
-    public void setUsers(Integer[] users) {
-        this.users = users;
-    }
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 }

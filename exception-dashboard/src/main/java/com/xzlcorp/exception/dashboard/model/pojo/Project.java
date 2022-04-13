@@ -1,149 +1,76 @@
 package com.xzlcorp.exception.dashboard.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
 import java.util.Date;
-import javax.annotation.Generated;
+import lombok.Data;
 
-public class Project {
-
+/**
+ * 项目表
+ * @TableName t_project
+ */
+@TableName(value ="s_exception.t_project")
+@Data
+public class Project implements Serializable {
+    /**
+     * 
+     */
+    @TableId
     private Integer id;
 
-
+    /**
+     * 
+     */
     private String apiKey;
 
-
+    /**
+     * 项目名	
+     */
     private String name;
 
-
+    /**
+     * 项目类型
+     */
     private String type;
 
-
+    /**
+     * project 的管理员用户(多对一)
+     */
     private Integer admin;
 
-
+    /**
+     * project 所属的 organization (多对一)
+     */
     private Integer organization;
 
-
+    /**
+     * project 所拥有的 users (多对多)
+     */
     private Integer[] users;
 
-
+    /**
+     * project 所拥有的 notification rules 
+     */
     private Integer[] notificationRules;
 
-
+    /**
+     * project 所拥有的 notification settings
+     */
     private Integer notificationSetting;
 
-
+    /**
+     * 
+     */
     private Date createdAt;
 
-
+    /**
+     * 
+     */
     private Date updatedAt;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey == null ? null : apiKey.trim();
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
-
-    public String getType() {
-        return type;
-    }
-
-
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
-
-
-    public Integer getAdmin() {
-        return admin;
-    }
-
-
-    public void setAdmin(Integer admin) {
-        this.admin = admin;
-    }
-
-
-    public Integer getOrganization() {
-        return organization;
-    }
-
-
-    public void setOrganization(Integer organization) {
-        this.organization = organization;
-    }
-
-
-    public Integer[] getUsers() {
-        return users;
-    }
-
-
-    public void setUsers(Integer[] users) {
-        this.users = users;
-    }
-
-
-    public Integer[] getNotificationRules() {
-        return notificationRules;
-    }
-
-
-    public void setNotificationRules(Integer[] notificationRules) {
-        this.notificationRules = notificationRules;
-    }
-
-
-    public Integer getNotificationSetting() {
-        return notificationSetting;
-    }
-
-
-    public void setNotificationSetting(Integer notificationSetting) {
-        this.notificationSetting = notificationSetting;
-    }
-
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 }

@@ -1,14 +1,14 @@
-package com.xzlcorp.exception.manager.mapper;
+package com.xzlcorp.exception.dashboard.mapper;
 
+import com.xzlcorp.exception.dashboard.model.pojo.Invite;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xzlcorp.exception.manager.model.pojo.Invite;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
-* @author wxr
+* @author wuxiaoran
 * @description 针对表【t_invite(邀请表)】的数据库操作Mapper
-* @createDate 2022-04-12 22:49:58
-* @Entity com.xzlcorp.exception.domain.Invite
+* @createDate 2022-04-13 11:32:48
+* @Entity com.xzlcorp.exception.dashboard.model.pojo.Invite
 */
 @Mapper
 public interface InviteMapper extends BaseMapper<Invite> {

@@ -4,6 +4,8 @@ import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
+import com.xzlcorp.exception.dashboard.model.request.LoginRequest;
+import com.xzlcorp.exception.dashboard.model.request.SignupRequest;
 import com.xzlcorp.exception.dashboard.model.request.UpdateUserRequest;
 import com.xzlcorp.exception.dashboard.model.vo.OrganizationVO;
 import com.xzlcorp.exception.dashboard.model.vo.ProjectVO;
@@ -13,20 +15,21 @@ import com.xzlcorp.exception.dashboard.service.ProjectService;
 import com.xzlcorp.exception.dashboard.service.UserService;
 import io.swagger.annotations.Api;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author wuxiaoran
  */
 @Slf4j
 @RestController
-@RequestMapping("/users")
+//@RequestMapping("/users")
 @Api(value = "User", tags = {"用户信息相关接口"})
 public class UserController {
 
@@ -39,7 +42,7 @@ public class UserController {
   @Autowired
   private ProjectService projectService;
 
-  @GetMapping("{userId}")
+  @GetMapping("/users/{userId}")
   public ApiRestResponse getUserInfo(@PathVariable Integer userId) {
     User user = userService.getUserInfoById(userId);
     UserVO userVO = userService.handleUser2VO(user);
@@ -73,12 +76,24 @@ public class UserController {
     return ApiRestResponse.success(userVO);
   }
 
-
-
-  @PatchMapping("{userId}")
+  @PatchMapping("/users/{userId}")
   public ApiRestResponse<User> updateUserInfo(@PathVariable Integer userId, @RequestBody UpdateUserRequest request) {
     User user = userService.updateUserById(userId, request);
     return ApiRestResponse.success(user);
   }
 
+
+  @PostMapping("/auth/signup")
+  public ApiRestResponse signup(@Valid @RequestBody SignupRequest request)
+      throws NoSuchAlgorithmException {
+    UserVO userVO = userService.signup(request);
+    return ApiRestResponse.success(userVO);
+  }
+
+  @PostMapping("/auth/login")
+  public ApiRestResponse login(@Valid @RequestBody LoginRequest request)
+      throws NoSuchAlgorithmException {
+    UserVO userVO = userService.login(request);
+    return ApiRestResponse.success(userVO);
+  }
 }
