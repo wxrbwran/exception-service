@@ -1,0 +1,42 @@
+logging.to_files: true
+
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /logs/xzl/health_week/healthWeek.*.log
+    # 匹配 HEALTH_WEEK# 结尾的日志 单行
+    include_lines: '^#HEALTH_WEEK'
+processors:
+  # 将message字段进行kv赋值到根节点
+  - dissect:
+      # 通过<![CDATA[]]>关键字进行kv组分割，如果不记录聊天内容或者把聊天内容记录至note，可是用下面的简单空格进行分割
+      tokenizer: "#HEALTH_WEEK %{*field1}=%{&field1}<![CDATA[]]>%{*field2}=%{&field2}<![CDATA[]]>%{*field3}=%{&field3}<![CDATA[]]>%{*field4}=%{&field4}<![CDATA[]]>%{*field5}=%{&field5}<![CDATA[]]>%{*field6}=%{&field6}<![CDATA[]]>%{*field7}=%{&field7}<![CDATA[]]>%{note}"
+      field: "message"
+      target_prefix: ""
+  # 丢弃不需要的字段
+  - drop_fields:
+      fields: ["ecs", "agent", "input", "log", "host", "message", ""]
+      ignore_missing: true
+  - convert:
+      fields:
+        # - {from: "src_ip", to: "source.ip", type: "ip"}
+        - {from: "sid", to: "sid", type: "long"}
+        - {from: "createTime", to: "createTime", type: "long"}
+      ignore_missing: true
+      fail_on_error: false
+setup:
+  ilm:
+    enabled: false
+  template:
+    enabled: false
+output:
+  # console:
+  #   pretty: true
+  #   enable: true
+  elasticsearch:
+    # hosts: ["http://172.16.10.121:9200"]
+    username: elastic
+    password: dev123
+    hosts: ["http://103.105.200.216:9200"]
+    index: chao-test-index-%{+yyyy-MM-dd}
