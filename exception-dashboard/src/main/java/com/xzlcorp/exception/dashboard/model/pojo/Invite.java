@@ -6,13 +6,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler;
+import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
 import lombok.Data;
 
 /**
  * 邀请表
  * @TableName t_invite
  */
-@TableName(value ="s_exception.t_invite")
+@TableName(value ="s_exception.t_invite", autoResultMap = true)
 @Data
 public class Invite implements Serializable {
     /**
@@ -49,6 +52,7 @@ public class Invite implements Serializable {
     /**
      * invite 链接所对应的项目
      */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private Integer[] projects;
 
     /**

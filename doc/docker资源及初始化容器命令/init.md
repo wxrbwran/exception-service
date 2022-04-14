@@ -17,8 +17,8 @@ docker run -d --name filebeat \
 ### kafka
 docker run -d --restart=always --log-driver json-file --log-opt max-size=100m --log-opt max-file=2 \
     --name kafka -p 9092:9092 -e KAFKA_BROKER_ID=0 -e KAFKA_HEAP_OPTS="-Xmx512M -Xms512M" \
-    -e KAFKA_ZOOKEEPER_CONNECT=192.168.6.194:2181/kafka \
-    -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.6.194:9092 \
+    -e KAFKA_ZOOKEEPER_CONNECT=172.17.0.3:2181/kafka \
+    -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://103.105.200.216:9092 \
     -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092 -v /etc/localtime:/etc/localtime wurstmeister/kafka
 ### nacos
 docker run --name nacos -v /root/docker/nacos/nacos.properties:/home/nacos/conf/application.properties \

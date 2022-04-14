@@ -63,7 +63,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
       ProjectVO projectVO = new ProjectVO();
       BeanUtils.copyProperties(project, projectVO);
       List<Integer> users = new ArrayList<>();
-      users.addAll(Arrays.asList(project.getUsers()));
+      users.addAll(project.getUsers() != null ? Arrays.asList(project.getUsers()) : new ArrayList<>());
       List<UserVO> userVOList = new ArrayList<>();
       users.forEach(userId -> {
         if (userVOCache.containsKey(userId)) {

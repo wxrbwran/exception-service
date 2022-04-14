@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.*;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ import lombok.Data;
  * 通知设置表
  * @TableName t_notification_setting
  */
-@TableName(value ="s_exception.t_notification_setting")
+@TableName(value ="s_exception.t_notification_setting", autoResultMap = true)
 @Data
 public class NotificationSetting implements Serializable {
     /**
@@ -26,21 +27,25 @@ public class NotificationSetting implements Serializable {
     /**
      * 
      */
+    @TableField(typeHandler = JsonbTypeHandler.class)
     private NotificationSettingEmails emails;
 
     /**
      * 
      */
+    @TableField(typeHandler = JsonbTypeHandler.class)
     private NotificationSettingBrowser browser;
 
     /**
      * 
      */
+    @TableField(typeHandler = JsonbTypeHandler.class)
     private NotificationSettingWebHooks webhooks;
 
     /**
      * 
      */
+
     private Integer project;
 
     /**

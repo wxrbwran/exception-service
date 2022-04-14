@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xzlcorp.exception.common.model.pojo.event.MetaData;
+import com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler;
+import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,7 +15,7 @@ import java.util.Date;
  * 
  * @TableName t_issue
  */
-@TableName(value ="s_exception.t_issue")
+@TableName(value ="s_exception.t_issue", autoResultMap = true)
 @Data
 public class Issue implements Serializable {
     /**
@@ -40,11 +42,13 @@ public class Issue implements Serializable {
     /**
      * issue 所对应的 metadata
      */
+    @TableField(typeHandler = JsonbTypeHandler.class)
     private MetaData metadata;
 
     /**
      * 所对应的 events (doc:_id)
      */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private String[] events;
 
     /**
@@ -55,6 +59,7 @@ public class Issue implements Serializable {
     /**
      * 受此 issue 影响的用户
      */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private Integer[] users;
 
     /**

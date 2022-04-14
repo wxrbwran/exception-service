@@ -6,13 +6,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler;
+import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
 import lombok.Data;
 
 /**
  * 
  * @TableName t_user
  */
-@TableName(value ="s_exception.t_user")
+@TableName(value ="s_exception.t_user", autoResultMap = true)
 @Data
 public class User implements Serializable {
     /**
@@ -54,16 +57,19 @@ public class User implements Serializable {
     /**
      * 第三方登录信息
      */
+    @TableField(typeHandler = JsonbTypeHandler.class)
     private Object oauth;
 
     /**
      * user 所属的 organization (多对多)
      */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private Integer[] organizations;
 
     /**
      * user 所属的 project (多对多)
      */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private Integer[] projects;
 
     /**

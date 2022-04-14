@@ -67,13 +67,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
   @Override
   public User getUserInfoById(Integer id) {
-    User user = this.getUserInfoById(id);
+    User user = this.getById(id);
     return user;
   }
 
   @Override
   public List<User> getUserInfoByIds(Integer[] userIds) {
-    List<User> users = this.getUserInfoByIds(userIds);
+    List<User> users = this.listByIds(List.of(userIds));
     return users;
   }
 

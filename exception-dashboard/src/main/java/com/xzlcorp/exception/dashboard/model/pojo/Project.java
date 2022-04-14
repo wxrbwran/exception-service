@@ -6,13 +6,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler;
+import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
 import lombok.Data;
 
 /**
  * 项目表
  * @TableName t_project
  */
-@TableName(value ="s_exception.t_project")
+@TableName(value ="s_exception.t_project", autoResultMap = true)
 @Data
 public class Project implements Serializable {
     /**
@@ -49,11 +52,13 @@ public class Project implements Serializable {
     /**
      * project 所拥有的 users (多对多)
      */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private Integer[] users;
 
     /**
      * project 所拥有的 notification rules 
      */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private Integer[] notificationRules;
 
     /**

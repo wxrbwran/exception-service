@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
 import com.xzlcorp.exception.dashboard.model.pojo.SourceMapData;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ import lombok.Data;
  * sourceMap表
  * @TableName t_source_map
  */
-@TableName(value ="s_exception.t_source_map")
+@TableName(value ="s_exception.t_source_map", autoResultMap = true)
 @Data
 public class SourceMap implements Serializable {
     /**
@@ -41,6 +42,7 @@ public class SourceMap implements Serializable {
     /**
      * 所有的 sourceMap 文件信息
      */
+    @TableField(typeHandler = JsonbTypeHandler.class)
     private SourceMapData data;
 
     /**
