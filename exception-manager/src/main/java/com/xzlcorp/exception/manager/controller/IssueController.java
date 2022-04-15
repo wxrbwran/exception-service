@@ -8,6 +8,7 @@ import com.xzlcorp.exception.manager.model.query.IssuesTrendQuery;
 import com.xzlcorp.exception.manager.model.vo.IssueVO;
 import com.xzlcorp.exception.manager.service.IssueService;
 import java.util.List;
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,16 +41,16 @@ public class IssueController {
       @RequestParam("start") long start,
       @RequestParam("end") long end
   ) {
-//    Map<String, Object> resMap = issueService.getIssuesProjectTrend(projectId, start, end);
-//    return ApiRestResponse.success(resMap);
-    return ApiRestResponse.success();
+    Map<String, Object> resMap = issueService.getIssuesProjectTrend(projectId, start, end);
+    return ApiRestResponse.success(resMap);
+//    return ApiRestResponse.success();
 
   }
 
   @PostMapping("/trend")
   public ApiRestResponse getTrendByIssueIds(@RequestBody IssuesTrendQuery query) {
-//    List<Map<String, Object>> lists = issueService.getTrendByIssueIds(query);
-//    return ApiRestResponse.success(lists);
-    return ApiRestResponse.success();
+    List<Map<String, Object>> lists = issueService.getTrendByIssueIds(query);
+    return ApiRestResponse.success(lists);
+//    return ApiRestResponse.success();
   }
 }

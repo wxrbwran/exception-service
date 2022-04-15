@@ -69,6 +69,7 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     LambdaQueryWrapper<Issue> queryWrapper = new LambdaQueryWrapper<>();
     queryWrapper.eq(Issue::getApiKey, apiKey).orderByDesc(Issue::getId);
     issueService.page(page, queryWrapper);
+//    log.info("getIssues page: {}", page);
     return (PageInfoReducer.PageInfoReduce<Issue>) PageInfoReducer
         .reduce(page.getRecords(), page.getTotal());
   }
@@ -166,7 +167,7 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     trendMap.put("24h", trendOf24h);
     return trendMap;
   }
-
+  @Override
   public Map<String, Object> getTrendByIssueId(long now, String issueId, String period) {
     Map<String, AggregationBuilder> trendMap = getTrendMap(now);
     Map<String, QueryBuilder> queryMap = getQueryMap(now, issueId);
@@ -183,6 +184,7 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     return resMap;
   }
 
+  @Override
   public List<Map<String, Object>> getTrendByIssueIds(IssuesTrendQuery query) {
     long now = System.currentTimeMillis();
     List<Map<String, Object>> list = new ArrayList<>();
@@ -193,6 +195,7 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     return list;
   }
 
+  @Override
   public Map<String, Object> getIssuesProjectTrend(Integer projectId, long start, long end) {
     // 从es中查询趋势
     String apiKey = dashboardClient.getApiKeyByProjectId(projectId);

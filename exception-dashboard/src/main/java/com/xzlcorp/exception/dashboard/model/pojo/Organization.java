@@ -21,7 +21,7 @@ public class Organization implements Serializable {
     /**
      * 唯一主键
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**

@@ -18,7 +18,7 @@ public class IssueVO {
 
   private MetaData metadata;
 
-  private Integer[] events;
+  private String[] events;
 
   private Integer eventsCount;
 
