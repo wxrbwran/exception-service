@@ -139,7 +139,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
   };
   @Override
   public void bindOrganizationWithProjectId(Integer projectId, Integer organizationId) {
-    Organization organization = organizationService.getOrganizationById(organizationId);
+    Organization organization = organizationService.getById(organizationId);
     Integer[] projects = organization.getProjects();
     List<Integer> projectList = new ArrayList<>();
     if (projects != null) {
@@ -186,11 +186,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
     List<Project> projectList = this.listByIds(projectIds);
     return projectList;
   }
-  @Override
-  public Project getProjectById(Integer projectId) {
-    Project project = this.getById(projectId);
-    return project;
-  }
+
   @Override
   public Project getProjectByApiKey(String apiKey) {
     LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
@@ -200,7 +196,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
 
   @Override
   public void addUser(Integer projectId, List<Integer> userIds) {
-    Project project = getProjectById(projectId);
+    Project project = this.getById(projectId);
     List<Integer> users = Arrays.stream(project.getUsers()).collect(Collectors.toList());
     List<Integer> userIdSet = UniqueList.toUnique(users, userIds);
     project.setUsers(userIdSet.toArray(new Integer[userIdSet.size()]));

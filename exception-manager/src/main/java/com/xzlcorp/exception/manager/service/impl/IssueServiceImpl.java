@@ -65,8 +65,6 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
   private final static String Agg_Name_Trend = "trend";
   private final static String Format_Of_14d = "yyyy-MM-dd";
   private final static String Format_Of_24h = "yyyy-MM-dd HH:mm:ss";
-//  public Map<String, AggregationBuilder> trendMap = null;
-//  public Map<String, QueryBuilder> queryMap = null;
   @Override
   // 分页服务前端react-query进行缓存
   public PageInfoReducer.PageInfoReduce<Issue> getIssues(IssueQuery query) {
@@ -191,23 +189,19 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     Map<String, Object> resMap = new HashMap<>();
     switch (period) {
       case Constant.TWO_WEEK:
-//        resMap = getTrend(queryMap.get(Constant.TWO_WEEK), trendMap.get(Constant.TWO_WEEK), issueId);
         // 互斥锁解决缓存击穿
         resMap = cacheClient
             .queryWithMutex(RedisConstants.ISSUE_TREND_14D + issueId, String.valueOf(issueId),
                 Map.class, this::getTrendBy14D,
                 RedisConstants.CACHE_ISSUE_TREND_TTL, TimeUnit.HOURS,
                 RedisConstants.LOCK_ISSUE_TREND_14D_KEY + issueId);
-//        resMap = getTrendBy14D(issueId);
         break;
       case Constant.ONE_DAY:
-//        resMap = getTrend(queryMap.get(Constant.ONE_DAY), trendMap.get(Constant.ONE_DAY), issueId);
         resMap = cacheClient
             .queryWithMutex(RedisConstants.ISSUE_TREND_1D + issueId, String.valueOf(issueId),
                 Map.class, this::getTrendBy1D,
                 RedisConstants.CACHE_ISSUE_TREND_TTL, TimeUnit.HOURS,
                 RedisConstants.LOCK_ISSUE_TREND_1D_KEY + issueId);
-//        resMap = getTrendBy1D(issueId);
         break;
     }
     return resMap;

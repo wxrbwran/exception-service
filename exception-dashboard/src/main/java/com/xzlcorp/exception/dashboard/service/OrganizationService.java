@@ -20,10 +20,6 @@ public interface OrganizationService extends IService<Organization> {
   @Transactional(propagation = Propagation.REQUIRED)
   Organization create(OrganizationRequest request);
 
-  Organization getOrganizationById(Integer id);
-
-  List<Organization> getOrganizations(List<Integer> orgIds);
-
   void update(Organization organization);
 
   OrganizationVO handleOrganization2ToVO(Organization organization);
@@ -35,8 +31,6 @@ public interface OrganizationService extends IService<Organization> {
   void increaseEventCount(String apiKey);
 
   Organization updateOrganizationById(Integer orgId, UpdateOrganizationRequest request);
-
-  void deleteOrganizationById(Integer orgId);
 
   void handleOrganizationUsersAndProjectsAndAdmin(
       List<Organization> organizations, List<OrganizationVO> organizationVOList);

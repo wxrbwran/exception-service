@@ -179,7 +179,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     List<Integer> orgIds = userVO.getOrganizationIds();
     List<OrganizationVO> organizationVOList = new ArrayList<>();
     if (orgIds != null && orgIds.size() > 0) {
-      List<Organization> organizations = organizationService.getOrganizations(orgIds);
+      List<Organization> organizations = organizationService.listByIds(orgIds);
       log.info("organizations, {}", organizations);
       organizationVOList = organizationService.handleOrganization2ToVOList(organizations);
       log.info("organizationVOList, {}", organizationVOList);

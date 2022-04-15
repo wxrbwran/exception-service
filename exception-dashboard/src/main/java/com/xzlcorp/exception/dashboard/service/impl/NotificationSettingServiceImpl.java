@@ -34,7 +34,7 @@ public class NotificationSettingServiceImpl extends ServiceImpl<NotificationSett
 
   @Override
   public NotificationSetting getNotificationSetting(Integer projectId) {
-    Project project = projectService.getProjectById(projectId);
+    Project project = projectService.getById(projectId);
     NotificationSetting setting = this.getById(project.getNotificationSetting());
     return setting;
   }

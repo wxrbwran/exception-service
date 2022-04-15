@@ -61,7 +61,7 @@ public class ProjectController {
   @GetMapping("getApiKeyByProjectId")
   public String getApiKeyByProjectId(Integer projectId){
     log.info("projects getApiKeyByProjectId projectId: {}", projectId);
-    Project project = projectService.getProjectById(projectId);
+    Project project = projectService.getById(projectId);
     return project.getApiKey();
   }
 }

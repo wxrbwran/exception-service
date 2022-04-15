@@ -46,7 +46,7 @@ public class OrganizationController {
   @ApiOperation(value = "删除机构")
   @DeleteMapping("{orgId}")
   public ApiRestResponse deleteOrganizationById(@PathVariable Integer orgId) {
-    organizationService.deleteOrganizationById(orgId);
+    organizationService.removeById(orgId);
     return ApiRestResponse.success();
   }
 }

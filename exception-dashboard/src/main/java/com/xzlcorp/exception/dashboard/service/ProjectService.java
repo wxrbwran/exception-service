@@ -33,8 +33,6 @@ public interface ProjectService extends IService<Project> {
 
   List<Project> getProjects(List<Integer> projectIds);
 
-  Project getProjectById(Integer projectId);
-
   Project getProjectByApiKey(String apiKey);
 
   void addUser(Integer projectId, List<Integer> userIds);

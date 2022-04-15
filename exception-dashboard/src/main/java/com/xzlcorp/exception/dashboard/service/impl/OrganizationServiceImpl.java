@@ -62,17 +62,6 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
   }
 
   @Override
-  public Organization getOrganizationById(Integer id) {
-    Organization organization = this.getById(id);
-    return organization;
-  }
-  @Override
-  public List<Organization> getOrganizations(List<Integer> orgIds) {
-    List<Organization> organizationList = this.listByIds(orgIds);
-    return organizationList;
-  }
-
-  @Override
   public void update(Organization organization) {
     this.updateById(organization);
   }
@@ -115,11 +104,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
 //    organizationMapper.updateByPrimaryKeySelective(organization);
     return organization;
   }
-  @Override
-  public void deleteOrganizationById(Integer orgId) {
-    this.removeById(orgId);
-//    organizationMapper.deleteByPrimaryKey(orgId);
-  }
+
   @Override
   public void handleOrganizationUsersAndProjectsAndAdmin(
       List<Organization> organizations, List<OrganizationVO> organizationVOList) {
@@ -169,7 +154,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
   }
   @Override
   public void addUser(Integer organizationId, List<Integer> userIds) {
-    Organization organization = getOrganizationById(organizationId);
+    Organization organization = this.getById(organizationId);
     List<Integer> users = Arrays.stream(organization.getUsers()).collect(Collectors.toList());
     List<Integer> userIdSet = UniqueList.toUnique(users, userIds);
     organization.setUsers(userIdSet.toArray(new Integer[userIdSet.size()]));

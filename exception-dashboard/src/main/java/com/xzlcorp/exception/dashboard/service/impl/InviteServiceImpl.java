@@ -93,7 +93,7 @@ public class InviteServiceImpl extends ServiceImpl<InviteMapper, Invite>
       InviteVO inviteVO = new InviteVO();
       BeanUtils.copyProperties(invite, inviteVO);
       User inviter = userService.getUserInfoById(invite.getInviter());
-      Organization organization = organizationService.getOrganizationById(invite.getOrganization());
+      Organization organization = organizationService.getById(invite.getOrganization());
       List<Project> projects = projectService.getProjects(Arrays.asList(invite.getProjects()));
       inviteVO.setInviter(userService.handleUser2VO(inviter));
       inviteVO.setOrganization(organizationService.handleOrganization2ToVO(organization));
