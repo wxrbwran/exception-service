@@ -1,18 +1,16 @@
 package com.xzlcorp.exception.dashboard.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xzlcorp.exception.dashboard.model.pojo.Project;
-import com.xzlcorp.exception.dashboard.service.*;
-import com.xzlcorp.exception.dashboard.mapper.ProjectMapper;
-import org.springframework.stereotype.Service;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xzlcorp.exception.common.common.Constant;
 import com.xzlcorp.exception.common.utils.UniqueList;
-import com.xzlcorp.exception.dashboard.model.pojo.Organization;
-import com.xzlcorp.exception.dashboard.model.pojo.User;
+import com.xzlcorp.exception.dashboard.mapper.ProjectMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.NotificationSetting;
+import com.xzlcorp.exception.dashboard.model.pojo.Organization;
+import com.xzlcorp.exception.dashboard.model.pojo.Project;
+import com.xzlcorp.exception.dashboard.model.pojo.User;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingBrowser;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmail;
 import com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmails;
@@ -22,13 +20,17 @@ import com.xzlcorp.exception.dashboard.model.request.NotificationSettingRequest;
 import com.xzlcorp.exception.dashboard.model.request.ProjectRequest;
 import com.xzlcorp.exception.dashboard.model.vo.ProjectVO;
 import com.xzlcorp.exception.dashboard.model.vo.UserVO;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.xzlcorp.exception.dashboard.service.NotificationSettingService;
+import com.xzlcorp.exception.dashboard.service.OrganizationService;
+import com.xzlcorp.exception.dashboard.service.ProjectService;
+import com.xzlcorp.exception.dashboard.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
 * @author wuxiaoran

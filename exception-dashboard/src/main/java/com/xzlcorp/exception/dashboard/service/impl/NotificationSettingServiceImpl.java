@@ -1,8 +1,8 @@
 package com.xzlcorp.exception.dashboard.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xzlcorp.exception.dashboard.model.pojo.NotificationSetting;
 import com.xzlcorp.exception.dashboard.mapper.NotificationSettingMapper;
+import com.xzlcorp.exception.dashboard.model.pojo.NotificationSetting;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.request.NotificationSettingRequest;
 import com.xzlcorp.exception.dashboard.service.NotificationSettingService;

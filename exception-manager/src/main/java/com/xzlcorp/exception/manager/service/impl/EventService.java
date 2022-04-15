@@ -1,9 +1,5 @@
 package com.xzlcorp.exception.manager.service.impl;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.alibaba.fastjson.JSON;
 import com.xzlcorp.exception.common.common.BrowserError;
 import com.xzlcorp.exception.common.enums.EventIndicesEnum;
@@ -19,15 +15,16 @@ import com.xzlcorp.exception.manager.model.bo.EventLikeWithIssueId;
 import com.xzlcorp.exception.manager.model.pojo.Document;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
-
 import com.xzlcorp.exception.manager.service.IssueService;
-import com.xzlcorp.exception.manager.service.impl.KafkaProducerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import lombok.extern.slf4j.Slf4j;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author wuxiaoran
@@ -69,10 +66,10 @@ public class EventService {
 //    KafkaMessage message = new KafkaMessage();
 //    message.setKey(topic);
 //    message.setEvent(eventLikeWithIssueId);
-    ListenableFutureCallback<SendResult<String, String>> callback = new ListenableFutureCallback<SendResult<String, String>>() {
+    ListenableFutureCallback<SendResult<String, String>> callback = new ListenableFutureCallback<>() {
       @Override
       public void onFailure(Throwable ex) {
-        log.warn("发送消息失败：{}" , ex.getMessage());
+        log.error("发送消息失败：{}" , ex.getMessage());
       }
 
       @Override

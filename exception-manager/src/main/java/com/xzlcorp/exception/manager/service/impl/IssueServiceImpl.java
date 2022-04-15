@@ -1,5 +1,6 @@
 package com.xzlcorp.exception.manager.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +10,7 @@ import com.xzlcorp.exception.common.model.pojo.event.Event;
 import com.xzlcorp.exception.common.utils.ArrayListUtils;
 import com.xzlcorp.exception.common.utils.PageInfoReducer;
 import com.xzlcorp.exception.manager.feign.DashboardClient;
+import com.xzlcorp.exception.manager.mapper.IssueMapper;
 import com.xzlcorp.exception.manager.model.bo.BugDocument;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
@@ -16,7 +18,6 @@ import com.xzlcorp.exception.manager.model.query.IssuesTrendQuery;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
 import com.xzlcorp.exception.manager.model.vo.IssueVO;
 import com.xzlcorp.exception.manager.service.IssueService;
-import com.xzlcorp.exception.manager.mapper.IssueMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -32,7 +33,6 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.alibaba.fastjson.JSON;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -69,7 +69,6 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     LambdaQueryWrapper<Issue> queryWrapper = new LambdaQueryWrapper<>();
     queryWrapper.eq(Issue::getApiKey, apiKey).orderByDesc(Issue::getId);
     issueService.page(page, queryWrapper);
-//    log.info("getIssues page: {}", page);
     return (PageInfoReducer.PageInfoReduce<Issue>) PageInfoReducer
         .reduce(page.getRecords(), page.getTotal());
   }
