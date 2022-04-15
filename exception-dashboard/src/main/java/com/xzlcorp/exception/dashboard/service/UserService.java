@@ -38,4 +38,6 @@ public interface UserService extends IService<User> {
   void bindUserWithProjectId(Integer projectId, Integer userId);
 
   void bindUserWithOrganizationId(Integer id, Integer admin);
+
+  UserVO getFullUserInfo(Integer userId);
 }

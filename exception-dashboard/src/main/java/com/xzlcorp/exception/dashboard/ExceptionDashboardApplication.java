@@ -15,9 +15,6 @@ import org.springframework.context.annotation.ComponentScan;
     "com.xzlcorp.exception.common.exception",
     "com.xzlcorp.exception.dashboard.*",
 })
-@EnableAutoConfiguration(exclude={
-    RedisAutoConfiguration.class
-})
 @EnableFeignClients
 @SpringBootApplication
 @EnableDiscoveryClient

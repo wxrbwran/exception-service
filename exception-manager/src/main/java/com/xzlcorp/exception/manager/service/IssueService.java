@@ -22,7 +22,7 @@ public interface IssueService extends IService<Issue> {
 
   List<IssueVO> handleIssueToVO(List<Issue> issueList);
 
-  Map<String, Object> getTrendByIssueId(long now, String issueId, String period);
+  Map<String, Object> getTrendByIssueId(String issueId, String period);
 
   List<Map<String, Object>> getTrendByIssueIds(IssuesTrendQuery query);
 

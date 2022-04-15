@@ -9,6 +9,7 @@ import com.xzlcorp.exception.common.enums.OhbugEventIndicesEnum;
 import com.xzlcorp.exception.common.model.pojo.event.Event;
 import com.xzlcorp.exception.common.utils.ArrayListUtils;
 import com.xzlcorp.exception.common.utils.PageInfoReducer;
+import com.xzlcorp.exception.common.utils.RedisConstants;
 import com.xzlcorp.exception.manager.feign.DashboardClient;
 import com.xzlcorp.exception.manager.mapper.IssueMapper;
 import com.xzlcorp.exception.manager.model.bo.BugDocument;
@@ -18,6 +19,7 @@ import com.xzlcorp.exception.manager.model.query.IssuesTrendQuery;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
 import com.xzlcorp.exception.manager.model.vo.IssueVO;
 import com.xzlcorp.exception.manager.service.IssueService;
+import com.xzlcorp.exception.manager.utils.CacheClient;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -35,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 /**
@@ -50,6 +53,9 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
   private IssueService issueService;
 
   @Autowired
+  private CacheClient cacheClient;
+
+  @Autowired
   private DashboardClient dashboardClient;
 
   @Autowired
@@ -59,8 +65,10 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
   private final static String Agg_Name_Trend = "trend";
   private final static String Format_Of_14d = "yyyy-MM-dd";
   private final static String Format_Of_24h = "yyyy-MM-dd HH:mm:ss";
-
+//  public Map<String, AggregationBuilder> trendMap = null;
+//  public Map<String, QueryBuilder> queryMap = null;
   @Override
+  // 分页服务前端react-query进行缓存
   public PageInfoReducer.PageInfoReduce<Issue> getIssues(IssueQuery query) {
 //    PageHelper.startPage(query.getPageAt(), query.getPageSize());
     Page<Issue> page = new Page<>(query.getPageAt(), query.getPageSize());
@@ -111,6 +119,18 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     return  null;
   }
 
+  public Map<String, Object> getTrendBy14D(String issueId) {
+    long now = System.currentTimeMillis();
+    Map<String, AggregationBuilder> trendMap = getTrendMap(now);
+    Map<String, QueryBuilder> queryMap = getQueryMap(now, issueId);
+    return this.getTrend(queryMap.get(Constant.TWO_WEEK), trendMap.get(Constant.TWO_WEEK), issueId);
+  }
+  private Map<String, Object> getTrendBy1D(String issueId) {
+    long now = System.currentTimeMillis();
+    Map<String, AggregationBuilder> trendMap = getTrendMap(now);
+    Map<String, QueryBuilder> queryMap = getQueryMap(now, issueId);
+    return this.getTrend(queryMap.get(Constant.ONE_DAY), trendMap.get(Constant.ONE_DAY), issueId);
+  }
   private Map<String, QueryBuilder> getQueryMap(long now, String issueId) {
     long start14d = now - (One_Day_Mills * 14);
     long start24h = now - One_Day_Mills;
@@ -167,17 +187,27 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     return trendMap;
   }
   @Override
-  public Map<String, Object> getTrendByIssueId(long now, String issueId, String period) {
-    Map<String, AggregationBuilder> trendMap = getTrendMap(now);
-    Map<String, QueryBuilder> queryMap = getQueryMap(now, issueId);
-//    SearchResponse response = new SearchResponse();
+  public Map<String, Object> getTrendByIssueId(String issueId, String period) {
     Map<String, Object> resMap = new HashMap<>();
     switch (period) {
       case Constant.TWO_WEEK:
-        resMap = getTrend(queryMap.get(Constant.TWO_WEEK), trendMap.get(Constant.TWO_WEEK), issueId);
+//        resMap = getTrend(queryMap.get(Constant.TWO_WEEK), trendMap.get(Constant.TWO_WEEK), issueId);
+        // 互斥锁解决缓存击穿
+        resMap = cacheClient
+            .queryWithMutex(RedisConstants.ISSUE_TREND_14D + issueId, String.valueOf(issueId),
+                Map.class, this::getTrendBy14D,
+                RedisConstants.CACHE_ISSUE_TREND_TTL, TimeUnit.HOURS,
+                RedisConstants.LOCK_ISSUE_TREND_14D_KEY + issueId);
+//        resMap = getTrendBy14D(issueId);
         break;
       case Constant.ONE_DAY:
-        resMap = getTrend(queryMap.get(Constant.ONE_DAY), trendMap.get(Constant.ONE_DAY), issueId);
+//        resMap = getTrend(queryMap.get(Constant.ONE_DAY), trendMap.get(Constant.ONE_DAY), issueId);
+        resMap = cacheClient
+            .queryWithMutex(RedisConstants.ISSUE_TREND_1D + issueId, String.valueOf(issueId),
+                Map.class, this::getTrendBy1D,
+                RedisConstants.CACHE_ISSUE_TREND_TTL, TimeUnit.HOURS,
+                RedisConstants.LOCK_ISSUE_TREND_1D_KEY + issueId);
+//        resMap = getTrendBy1D(issueId);
         break;
     }
     return resMap;
@@ -185,10 +215,9 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
 
   @Override
   public List<Map<String, Object>> getTrendByIssueIds(IssuesTrendQuery query) {
-    long now = System.currentTimeMillis();
     List<Map<String, Object>> list = new ArrayList<>();
     Stream.of(query.getIds()).forEach(issueId -> {
-      Map<String, Object> resMap = getTrendByIssueId(now, issueId, query.getPeriod());
+      Map<String, Object> resMap = getTrendByIssueId(issueId, query.getPeriod());
       list.add(resMap);
     });
     return list;

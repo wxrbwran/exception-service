@@ -6,14 +6,21 @@ import com.xzlcorp.exception.common.exception.XzlCorpException;
 import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
 import com.xzlcorp.exception.common.utils.Md5Utils;
 import com.xzlcorp.exception.dashboard.mapper.UserMapper;
+import com.xzlcorp.exception.dashboard.model.pojo.Organization;
+import com.xzlcorp.exception.dashboard.model.pojo.Project;
 import com.xzlcorp.exception.dashboard.model.pojo.User;
 import com.xzlcorp.exception.dashboard.model.request.LoginRequest;
 import com.xzlcorp.exception.dashboard.model.request.SignupRequest;
 import com.xzlcorp.exception.dashboard.model.request.UpdateUserRequest;
+import com.xzlcorp.exception.dashboard.model.vo.OrganizationVO;
+import com.xzlcorp.exception.dashboard.model.vo.ProjectVO;
 import com.xzlcorp.exception.dashboard.model.vo.UserVO;
+import com.xzlcorp.exception.dashboard.service.OrganizationService;
+import com.xzlcorp.exception.dashboard.service.ProjectService;
 import com.xzlcorp.exception.dashboard.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -31,6 +38,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService {
+
+  @Autowired
+  private OrganizationService organizationService;
+
+  @Autowired
+  private ProjectService projectService;
 
   @Override
   public UserVO signup(SignupRequest request) throws NoSuchAlgorithmException {
@@ -155,6 +168,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     Integer[] newOrganizations = organizationList.toArray(new Integer[organizationList.size()]);
     user.setOrganizations(newOrganizations);
     updateUser(user);
+  }
+
+  @Override
+  public UserVO getFullUserInfo(Integer userId) {
+    User user = getUserInfoById(userId);
+    UserVO userVO = handleUser2VO(user);
+
+    // 设置user的机构信息 organization
+    List<Integer> orgIds = userVO.getOrganizationIds();
+    List<OrganizationVO> organizationVOList = new ArrayList<>();
+    if (orgIds != null && orgIds.size() > 0) {
+      List<Organization> organizations = organizationService.getOrganizations(orgIds);
+      log.info("organizations, {}", organizations);
+      organizationVOList = organizationService.handleOrganization2ToVOList(organizations);
+      log.info("organizationVOList, {}", organizationVOList);
+      // 处理机构的人员信息，项目信息，管理员信息。
+      organizationService.handleOrganizationUsersAndProjectsAndAdmin(organizations, organizationVOList);
+    }
+    userVO.setOrganizations(organizationVOList);
+
+    // 设置user的项目信息 projects
+    List<Integer> projectIds = userVO.getProjectIds();
+    List<ProjectVO> projectVOList = new ArrayList<>();
+    if (projectIds != null && projectIds.size() > 0) {
+      List<Project> projects = projectService.getProjects(projectIds);
+      log.info("projects, {}", projects);
+      projectVOList = projectService.handleProjects2VOList(projects);
+      log.info("projectVOList, {}", projectVOList);
+    }
+
+    userVO.setProjects(projectVOList);
+    return userVO;
   }
 }
 
