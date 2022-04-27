@@ -81,7 +81,6 @@ public class EventService {
         log.info("消息发送成功, partition: {}", partition);
         log.info("消息发送成功, offset: {}", offset);
 
-
         String documentId = topic + "-" + partition + "-" + offset;
         log.info("documentId: {}", documentId);
         // 4. 更新 issue 的 events (postgres)
