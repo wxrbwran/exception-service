@@ -10,7 +10,6 @@ import java.util.concurrent.SubmissionPublisher;
 
 public class FlowDemo2 {
   public static void main(String[] args) throws InterruptedException {
-
   }
 
 }
@@ -27,6 +26,7 @@ class MyProcessor extends SubmissionPublisher<String> implements Processor<Integ
   @Override
   public void onSubscribe(Subscription s) {
     this.subscription = s;
+    this.subscription.request(1);
   }
 
   @Override
