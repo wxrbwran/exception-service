@@ -23,7 +23,7 @@ docker run -d --restart=always --log-driver json-file --log-opt max-size=100m --
 
 
 ### filebeat 
-```shell	
+```shell
 docker run -d --name filebeat \
     -v /root/docker/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml \
     -v /root/docker/filebeat/data:/usr/share/filebeat/data \
