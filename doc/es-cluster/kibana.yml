@@ -1,0 +1,4 @@
+elasticsearch.hosts: ["http://es_1:9199","http://es_2:9199","http://es_3:9199"]
+server.host: 0.0.0.0
+server.port: 5601
+i18n.locale: "zh-CN"

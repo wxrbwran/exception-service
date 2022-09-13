@@ -1,0 +1,36 @@
+server:
+  port: 9997
+
+spring:
+  application:
+    name: exception-transfer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 103.105.200.216
+        group: ${spring.profiles.active}
+        namespace: ${spring.profiles.active}
+        cluster-name: BJ
+      config:
+        server-addr: 103.105.200.216
+        file-extension: yaml
+        namespace: ${spring.profiles.active}
+#    sentinel:
+#      transport:
+#        dashboard: localhost:8080
+#        port: 8719
+##        client-ip: 172.16.10.27
+#        datasource:
+#          ds1:
+#            nacos:
+#              server-addr: 103.105.200.216
+#              dataId: exception-transfer
+#              groupId: DEFAULT_GROUP
+#              data-type: json
+#              rule-type: flow
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: '*'

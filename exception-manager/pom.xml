@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-
+<!-- groupId和version如果和父工程一致，则可以省略 -->
   <artifactId>exception-manager</artifactId>
 
   <properties>
@@ -18,13 +18,21 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.session</groupId>
-      <artifactId>spring-session-data-redis</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.springframework.session</groupId>-->
+<!--      <artifactId>spring-session-data-redis</artifactId>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -38,6 +46,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-log4j2</artifactId>
+      <version>2.6.2</version>
     </dependency>
     <dependency>
       <groupId>com.xzlcorp</groupId>
@@ -69,9 +78,10 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.6.2</version>
         <configuration>
-          <mainClass>com.xzlcorp.exception.manager.ManagerApplication</mainClass>
-<!--          <outputDirectory>../target</outputDirectory>-->
+          <mainClass>com.xzlcorp.exception.manager.ExceptionManagerApplication</mainClass>
+          <!-- <outputDirectory>../target</outputDirectory> -->
         </configuration>
         <executions>
           <execution>

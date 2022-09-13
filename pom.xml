@@ -8,7 +8,6 @@
     <module>exception-dashboard</module>
     <module>exception-common</module>
     <module>exception-manager</module>
-    <module>exception-eureka</module>
     <module>exception-transfer</module>
     <module>exception-cloud-gateway</module>
   </modules>
@@ -25,9 +24,13 @@
   <name>exception-service</name>
   <description>前端异常监控</description>
   <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>11</java.version>
-    <harbor>192.168.6.194:8085</harbor>
-    <harborRepo>tensquare</harborRepo>
+    <harbor>registry.cn-beijing.aliyuncs.com</harbor>
+    <harborRepo>wxr_dev</harborRepo>
+    <serviceVer>0.0.1</serviceVer>
 <!--    <sonar.projectKey>backend_exception-service_AXzUX8y4Cgq56jMkNLpg</sonar.projectKey>-->
   </properties>
   <dependencyManagement>
@@ -39,10 +42,17 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+        <version>2.2.2.RELEASE</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
@@ -56,16 +66,15 @@
       <artifactId>postgresql</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.mybatis.dynamic-sql</groupId>
-      <artifactId>mybatis-dynamic-sql</artifactId>
-      <version>1.1.4</version>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-boot-starter</artifactId>
+      <version>3.5.0</version>
     </dependency>
     <dependency>
-      <groupId>org.mybatis.spring.boot</groupId>
-      <artifactId>mybatis-spring-boot-starter</artifactId>
-      <version>1.3.2</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+      <version>2.6.2</version>
     </dependency>
-
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
@@ -80,11 +89,6 @@
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
       <version>1.2.76</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.pagehelper</groupId>
-      <artifactId>pagehelper-spring-boot-starter</artifactId>
-      <version>1.2.13</version>
     </dependency>
     <dependency>
       <groupId>com.zaxxer</groupId>
@@ -119,31 +123,20 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <source>11</source>
-          <target>11</target>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
 <!--      <plugin>-->
-<!--        <groupId>org.springframework.boot</groupId>-->
-<!--        <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-compiler-plugin</artifactId>-->
+<!--        <version>3.6.0</version>-->
 <!--        <configuration>-->
-<!--          <skip>true</skip>-->
+<!--          <source>11</source>-->
+<!--          <target>11</target>-->
+<!--          <encoding>UTF-8</encoding>-->
 <!--        </configuration>-->
 <!--      </plugin>-->
       <plugin>

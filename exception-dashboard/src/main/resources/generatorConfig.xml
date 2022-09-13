@@ -49,7 +49,7 @@
     </javaClientGenerator>
     <!--生成对应表及类名-->
 
-<!--    <table schema="s_bug" tableName="t_issue" domainObjectName="Issue">-->
+<!--    <table schema="s_exception" tableName="t_issue" domainObjectName="Issue">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--      <columnOverride column="metadata" javaType="com.xzlcorp.exception.dashboard.model.pojo.MetaData"-->
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
@@ -59,7 +59,7 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
 <!--    </table>-->
 
-<!--    <table schema="s_bug" tableName="t_organization" domainObjectName="Organization">-->
+<!--    <table schema="s_exception" tableName="t_organization" domainObjectName="Organization">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--      <columnOverride column="projects" javaType="Integer[]"-->
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
@@ -67,7 +67,7 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
 <!--    </table>-->
 
-<!--    <table schema="s_bug" tableName="t_project" domainObjectName="Project">-->
+<!--    <table schema="s_exception" tableName="t_project" domainObjectName="Project">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--      <columnOverride column="notification_rules" javaType="Integer[]"-->
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
@@ -75,7 +75,7 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
 <!--    </table>-->
 
-<!--    <table schema="s_bug" tableName="t_user" domainObjectName="User">-->
+<!--    <table schema="s_exception" tableName="t_user" domainObjectName="User">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--      <columnOverride column="organizations" javaType="Integer[]"-->
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
@@ -83,7 +83,7 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
 <!--    </table>-->
 
-    <table schema="s_bug" tableName="t_notification_rule" domainObjectName="NotificationRule">
+    <table schema="s_exception" tableName="t_notification_rule" domainObjectName="NotificationRule">
       <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
       <columnOverride column="data" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRuleData"
         typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
@@ -94,7 +94,7 @@
         typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
     </table>
 
-<!--    <table schema="s_bug" tableName="t_notification_setting" domainObjectName="NotificationSetting">-->
+<!--    <table schema="s_exception" tableName="t_notification_setting" domainObjectName="NotificationSetting">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--      <columnOverride column="emails" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationSettingEmails"-->
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
@@ -105,13 +105,13 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
 <!--    </table>-->
 
-<!--    <table schema="s_bug" tableName="t_source_map" domainObjectName="SourceMap">-->
+<!--    <table schema="s_exception" tableName="t_source_map" domainObjectName="SourceMap">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--      <columnOverride column="data" javaType="com.xzlcorp.exception.dashboard.model.pojo.SourceMapData"-->
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
 <!--    </table>-->
 
-<!--        <table schema="s_bug" tableName="t_invite" domainObjectName="Invite">-->
+<!--        <table schema="s_exception" tableName="t_invite" domainObjectName="Invite">-->
 <!--          <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--          <columnOverride column="projects" javaType="Integer[]"-->
 <!--            typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->

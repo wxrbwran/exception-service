@@ -1,50 +1,5 @@
-server:
-  port: 10086
-
 spring:
-  application:
-    name: exception-cloud-gateway
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: false # 开启从注册中心动态创建路由的功能，利用微服务名称进行路由
-      routes:
-        - id: exception-transfer
-          uri: lb://exception-transfer
-          predicates:
-            - Path=/transfer/** #断言,路径相匹配的进行路由
-          filters:
-            - RewritePath=/transfer/(?<segment>.*), /$\{segment}
+  profiles:
+    active: dev
 
-        - id: exception-manager
-          uri: lb://exception-manager
-          predicates:
-            - Path=/manager/**
-          filters:
-            - RewritePath=/manager/(?<segment>.*), /$\{segment}
 
-        - id: exception-dashboard
-          uri: lb://exception-dashboard
-          predicates:
-            - Path=/dashboard/**
-          filters:
-            - RewritePath=/dashboard/(?<segment>.*), /$\{segment}
----
-spring:
-  profiles: dev
-eureka:
-  client:
-    service-url:
-      defaultZone: http://192.168.6.174:10010/eureka/
-  instance:
-    hostname: 192.168.6.174
----
-spring:
-  profiles: test
-eureka:
-  client:
-    service-url:
-      defaultZone: http://192.168.6.182:10010/eureka/
-  instance:
-    hostname: 192.168.6.182

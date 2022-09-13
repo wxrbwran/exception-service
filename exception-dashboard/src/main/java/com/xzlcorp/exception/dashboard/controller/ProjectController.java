@@ -35,7 +35,7 @@ public class ProjectController {
   @PostMapping()
   @ApiOperation(value="创建项目", notes = "创建项目", httpMethod = "POST")
   public ApiRestResponse create(@Valid @RequestBody ProjectRequest request) {
-    ProjectVO projectVO = projectService.save(request);
+    ProjectVO projectVO = projectService.saveToVO(request);
     return ApiRestResponse.success(projectVO);
   }
 
@@ -44,7 +44,7 @@ public class ProjectController {
   public ApiRestResponse updateProjectById(
       @PathVariable Integer projectId,
       @Valid @RequestBody EditProjectRequest request) {
-    ProjectVO projectVO = projectService.update(projectId, request);
+    ProjectVO projectVO = projectService.updateProject(projectId, request);
     return ApiRestResponse.success(projectVO);
   }
 
@@ -61,7 +61,7 @@ public class ProjectController {
   @GetMapping("getApiKeyByProjectId")
   public String getApiKeyByProjectId(Integer projectId){
     log.info("projects getApiKeyByProjectId projectId: {}", projectId);
-    Project project = projectService.getProjectById(projectId);
+    Project project = projectService.getById(projectId);
     return project.getApiKey();
   }
 }

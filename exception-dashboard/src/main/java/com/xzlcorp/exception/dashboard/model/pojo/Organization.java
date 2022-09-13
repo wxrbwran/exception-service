@@ -1,123 +1,71 @@
 package com.xzlcorp.exception.dashboard.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
 import java.util.Date;
-import javax.annotation.Generated;
 
-public class Organization {
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+import com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler;
+import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
+import lombok.Data;
+
+/**
+ * 组织表
+ * @TableName t_organization
+ */
+@TableName(value ="s_exception.t_organization", autoResultMap = true)
+@Data
+public class Organization implements Serializable {
+    /**
+     * 唯一主键
+     */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    /**
+     * 名称
+     */
     private String name;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    /**
+     * 简介
+     */
     private String introduction;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    /**
+     * 
+     */
     private Integer admin;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    /**
+     * organization 所拥有的 project (一对多)
+     */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private Integer[] projects;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    /**
+     * organization 当前承载的 event 数
+     */
     private Integer count;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    /**
+     * 
+     */
     private Date createdAt;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    /**
+     * 
+     */
     private Date updatedAt;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    /**
+     * organization 所拥有的 user (多对多)
+     */
+    @TableField(typeHandler = IntArrayTypeHandler.class)
     private Integer[] users;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Integer getId() {
-        return id;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public String getName() {
-        return name;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public String getIntroduction() {
-        return introduction;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction == null ? null : introduction.trim();
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Integer getAdmin() {
-        return admin;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setAdmin(Integer admin) {
-        this.admin = admin;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Integer[] getProjects() {
-        return projects;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setProjects(Integer[] projects) {
-        this.projects = projects;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Integer getCount() {
-        return count;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Integer[] getUsers() {
-        return users;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setUsers(Integer[] users) {
-        this.users = users;
-    }
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 }

@@ -4,14 +4,10 @@ import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.request.OrganizationRequest;
 import com.xzlcorp.exception.dashboard.model.request.UpdateOrganizationRequest;
-import com.xzlcorp.exception.dashboard.model.vo.OrganizationVO;
-import com.xzlcorp.exception.dashboard.model.vo.UserVO;
 import com.xzlcorp.exception.dashboard.service.OrganizationService;
-import com.xzlcorp.exception.dashboard.service.UserService;
 import io.swagger.annotations.Api;
 import javax.validation.Valid;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +46,7 @@ public class OrganizationController {
   @ApiOperation(value = "删除机构")
   @DeleteMapping("{orgId}")
   public ApiRestResponse deleteOrganizationById(@PathVariable Integer orgId) {
-    organizationService.deleteOrganizationById(orgId);
+    organizationService.removeById(orgId);
     return ApiRestResponse.success();
   }
 }

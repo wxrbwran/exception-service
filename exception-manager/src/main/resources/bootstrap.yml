@@ -1,0 +1,18 @@
+server:
+  port: 9998
+
+spring:
+  application:
+    name: exception-manager
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 103.105.200.216
+        group: ${spring.profiles.active}
+        namespace: ${spring.profiles.active}
+        cluster-name: BJ
+      config:
+        server-addr: 103.105.200.216
+        file-extension: yaml
+        namespace: ${spring.profiles.active}
+
