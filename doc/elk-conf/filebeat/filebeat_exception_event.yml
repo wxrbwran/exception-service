@@ -6,12 +6,12 @@ filebeat.inputs:
     paths:
       - /Users/xiaoran/logs/exception/manager/manager-info.log
     # 匹配 HEALTH_WEEK# 开头的日志 单行
-    include_lines: '^#HEALTH_WEEK'
+    include_lines: '^#EXCEPTION_EVENT'
 processors:
   # 将message字段进行kv赋值到根节点
   - dissect:
       # 通过<![CDATA[]]>关键字进行kv组分割，如果不记录聊天内容或者把聊天内容记录至note，可是用下面的简单空格进行分割
-      tokenizer: "#HEALTH_WEEK %{*field1}=%{&field1}<![CDATA[]]>%{*field2}=%{&field2}<![CDATA[]]>%{*field3}=%{&field3}<![CDATA[]]>%{*field4}=%{&field4}<![CDATA[]]>%{*field5}=%{&field5}<![CDATA[]]>%{*field6}=%{&field6}<![CDATA[]]>%{*field7}=%{&field7}<![CDATA[]]>%{note}"
+      tokenizer: "#EXCEPTION_EVENT %{*field1}=%{&field1}<![CDATA[]]>%{*field2}=%{&field2}<![CDATA[]]>%{*field3}=%{&field3}<![CDATA[]]>%{*field4}=%{&field4}<![CDATA[]]>%{*field5}=%{&field5}<![CDATA[]]>%{*field6}=%{&field6}<![CDATA[]]>%{*field7}=%{&field7}<![CDATA[]]>%{note}"
       field: "message"
       target_prefix: ""
   # 丢弃不需要的字段
@@ -21,8 +21,8 @@ processors:
   - convert:
       fields:
         # - {from: "src_ip", to: "source.ip", type: "ip"}
-        - {from: "sid", to: "sid", type: "long"}
-        - {from: "createTime", to: "createTime", type: "long"}
+#        - {from: "sid", to: "sid", type: "long"}
+#        - {from: "createTime", to: "createTime", type: "long"}
       ignore_missing: true
       fail_on_error: false
 setup:
@@ -31,12 +31,11 @@ setup:
   template:
     enabled: false
 output:
-  # console:
-  #   pretty: true
-  #   enable: true
-  elasticsearch:
-    # hosts: ["http://172.16.10.121:9200"]
-    username: elastic
-    password: dev123
-    hosts: ["http://10.33.28.92:9200"]
-    index: chao-test-index-%{+yyyy-MM-dd}
+   console:
+     pretty: true
+     enable: true
+#  elasticsearch:
+#     hosts: ["http://127.0.0.1:9200"]
+#    username: elastic
+#    password: dev123
+#    index: exception-service-%{+yyyy-MM-dd}

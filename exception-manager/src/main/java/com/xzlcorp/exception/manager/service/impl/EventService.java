@@ -64,14 +64,6 @@ public class EventService {
 
     eventLikeWithIssueId.setKey(topic);
 
-//    log.info("发送的消息: {}", JSON.toJSONString(eventLikeWithIssueId));
-//    String topic = result.getRecordMetadata().topic();
-//    int partition = result.getRecordMetadata().partition();
-//    long offset = result.getRecordMetadata().offset();
-//    log.info("消息发送成功, topic: {}", topic);
-//    log.info("消息发送成功, partition: {}", partition);
-//    log.info("消息发送成功, offset: {}", offset);
-
     String documentId = topic + ">" + LocalDateTime.now();
     log.info("documentId: {}", documentId);
     // 4. 更新 issue 的 events (postgres)
@@ -79,7 +71,6 @@ public class EventService {
     document.setDocumentId(documentId);
     document.setIndex(index);
     CreateOrUpdateIssueByIntroRequest introRequest = new CreateOrUpdateIssueByIntroRequest();
-//        event, baseIssue, documentId, index
     introRequest.setEvent(event);
     introRequest.setBaseIssue(baseIssue);
     introRequest.setDocumentId(documentId);
@@ -87,6 +78,8 @@ public class EventService {
     Issue issue = issueService.updateIssueByIntro(introRequest);
     // 5. 更新 organization 中的 count
     dashboardClient.increaseEventCount(event.getApiKey());
+    log.info("\n#EXCEPTION_EVENT event={}<![CDATA[]]>key={}<![CDATA[]]>issueId={}",
+            JSON.toJSONString(eventLikeWithIssueId.getEvent()), eventLikeWithIssueId.getKey(), eventLikeWithIssueId.getIssueId());
     // todo: 通知
     // 6. 根据 apiKey 拿到对应的 notification 配置
 
