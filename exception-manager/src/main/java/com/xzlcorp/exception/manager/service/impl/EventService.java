@@ -82,7 +82,7 @@ public class EventService {
     // 设置索引及唯一性标识
     String documentId = topic + "--" + LocalDateTime.now();
     log.info("documentId: {}", documentId);
-    indexRequest.index(OhbugEventIndicesEnum.ERROR.getKey()).id(documentId);
+    indexRequest.index(OhbugEventIndicesEnum.ERROR.getIndex()).id(documentId);
 
     ObjectMapper objectMapper = new ObjectMapper();
     String eventJson = null;
