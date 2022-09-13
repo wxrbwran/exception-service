@@ -1,8 +1,11 @@
 package com.xzlcorp.exception.manager.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xzlcorp.exception.common.common.BrowserError;
 import com.xzlcorp.exception.common.enums.EventIndicesEnum;
+import com.xzlcorp.exception.common.enums.OhbugEventIndicesEnum;
 import com.xzlcorp.exception.common.model.pojo.event.Detail;
 import com.xzlcorp.exception.common.model.pojo.event.DetailAjaxReq;
 import com.xzlcorp.exception.common.model.pojo.event.Event;
@@ -17,12 +20,19 @@ import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
 import com.xzlcorp.exception.manager.service.IssueService;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +51,9 @@ public class EventService {
 
   @Autowired
   private DashboardClient dashboardClient;
+
+  @Autowired
+  private RestHighLevelClient highLevelClient;
 
 
   public void handleEvent(Event event) throws NoSuchAlgorithmException {
@@ -63,48 +76,67 @@ public class EventService {
 
     eventLikeWithIssueId.setKey(topic);
 
-//    KafkaMessage message = new KafkaMessage();
-//    message.setKey(topic);
-//    message.setEvent(eventLikeWithIssueId);
-    ListenableFutureCallback<SendResult<String, String>> callback = new ListenableFutureCallback<>() {
-      @Override
-      public void onFailure(Throwable ex) {
-        log.error("发送消息失败：{}" , ex.getMessage());
-      }
 
-      @Override
-      public void onSuccess(SendResult<String, String> result) {
-        String topic = result.getRecordMetadata().topic();
-        int partition = result.getRecordMetadata().partition();
-        long offset = result.getRecordMetadata().offset();
+    // 新增文档 - 请求对象
+    IndexRequest indexRequest = new IndexRequest();
+    // 设置索引及唯一性标识
+    String documentId = topic + "--" + LocalDateTime.now();
+    log.info("documentId: {}", documentId);
+    indexRequest.index(OhbugEventIndicesEnum.ERROR.getKey()).id(documentId);
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String eventJson = null;
+    try {
+      eventJson = objectMapper.writeValueAsString(eventLikeWithIssueId);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+    // 添加文档数据，数据格式为 JSON 格式
+    indexRequest.source(eventJson, XContentType.JSON);
+    // 客户端发送请求，获取响应对象
+    try {
+      IndexResponse response = highLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+      System.out.println("_index:" + response.getIndex());
+      System.out.println("_id:" + response.getId());
+      System.out.println("_result:" + response.getResult());
+    } catch (IOException e) {
+      throw new RuntimeException("插入数据失败", e);
+    }
+
+//    ListenableFutureCallback<SendResult<String, String>> callback = new ListenableFutureCallback<>() {
+//      @Override
+//      public void onFailure(Throwable ex) {
+//        log.error("发送消息失败：{}" , ex.getMessage());
+//      }
+//
+//      @Override
+//      public void onSuccess(SendResult<String, String> result) {
+
         log.info("消息发送成功, topic: {}", topic);
-        log.info("消息发送成功, partition: {}", partition);
-        log.info("消息发送成功, offset: {}", offset);
 
-        String documentId = topic + "-" + partition + "-" + offset;
-        log.info("documentId: {}", documentId);
+
         // 4. 更新 issue 的 events (postgres)
         Document document = new Document();
         document.setDocumentId(documentId);
         document.setIndex(index);
-        CreateOrUpdateIssueByIntroRequest request = new CreateOrUpdateIssueByIntroRequest();
+        CreateOrUpdateIssueByIntroRequest introRequest = new CreateOrUpdateIssueByIntroRequest();
 //        event, baseIssue, documentId, index
-        request.setEvent(event);
-        request.setBaseIssue(baseIssue);
-        request.setDocumentId(documentId);
-        request.setIndex(index);
-        Issue issue = issueService.updateIssueByIntro(request);
+        introRequest.setEvent(event);
+        introRequest.setBaseIssue(baseIssue);
+        introRequest.setDocumentId(documentId);
+        introRequest.setIndex(index);
+        Issue issue = issueService.updateIssueByIntro(introRequest);
         // 5. 更新 organization 中的 count
         dashboardClient.increaseEventCount(event.getApiKey());
         // todo: 通知
         // 6. 根据 apiKey 拿到对应的 notification 配置
 
         // 7. 判断当前状态十分符合 notification 配置的要求，符合则通知 notifier 开始任务
-      }
-    };
-    log.info("发送的消息: {}", JSON.toJSONString(eventLikeWithIssueId));
+//      }
+//    };
+//    log.info("发送的消息: {}", JSON.toJSONString(eventLikeWithIssueId));
 
-    kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(eventLikeWithIssueId), callback);
+//    kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(eventLikeWithIssueId), callback);
 
   }
 
