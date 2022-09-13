@@ -9,7 +9,7 @@ docker run -d -p 9000:9000 --name portainer  -v /var/run/docker.sock:/var/run/do
 ### postgres
 ```shell
 docker run --name postgres -e POSTGRES_PASSWORD=123456 -p 5432:5432 \
--v /root/docker/pg:/var/lib/postgresql/data -d postgres:latest
+-v /root/docker/pg:/var/lib/postgresql/data -d postgres:12
 ```
 
 
@@ -38,7 +38,7 @@ docker run -d --name filebeat \
 docker run -d --restart=always --log-driver json-file --log-opt max-size=100m --log-opt max-file=2 \
     --name kafka -p 9092:9092 -e KAFKA_BROKER_ID=0 -e KAFKA_HEAP_OPTS="-Xmx512M -Xms512M" \
     -e KAFKA_ZOOKEEPER_CONNECT=172.17.0.3:2181/kafka \
-    -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://103.105.200.216:9092 \
+    -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://10.33.28.92:9092 \
     -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092 -v /etc/localtime:/etc/localtime wurstmeister/kafka
 ```
 

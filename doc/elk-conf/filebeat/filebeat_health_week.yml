@@ -38,5 +38,5 @@ output:
     # hosts: ["http://172.16.10.121:9200"]
     username: elastic
     password: dev123
-    hosts: ["http://103.105.200.216:9200"]
+    hosts: ["http://10.33.28.92:9200"]
     index: chao-test-index-%{+yyyy-MM-dd}

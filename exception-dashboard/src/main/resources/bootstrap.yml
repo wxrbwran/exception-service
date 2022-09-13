@@ -3,14 +3,17 @@ server:
 spring:
   application:
     name: exception-dashboard
+
   cloud:
     nacos:
       discovery:
-        server-addr: 103.105.200.216
+        server-addr: 10.33.28.92:30042
         namespace: ${spring.profiles.active}
         group: ${spring.profiles.active}
         cluster-name: BJ
       config:
-        server-addr: 103.105.200.216
+        server-addr: 10.33.28.92:30042
         file-extension: yaml
         namespace: ${spring.profiles.active}
+
+

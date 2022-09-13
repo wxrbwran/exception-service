@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,51 +64,38 @@ public class EventService {
 
     eventLikeWithIssueId.setKey(topic);
 
-//    KafkaMessage message = new KafkaMessage();
-//    message.setKey(topic);
-//    message.setEvent(eventLikeWithIssueId);
-    ListenableFutureCallback<SendResult<String, String>> callback = new ListenableFutureCallback<>() {
-      @Override
-      public void onFailure(Throwable ex) {
-        log.error("发送消息失败：{}" , ex.getMessage());
-      }
+//    log.info("发送的消息: {}", JSON.toJSONString(eventLikeWithIssueId));
+//    String topic = result.getRecordMetadata().topic();
+//    int partition = result.getRecordMetadata().partition();
+//    long offset = result.getRecordMetadata().offset();
+//    log.info("消息发送成功, topic: {}", topic);
+//    log.info("消息发送成功, partition: {}", partition);
+//    log.info("消息发送成功, offset: {}", offset);
 
-      @Override
-      public void onSuccess(SendResult<String, String> result) {
-        String topic = result.getRecordMetadata().topic();
-        int partition = result.getRecordMetadata().partition();
-        long offset = result.getRecordMetadata().offset();
-        log.info("消息发送成功, topic: {}", topic);
-        log.info("消息发送成功, partition: {}", partition);
-        log.info("消息发送成功, offset: {}", offset);
-
-        String documentId = topic + "-" + partition + "-" + offset;
-        log.info("documentId: {}", documentId);
-        // 4. 更新 issue 的 events (postgres)
-        Document document = new Document();
-        document.setDocumentId(documentId);
-        document.setIndex(index);
-        CreateOrUpdateIssueByIntroRequest request = new CreateOrUpdateIssueByIntroRequest();
+    String documentId = topic + ">" + LocalDateTime.now();
+    log.info("documentId: {}", documentId);
+    // 4. 更新 issue 的 events (postgres)
+    Document document = new Document();
+    document.setDocumentId(documentId);
+    document.setIndex(index);
+    CreateOrUpdateIssueByIntroRequest introRequest = new CreateOrUpdateIssueByIntroRequest();
 //        event, baseIssue, documentId, index
-        request.setEvent(event);
-        request.setBaseIssue(baseIssue);
-        request.setDocumentId(documentId);
-        request.setIndex(index);
-        Issue issue = issueService.updateIssueByIntro(request);
-        // 5. 更新 organization 中的 count
-        dashboardClient.increaseEventCount(event.getApiKey());
-        // todo: 通知
-        // 6. 根据 apiKey 拿到对应的 notification 配置
+    introRequest.setEvent(event);
+    introRequest.setBaseIssue(baseIssue);
+    introRequest.setDocumentId(documentId);
+    introRequest.setIndex(index);
+    Issue issue = issueService.updateIssueByIntro(introRequest);
+    // 5. 更新 organization 中的 count
+    dashboardClient.increaseEventCount(event.getApiKey());
+    // todo: 通知
+    // 6. 根据 apiKey 拿到对应的 notification 配置
 
-        // 7. 判断当前状态十分符合 notification 配置的要求，符合则通知 notifier 开始任务
-      }
-    };
-    log.info("发送的消息: {}", JSON.toJSONString(eventLikeWithIssueId));
-
-    kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(eventLikeWithIssueId), callback);
+    // 7. 判断当前状态十分符合 notification 配置的要求，符合则通知 notifier 开始任务
+//    kafkaProducerService.sendMessageWithCallback(topic, JSON.toJSONString(eventLikeWithIssueId), callback);
 
   }
 
+  // 进行错误聚合
   public CreateOrUpdateIssueByIntroRequest aggregation(Event event)
       throws NoSuchAlgorithmException {
     String type = event.getType();
@@ -125,6 +113,7 @@ public class EventService {
     return request;
   }
 
+  // 分解不同的错误类型，添加元数据
   private AggregationDataAndMetaData<String> switchErrorDetailAndGetAggregationDataAndMetaData(String type, Detail detail, String apiKey) {
     AggregationDataAndMetaData<String> aggAndMetadata = new AggregationDataAndMetaData<>();
     List<String> aggList = new ArrayList<>();
