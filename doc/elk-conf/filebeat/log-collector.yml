@@ -50,7 +50,7 @@ setup.template.settings:
   #   pretty: true
   #   enable: true
   # elasticsearch: #指定ES的配置
-  #   hosts: ["172.16.10.25:9200","172.16.10.25:9201","172.16.10.25:9202"]
+  #   hosts: ["127.0.0.1:9200","127.0.0.1:9201","127.0.0.1:9202"]
 output:
   kafka:
     enabled: true

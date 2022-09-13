@@ -1,0 +1,40 @@
+logging.to_files: true
+
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /logs/exception_log/exception.*.log
+    include_lines: '^#EXCEPTION_LOG'
+processors:
+  # 将message字段进行kv赋值到根节点
+  - dissect:
+      # 通过<![CDATA[]]>关键字进行kv组分割，如果不记录聊天内容或者把聊天内容记录至note，可是用下面的简单空格进行分割
+      tokenizer: "#EXCEPTION_LOG %{*field1}=%{&field1}<![CDATA[]]>%{*field2}=%{&field2}<![CDATA[]]>%{*field3}=%{&field3}<![CDATA[]]>%{*field4}=%{&field4}<![CDATA[]]>%{*field5}=%{&field5}<![CDATA[]]>%{*field6}=%{&field6}<![CDATA[]]>%{*field7}=%{&field7}<![CDATA[]]>%{note}"
+      field: "message"
+      target_prefix: ""
+  # 丢弃不需要的字段
+  - drop_fields:
+      fields: ["ecs", "agent", "input", "log", "host", "message", ""]
+      ignore_missing: true
+  - convert:
+      fields:
+        # - {from: "src_ip", to: "source.ip", type: "ip"}
+#        - {from: "sid", to: "sid", type: "long"}
+#        - {from: "createTime", to: "createTime", type: "long"}
+      ignore_missing: true
+      fail_on_error: false
+setup:
+  ilm:
+    enabled: false
+  template:
+    enabled: false
+output:
+  # console:
+  #   pretty: true
+  #   enable: true
+  elasticsearch:
+    # hosts: ["http://172.16.10.121:9200"]
+    username: elastic
+#    password: 123456
+    index: exception-log-%{+yyyy-MM-dd}

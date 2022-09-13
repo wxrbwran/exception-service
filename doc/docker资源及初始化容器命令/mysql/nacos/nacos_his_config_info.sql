@@ -671,3 +671,4 @@ feign:
         connect-timeout: 5000
         read-timeout: 10000
 ', 'a9c59c1ea136f8fbd1ed355091d5ba47', '2022-01-16 04:25:22', '2022-01-16 04:25:22', null, '111.192.79.149', 'I', 'test');
+

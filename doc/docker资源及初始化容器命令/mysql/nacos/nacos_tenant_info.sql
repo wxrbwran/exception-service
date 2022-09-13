@@ -22,3 +22,4 @@ INSERT INTO nacos.tenant_info (id, kp, tenant_id, tenant_name, tenant_desc, crea
 INSERT INTO nacos.tenant_info (id, kp, tenant_id, tenant_name, tenant_desc, create_source, gmt_create, gmt_modified) VALUES (3, '1', 'prod', 'prod', 'prod', 'nacos', 1641955629443, 1641955629443);
 INSERT INTO nacos.tenant_info (id, kp, tenant_id, tenant_name, tenant_desc, create_source, gmt_create, gmt_modified) VALUES (4, '1', 'seata', 'seata', 'seata', 'nacos', 1641955635824, 1641955635824);
 INSERT INTO nacos.tenant_info (id, kp, tenant_id, tenant_name, tenant_desc, create_source, gmt_create, gmt_modified) VALUES (5, '1', 'master', 'master', 'master', 'nacos', 1642239088151, 1642239088151);
+
