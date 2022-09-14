@@ -7,11 +7,11 @@ package com.xzlcorp.exception.common.enums;
 
 public enum EventIndicesEnum {
 
-  ERROR("error", "TOPIC_MANAGER_LOGSTASH_EVENT_ERROR", "bug-event-error"),
-  MESSAGE("error", "TOPIC_MANAGER_LOGSTASH_EVENT_MESSAGE", "bug-event-message"),
-  FEEDBACK("feedback", "TOPIC_MANAGER_LOGSTASH_EVENT_FEEDBACK", "bug-event-feedback"),
-  PERFORMANCE("performance", "TOPIC_MANAGER_LOGSTASH_EVENT_PERFORMANCE", "bug-event-performance"),
-  VIEW("view", "TOPIC_MANAGER_LOGSTASH_EVENT_VIEW", "bug-event-view"),
+  ERROR("error", "EVENT_ERROR", "ohbug-event-error"),
+  MESSAGE("error", "EVENT_MESSAGE", "ohbug-event-message"),
+  FEEDBACK("feedback", "EVENT_FEEDBACK", "ohbug-event-feedback"),
+  PERFORMANCE("performance", "EVENT_PERFORMANCE", "ohbug-event-performance"),
+  VIEW("view", "EVENT_VIEW", "ohbug-event-view"),
   ;
 
 

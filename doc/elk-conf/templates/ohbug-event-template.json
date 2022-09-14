@@ -19,14 +19,7 @@
       "event": {
         "properties": {
           "actions": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 256
-              }
-            }
+            "dynamic": true
           },
           "apiKey": {
             "type": "text",
@@ -69,8 +62,7 @@
             }
           },
           "detail": {
-            "type": "text",
-            "norms": false,
+            "dynamic": true,
             "fields": {
               "keyword": {
                 "type": "keyword",
@@ -79,7 +71,7 @@
             }
           },
           "metaData": {
-            "type": "text",
+            "dynamic": true,
             "norms": false,
             "fields": {
               "keyword": {
@@ -93,7 +85,6 @@
             "properties": {
               "language": {
                 "type": "text",
-                "norms": false,
                 "fields": {
                   "keyword": {
                     "type": "keyword",
@@ -203,7 +194,7 @@
           }
         }
       },
-      "issue_id": {
+      "issueId": {
         "type": "text",
         "norms": false,
         "fields": {
@@ -214,6 +205,5 @@
         }
       }
     }
-
   }
 }

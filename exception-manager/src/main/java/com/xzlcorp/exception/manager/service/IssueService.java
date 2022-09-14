@@ -1,6 +1,7 @@
 package com.xzlcorp.exception.manager.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xzlcorp.exception.common.model.pojo.event.Event;
 import com.xzlcorp.exception.common.utils.PageInfoReducer;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
@@ -31,4 +32,8 @@ public interface IssueService extends IService<Issue> {
   Issue updateIssueByIntro(CreateOrUpdateIssueByIntroRequest request);
 
   Issue createIssueByIntro(CreateOrUpdateIssueByIntroRequest request);
+
+  Event getLatestEventByIssueId(Integer issueId);
+
+  Issue getIssueById(Integer issueId);
 }
