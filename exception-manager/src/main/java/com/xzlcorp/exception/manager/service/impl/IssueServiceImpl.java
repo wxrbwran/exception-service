@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.common.common.Constant;
 import com.xzlcorp.exception.common.enums.OhbugEventIndicesEnum;
 import com.xzlcorp.exception.common.model.pojo.event.Event;
@@ -13,6 +14,7 @@ import com.xzlcorp.exception.common.utils.RedisConstants;
 import com.xzlcorp.exception.manager.feign.DashboardClient;
 import com.xzlcorp.exception.manager.mapper.IssueMapper;
 import com.xzlcorp.exception.manager.model.bo.BugDocument;
+import com.xzlcorp.exception.manager.model.bo.EventLikeWithIssueId;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
 import com.xzlcorp.exception.manager.model.query.IssuesTrendQuery;
@@ -21,6 +23,8 @@ import com.xzlcorp.exception.manager.model.vo.IssueVO;
 import com.xzlcorp.exception.manager.service.IssueService;
 import com.xzlcorp.exception.manager.utils.CacheClient;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -36,8 +40,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -77,6 +83,14 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     issueService.page(page, queryWrapper);
     return (PageInfoReducer.PageInfoReduce<Issue>) PageInfoReducer
         .reduce(page.getRecords(), page.getTotal());
+  }
+
+  @Override
+  public Issue getIssueById(Integer issueId) {
+    LambdaQueryWrapper<Issue> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.eq(Issue::getId, issueId);
+    Issue issue = this.getOne(queryWrapper);
+    return issue;
   }
   @Override
   public List<IssueVO> handleIssueToVO(List<Issue> issueList) {
@@ -335,6 +349,57 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
       issueService.save(issue);
     }
     return issue;
+  }
+
+  @Override
+  public Event getLatestEventByIssueId(Integer issueId) {
+    LambdaQueryWrapper<Issue> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.eq(Issue::getId, issueId);
+    Issue issue = issueService.getOne(queryWrapper);
+    List<String> documentIds = Arrays.stream(issue.getEvents()).collect(Collectors.toList());
+    String latestDocumentId = documentIds.get(documentIds.size() - 1);
+    return getEventByEventId(latestDocumentId, issueId, issue);
+  }
+
+
+
+  private Event getEventByEventId(String latestDocumentId, Integer issueId, Issue issue) {
+    Issue curIssue = null;
+    if (issue != null) {
+      curIssue = issue;
+    } else {
+      LambdaQueryWrapper<Issue> queryWrapper = new LambdaQueryWrapper<>();
+      queryWrapper.eq(Issue::getId, issueId);
+      curIssue = issueService.getOne(queryWrapper);
+    }
+    List<String> documentIds = Arrays.stream(curIssue.getEvents()).collect(Collectors.toList());
+    int eventIndex = documentIds.indexOf(latestDocumentId);
+    String previousEvent = null;
+    if (eventIndex - 1 >= 0) {
+      previousEvent = documentIds.get(eventIndex - 1);
+    }
+    String nextEvent = null;
+    if (eventIndex + 1 < documentIds.size()) {
+      nextEvent = documentIds.get(eventIndex + 1);
+    }
+    GetRequest request = new GetRequest();
+    String index = OhbugEventIndicesEnum.ERROR.getIndex();
+    request.index(index).id(latestDocumentId);
+    GetResponse response = null;
+    try {
+      response = highLevelClient.get(request, RequestOptions.DEFAULT);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    String sourceAsString = response.getSourceAsString();
+    EventLikeWithIssueId eventLikeWithIssueId = JSON.parseObject(sourceAsString, EventLikeWithIssueId.class);
+    Event event = eventLikeWithIssueId.getEvent();
+    event.setIndex(index);
+    event.setId(latestDocumentId);
+    event.setPrevious(previousEvent);
+    event.setNext(nextEvent);
+    log.info("eventLikeWithIssueId, {}", eventLikeWithIssueId);
+    return event;
   }
 }
 

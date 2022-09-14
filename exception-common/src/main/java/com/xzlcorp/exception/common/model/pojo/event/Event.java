@@ -11,6 +11,8 @@ public class Event {
   private String apiKey;
   private String appVersion;
   private String appType;
+  private String index;
+  private String id;
 
   /**
    *   'development' | 'production'
@@ -38,6 +40,9 @@ public class Event {
   private MetaData metaData;
 
   private List<Action> actions;
+
+  private String previous;
+  private String next;
 
 
 }

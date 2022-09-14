@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="APPLICATION_NAME" value="gateway"/>
+    <property name="LOG_FILE_HOME" value="${user.home}/logs/exception/gateway"/>
+    <property name="PATTERN"
+              value="[%level] | %date{yyyy-MM-dd HH:mm:ss.SSS} | %X{TRACE_ID} | %X{REQUEST_IP} | %X{REQUEST_URI} | %thread | %class{200}:%line | %msg%n"/>
+
+    <!-- 控制台输出 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Info -->
+    <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE_HOME}/${APPLICATION_NAME}-info.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 每天生成日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_HOME}/${APPLICATION_NAME}-info-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <!-- 格式化输出 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Error -->
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE_HOME}/${APPLICATION_NAME}-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_HOME}/${APPLICATION_NAME}-error-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="info_async" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>3000</discardingThreshold>
+        <queueSize>10000</queueSize>
+        <appender-ref ref="info"/>
+    </appender>
+
+    <appender name="error_async" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>3000</discardingThreshold>
+        <queueSize>10000</queueSize>
+        <appender-ref ref="error"/>
+    </appender>
+
+    <logger name="org.springframework" level="WARN" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="error_async"/>
+        <appender-ref ref="info_async"/>
+    </logger>
+
+    <logger name="ch.qos.logback" level="WARN" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="error_async"/>
+        <appender-ref ref="info_async"/>
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="error_async"/>
+        <appender-ref ref="info_async"/>
+        <appender-ref ref="console"/>
+    </root>
+
+</configuration>

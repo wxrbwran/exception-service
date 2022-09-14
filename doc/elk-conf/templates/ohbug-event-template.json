@@ -1,0 +1,209 @@
+{
+  "template": "ohbug-event-*",
+  "order": 1,
+  "settings": {
+    "index": {
+      "refresh_interval": "10s",
+      "number_of_shards": "1",
+      "number_of_replicas": "1"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "@version": {
+        "type": "keyword"
+      },
+      "event": {
+        "properties": {
+          "actions": {
+            "dynamic": true
+          },
+          "apiKey": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "appVersion": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "appType": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "category": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "detail": {
+            "dynamic": true,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "metaData": {
+            "dynamic": true,
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "device": {
+            "dynamic": true,
+            "properties": {
+              "language": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "platform": {
+                "type": "text",
+                "norms": false,
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "title": {
+                "type": "text",
+                "norms": false,
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "url": {
+                "type": "text",
+                "norms": false,
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "userAgent": {
+                "type": "text",
+                "norms": false,
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "version": {
+                "type": "text",
+                "norms": false,
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          },
+          "user": {
+            "dynamic": true,
+            "properties": {
+              "uuid": {
+                "type": "text",
+                "norms": false,
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "ip_address": {
+                "type": "text",
+                "norms": false,
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          },
+          "timestamp": {
+            "type": "date"
+          },
+          "type": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "releaseStage": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "issueId": {
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      }
+    }
+  }
+}

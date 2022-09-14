@@ -88,7 +88,7 @@ spring:
     allow-bean-definition-overriding: true
   # database
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
 
 feign:
@@ -113,7 +113,7 @@ spring:
     allow-bean-definition-overriding: true
   # redis
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
   # database
   datasource:
@@ -132,7 +132,7 @@ spring:
   # elasticsearch
   data:
     elasticsearch:
-      host:103.105.200.216
+      host:10.33.28.92
       port: 9200
   #kafka配置
   kafka:
@@ -208,7 +208,7 @@ spring:
     allow-bean-definition-overriding: true
   # database
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
 
 feign:
@@ -233,7 +233,7 @@ spring:
     allow-bean-definition-overriding: true
   # database
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
 
 feign:
@@ -258,7 +258,7 @@ spring:
     allow-bean-definition-overriding: true
   # database
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
 
 feign:
@@ -332,7 +332,7 @@ spring:
     allow-bean-definition-overriding: true
   # redis
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
   # database
   datasource:
@@ -351,7 +351,7 @@ spring:
   # elasticsearch
   data:
     elasticsearch:
-      host:103.105.200.216
+      host:10.33.28.92
       port: 9200
   #kafka配置
   kafka:
@@ -448,7 +448,7 @@ spring:
     allow-bean-definition-overriding: true
   # redis
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
   # database
   datasource:
@@ -467,7 +467,7 @@ spring:
   # elasticsearch
   data:
     elasticsearch:
-      host:103.105.200.216
+      host:10.33.28.92
       port: 9200
   #kafka配置
   kafka:
@@ -515,7 +515,7 @@ spring:
     allow-bean-definition-overriding: true
   # database
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
 
 feign:
@@ -617,7 +617,7 @@ spring:
     allow-bean-definition-overriding: true
   # redis
   redis:
-    host:103.105.200.216
+    host:10.33.28.92
     port: 6379
   # database
   datasource:
@@ -636,7 +636,7 @@ spring:
   # elasticsearch
   data:
     elasticsearch:
-      host:103.105.200.216
+      host:10.33.28.92
       port: 9200
   #kafka配置
   kafka:

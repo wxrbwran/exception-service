@@ -8,7 +8,7 @@ package com.xzlcorp.exception.common.enums;
 public enum OhbugEventIndicesEnum {
 
   ERROR("error", "ohbug-event-error*", "ohbug-event-error"),
-  PERFORMANCE("performance", "ohbug-performance*", "ohbug-performance"),
+  PERFORMANCE("performance", "ohbug-event-performance*", "ohbug-event-performance"),
   ;
 
 

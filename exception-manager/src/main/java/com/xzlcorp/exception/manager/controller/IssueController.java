@@ -26,13 +26,18 @@ public class IssueController {
   private IssueService issueService;
 
   @GetMapping()
-  public ApiRestResponse searchIssues(IssueQuery query) {
+  public ApiRestResponse getIssues(IssueQuery query) {
     PageInfoReduce<Issue> issueList = issueService.getIssues(query);
     List<IssueVO> issueVOList = issueService.handleIssueToVO(issueList.getList());
     PageInfoReduce<IssueVO> pageInfoReduce = new PageInfoReduce<>();
     pageInfoReduce.setList(issueVOList);
     pageInfoReduce.setTotal(issueList.getTotal());
     return ApiRestResponse.success(pageInfoReduce);
+  }
+  @GetMapping("{issueId}")
+  public ApiRestResponse getIssueById(@PathVariable Integer issueId) {
+    Issue issue = issueService.getIssueById(issueId);
+    return ApiRestResponse.success(issue);
   }
 
   @GetMapping("{projectId}/trend")
@@ -43,8 +48,6 @@ public class IssueController {
   ) {
     Map<String, Object> resMap = issueService.getIssuesProjectTrend(projectId, start, end);
     return ApiRestResponse.success(resMap);
-//    return ApiRestResponse.success();
-
   }
 
   @PostMapping("/trend")
@@ -52,5 +55,18 @@ public class IssueController {
     List<Map<String, Object>> lists = issueService.getTrendByIssueIds(query);
     return ApiRestResponse.success(lists);
 //    return ApiRestResponse.success();
+  }
+  @GetMapping("/event/latest")
+  public ApiRestResponse getLatestEventByIssueId(@RequestParam Integer issueId) {
+    log.info("issueId, {}", issueId);
+    return ApiRestResponse.success(issueService.getLatestEventByIssueId(issueId));
+  }
+
+  @GetMapping("/event/{id}")
+  public ApiRestResponse getEventByIdAndIssueId(@RequestParam Integer issueId, @PathVariable("id") Integer eventId) {
+    log.info("issueId, {}", issueId);
+    log.info("eventId, {}", eventId);
+
+    return ApiRestResponse.success();
   }
 }
