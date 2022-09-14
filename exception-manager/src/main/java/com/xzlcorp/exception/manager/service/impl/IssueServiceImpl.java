@@ -31,6 +31,7 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
@@ -111,16 +112,15 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
         .aggregation(trend)
 //        .sort(new FieldSortBuilder(PREDEFINED.TIME_ID).order(SortOrder.DESC))
         .size(0);
-    log.info(" 条件查询 ： {}", builder);
+//    log.info(" 条件查询 ： {}", builder);
     request.source(builder);
     try {
       SearchResponse response = highLevelClient.search(request, RequestOptions.DEFAULT);
-      log.info("response json, {}", JSON.toJSONString(response));
-//      response.getAggregations().get(Agg_Name_Trend)
-      log.info("response buckets, {}", JSON.toJSONString(response.getAggregations().asMap()));
-//      List<Bucket> buckets = response.getAggregations().asMap()
+//      log.info("response json, {}", JSON.toJSONString(response));
+      Aggregation aggregation = response.getAggregations().get(Agg_Name_Trend);
+//      log.info("response stringAggregationMap, {}", aggregation);
       Map<String, Object> resMap = new HashMap<>();
-      resMap.put("response", response);
+      resMap.put("response", aggregation);
       if (issueId != null) {
         resMap.put("issueId", issueId);
       }
@@ -160,8 +160,8 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
             .gte(start24h)
             .lte(end)
         );
-    queryMap.put("14d", queryOf14d);
-    queryMap.put("24h", queryOf24h);
+    queryMap.put(Constant.TWO_WEEK, queryOf14d);
+    queryMap.put(Constant.ONE_DAY, queryOf24h);
 
     return queryMap;
   }
@@ -194,8 +194,8 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
             start24h,
             end
         ));
-    trendMap.put("14d", trendOf14d);
-    trendMap.put("24h", trendOf24h);
+    trendMap.put(Constant.TWO_WEEK, trendOf14d);
+    trendMap.put(Constant.ONE_DAY, trendOf24h);
     return trendMap;
   }
   @Override
@@ -205,7 +205,8 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
       case Constant.TWO_WEEK:
         // 互斥锁解决缓存击穿
         resMap = cacheClient
-            .queryWithMutex(RedisConstants.ISSUE_TREND_14D + issueId, String.valueOf(issueId),
+            .queryWithMutex(RedisConstants.ISSUE_TREND_14D + issueId,
+                String.valueOf(issueId),
                 Map.class, this::getTrendBy14D,
                 RedisConstants.CACHE_ISSUE_TREND_TTL, TimeUnit.HOURS,
                 RedisConstants.LOCK_ISSUE_TREND_14D_KEY + issueId);
@@ -224,11 +225,47 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
   @Override
   public List<Map<String, Object>> getTrendByIssueIds(IssuesTrendQuery query) {
     List<Map<String, Object>> list = new ArrayList<>();
-    Stream.of(query.getIds()).forEach(issueId -> {
-      Map<String, Object> resMap = getTrendByIssueId(issueId, query.getPeriod());
-      list.add(resMap);
-    });
+    if (query.getPeriod().equals(Constant.ALL)) {
+      Stream.of(query.getIds()).forEach(issueId -> {
+        Map<String, Object> resMap = getTrendByIssueId(issueId, Constant.ONE_DAY);
+        Map<String, Object> oneDayRes = new HashMap<>();
+        oneDayRes.put(Constant.ONE_DAY, resMap);
+        list.add(oneDayRes);
+      });
+      Stream.of(query.getIds()).forEach(issueId -> {
+        Map<String, Object> resMap = getTrendByIssueId(issueId, Constant.TWO_WEEK);
+        Map<String, Object> twoWeekRes = new HashMap<>();
+        twoWeekRes.put(Constant.TWO_WEEK, resMap);
+        list.add(twoWeekRes);
+      });
+    } else {
+      Stream.of(query.getIds()).forEach(issueId -> {
+        Map<String, Object> resMap = getTrendByIssueId(issueId, query.getPeriod());
+        list.add(resMap);
+      });
+    }
     return list;
+  }
+
+  @Override
+  public Map<String, Object> getTrendByIssueIdsAll(IssuesTrendQuery query) {
+    Map<String, Object> allRes = new HashMap<>();
+    List<Object> listOneDay = new ArrayList<>();
+    Stream.of(query.getIds()).forEach(issueId -> {
+      Map<String, Object> resMap = getTrendByIssueId(issueId, Constant.ONE_DAY);
+//      Map<String, Object> oneDayRes = new HashMap<>();
+      listOneDay.add(resMap);
+    });
+    allRes.put(Constant.ONE_DAY, listOneDay);
+
+    List<Object> listTwoWeek = new ArrayList<>();
+    Stream.of(query.getIds()).forEach(issueId -> {
+      Map<String, Object> resMap = getTrendByIssueId(issueId, Constant.TWO_WEEK);
+//      Map<String, Object> twoWeekRes = new HashMap<>();
+      listTwoWeek.add(resMap);
+    });
+    allRes.put(Constant.TWO_WEEK, listTwoWeek);
+    return allRes;
   }
 
   @Override

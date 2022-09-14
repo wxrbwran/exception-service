@@ -1,6 +1,7 @@
 package com.xzlcorp.exception.manager.controller;
 
 import com.xzlcorp.exception.common.common.ApiRestResponse;
+import com.xzlcorp.exception.common.common.Constant;
 import com.xzlcorp.exception.common.utils.PageInfoReducer.PageInfoReduce;
 import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.query.IssueQuery;
@@ -52,9 +53,13 @@ public class IssueController {
 
   @PostMapping("/trend")
   public ApiRestResponse getTrendByIssueIds(@RequestBody IssuesTrendQuery query) {
-    List<Map<String, Object>> lists = issueService.getTrendByIssueIds(query);
-    return ApiRestResponse.success(lists);
-//    return ApiRestResponse.success();
+    if (query.getPeriod().equals(Constant.ALL)) {
+      Map<String, Object> res = issueService.getTrendByIssueIdsAll(query);
+      return ApiRestResponse.success(res);
+    } else {
+      List<Map<String, Object>> lists = issueService.getTrendByIssueIds(query);
+      return ApiRestResponse.success(lists);
+    }
   }
   @GetMapping("/event/latest")
   public ApiRestResponse getLatestEventByIssueId(@RequestParam Integer issueId) {

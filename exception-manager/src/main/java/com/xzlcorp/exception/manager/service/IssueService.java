@@ -27,6 +27,8 @@ public interface IssueService extends IService<Issue> {
 
   List<Map<String, Object>> getTrendByIssueIds(IssuesTrendQuery query);
 
+  Map<String, Object> getTrendByIssueIdsAll(IssuesTrendQuery query);
+
   Map<String, Object> getIssuesProjectTrend(Integer projectId, long start, long end);
 
   Issue updateIssueByIntro(CreateOrUpdateIssueByIntroRequest request);
