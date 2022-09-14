@@ -79,7 +79,7 @@ public class EventService {
     // 5. 更新 organization 中的 count
     dashboardClient.increaseEventCount(event.getApiKey());
     log.info("\n#EXCEPTION_EVENT_ERROR event={}<![CDATA[]]>key={}<![CDATA[]]>issue_id={}",
-            eventLikeWithIssueId.getEvent(), eventLikeWithIssueId.getKey(), eventLikeWithIssueId.getIssueId());
+            JSON.toJSONString(eventLikeWithIssueId.getEvent()), eventLikeWithIssueId.getKey(), eventLikeWithIssueId.getIssueId());
     // todo: 通知
     // 6. 根据 apiKey 拿到对应的 notification 配置
 
