@@ -3,22 +3,18 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzlcorp.exception.dashboard.mapper.NotificationRuleMapper">
-
     <resultMap id="BaseResultMap" type="com.xzlcorp.exception.dashboard.model.pojo.NotificationRule">
-            <id property="id" column="id" jdbcType="INTEGER"/>
+            <id property="id" column="id" jdbcType="OTHER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="data" column="data" jdbcType="OTHER"
-                typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
-            <result property="whiteList" column="white_list" jdbcType="OTHER"
-                typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
-            <result property="blackList" column="black_list" jdbcType="OTHER"
-                typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+            <result property="data" column="data" jdbcType="OTHER"/>
+            <result property="whiteList" column="white_list" jdbcType="OTHER"/>
+            <result property="blackList" column="black_list" jdbcType="OTHER"/>
             <result property="level" column="level" jdbcType="VARCHAR"/>
-            <result property="interval" column="interval" jdbcType="INTEGER"/>
+            <result property="interval" column="interval" jdbcType="OTHER"/>
             <result property="open" column="open" jdbcType="BOOLEAN"/>
             <result property="recently" column="recently" jdbcType="TIMESTAMP"/>
-            <result property="count" column="count" jdbcType="INTEGER"/>
-            <result property="project" column="project" jdbcType="INTEGER"/>
+            <result property="count" column="count" jdbcType="OTHER"/>
+            <result property="project" column="project" jdbcType="OTHER"/>
             <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
             <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
     </resultMap>

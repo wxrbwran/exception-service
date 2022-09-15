@@ -6,7 +6,7 @@
   <!-- 配置文件，放在resource目录下即可 -->
   <!--数据库驱动个人配置-->
   <classPathEntry
-    location="~/.m2/repository/org/postgresql/postgresql/42.2.19/postgresql-42.2.19.jar" />
+    location="/Users/xiaoran/.m2/repository/org/postgresql/postgresql/42.2.19/postgresql-42.2.19.jar" />
   <context id="PostgreSqlTables" targetRuntime="MyBatis3DynamicSql">
 <!--    <property name="autoDelimitKeywords" value="true"/>-->
     <!--可以使用``包括字段名，避免字段名与sql保留字冲突报错-->
@@ -19,7 +19,7 @@
     </commentGenerator>
     <!--数据库链接地址账号密码-->
     <jdbcConnection driverClass="org.postgresql.Driver"
-      connectionURL="jdbc:postgresql://192.168.6.182:5432/dev"
+      connectionURL="jdbc:postgresql://10.33.28.92:31667/dev"
       userId="postgres"
       password="123456">
       <property name="nullCatalogMeansCurrent" value="true"/>
@@ -29,7 +29,7 @@
       <property name="forceBigDecimals" value="false"/>
     </javaTypeResolver>
     <!--生成Model类存放位置-->
-    <javaModelGenerator targetPackage="com.xzlcorp.exception.dashboard.model.pojo"
+    <javaModelGenerator targetPackage="com.xzlcorp.exception.manager.model.pojo"
       targetProject="src/main/java">
       <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
       <property name="enableSubPackages" value="false"/>
@@ -43,7 +43,7 @@
       <property name="enableSubPackages" value="false"/>
     </sqlMapGenerator>
     <!--生成Dao类存放位置-->
-    <javaClientGenerator type="XMLMAPPER" targetPackage="com.xzlcorp.exception.dashboard.model.dao"
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.xzlcorp.exception.manager.model.dao"
       targetProject="src/main/java">
       <property name="enableSubPackages" value="false"/>
     </javaClientGenerator>
@@ -51,10 +51,10 @@
 
 <!--    <table schema="s_exception" tableName="t_issue" domainObjectName="Issue">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
-<!--      <columnOverride column="metadata" javaType="com.xzlcorp.exception.dashboard.model.pojo.MetaData"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
-<!--      <columnOverride column="events" javaType="Integer[]"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
+<!--      <columnOverride column="metadata" javaType="com.xzlcorp.exception.common.model.pojo.event.MetaData"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+<!--      <columnOverride column="events" javaType="String[]"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.TextArrayTypeHandler"/>-->
 <!--      <columnOverride column="users" javaType="Integer[]"-->
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
 <!--    </table>-->
@@ -83,16 +83,16 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler"/>-->
 <!--    </table>-->
 
-    <table schema="s_exception" tableName="t_notification_rule" domainObjectName="NotificationRule">
-      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-      <columnOverride column="data" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRuleData"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
-      <columnOverride column="white_list" javaType="com.xzlcorp.exception.dashboard.model.pojo.WhiteBlackList"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+<!--    <table schema="s_exception" tableName="t_notification_rule" domainObjectName="NotificationRule">-->
+<!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--      <columnOverride column="data" javaType="com.xzlcorp.exception.dashboard.model.pojo.notification.NotificationRuleData"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+<!--      <columnOverride column="white_list" javaType="com.xzlcorp.exception.dashboard.model.pojo.WhiteBlackList"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
 
-      <columnOverride column="black_list" javaType="com.xzlcorp.exception.dashboard.model.pojo.WhiteBlackList"
-        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
-    </table>
+<!--      <columnOverride column="black_list" javaType="com.xzlcorp.exception.dashboard.model.pojo.WhiteBlackList"-->
+<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
+<!--    </table>-->
 
 <!--    <table schema="s_exception" tableName="t_notification_setting" domainObjectName="NotificationSetting">-->
 <!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
@@ -105,11 +105,11 @@
 <!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
 <!--    </table>-->
 
-<!--    <table schema="s_exception" tableName="t_source_map" domainObjectName="SourceMap">-->
-<!--      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
-<!--      <columnOverride column="data" javaType="com.xzlcorp.exception.dashboard.model.pojo.SourceMapData"-->
-<!--        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>-->
-<!--    </table>-->
+    <table schema="s_exception" tableName="t_source_map" domainObjectName="SourceMap">
+      <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+      <columnOverride column="data" javaType="com.xzlcorp.exception.dashboard.model.pojo.SourceMapData"
+        typeHandler="com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler"/>
+    </table>
 
 <!--        <table schema="s_exception" tableName="t_invite" domainObjectName="Invite">-->
 <!--          <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->

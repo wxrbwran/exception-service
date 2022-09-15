@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xzlcorp.exception.dashboard.mapper.IssueMapper">
+<mapper namespace="com.xzlcorp.exception.manager.mapper.IssueMapper">
 
     <resultMap id="BaseResultMap" type="com.xzlcorp.exception.manager.model.pojo.Issue">
             <id property="id" column="id" jdbcType="INTEGER"/>
@@ -27,4 +27,34 @@
         events_count,users,users_count,
         created_at,updated_at
     </sql>
+    <insert id="insertSelective">
+        insert into s_exception.t_issue
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="intro != null">intro,</if>
+            <if test="apiKey != null">api_key,</if>
+            <if test="type != null">type,</if>
+            <if test="metadata != null">metadata,</if>
+            <if test="events != null">events,</if>
+            <if test="eventsCount != null">events_count,</if>
+            <if test="users != null">users,</if>
+            <if test="usersCount != null">users_count,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="intro != null">#{intro,jdbcType=VARCHAR},</if>
+            <if test="apiKey != null">#{apiKey,jdbcType=VARCHAR},</if>
+            <if test="type != null">#{type,jdbcType=VARCHAR},</if>
+            <if test="metadata != null">#{metadata,jdbcType=OTHER},</if>
+            <if test="events != null">#{events,jdbcType=ARRAY},</if>
+            <if test="eventsCount != null">#{eventsCount,jdbcType=INTEGER},</if>
+            <if test="users != null">#{users,jdbcType=ARRAY},</if>
+            <if test="usersCount != null">#{usersCount,jdbcType=INTEGER},</if>
+            <if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
 </mapper>

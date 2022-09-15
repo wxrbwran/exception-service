@@ -22,4 +22,30 @@
         auth,url,expires,
         projects,organization,inviter
     </sql>
+    <insert id="insertSelective">
+        insert into s_exception.t_invite
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uuid != null">uuid,</if>
+            <if test="hash != null">hash,</if>
+            <if test="auth != null">auth,</if>
+            <if test="url != null">url,</if>
+            <if test="expires != null">expires,</if>
+            <if test="projects != null">projects,</if>
+            <if test="organization != null">organization,</if>
+            <if test="inviter != null">inviter,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="uuid != null">#{uuid,jdbcType=VARCHAR},</if>
+            <if test="hash != null">#{hash,jdbcType=VARCHAR},</if>
+            <if test="auth != null">#{auth,jdbcType=VARCHAR},</if>
+            <if test="url != null">#{url,jdbcType=VARCHAR},</if>
+            <if test="expires != null">#{expires,jdbcType=TIMESTAMP},</if>
+            <if test="projects != null">#{projects,jdbcType=OTHER},</if>
+            <if test="organization != null">#{organization,jdbcType=INTEGER},</if>
+            <if test="inviter != null">#{inviter,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
 </mapper>

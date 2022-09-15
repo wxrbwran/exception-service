@@ -1,4 +1,5 @@
 package com.xzlcorp.exception.dashboard.mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.xzlcorp.exception.dashboard.model.pojo.Invite;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -12,7 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface InviteMapper extends BaseMapper<Invite> {
-
+  int insertSelective(Invite invite);
 }
 
 
