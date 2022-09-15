@@ -25,6 +25,8 @@ public interface UserService extends IService<User> {
 
   List<User> getUserInfoByIds(Integer[] userIds);
 
+  void deleteRedisUserInfo(Integer userId);
+
   UserVO getUserInfoByIdSimple(Integer id);
 
   UserVO handleUser2VO(User user);

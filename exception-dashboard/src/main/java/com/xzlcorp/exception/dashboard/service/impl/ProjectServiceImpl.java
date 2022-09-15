@@ -5,6 +5,7 @@ import cn.hutool.crypto.digest.HmacAlgorithm;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xzlcorp.exception.common.common.Constant;
+import com.xzlcorp.exception.common.utils.RedisConstants;
 import com.xzlcorp.exception.common.utils.UniqueList;
 import com.xzlcorp.exception.dashboard.mapper.ProjectMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.NotificationSetting;
@@ -27,6 +28,7 @@ import com.xzlcorp.exception.dashboard.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,6 +43,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
     implements ProjectService{
+
+  @Autowired
+  private StringRedisTemplate stringRedisTemplate;
 
   @Autowired
   private UserService userService;
@@ -135,6 +140,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
 //    projectMapper.insertSelective(project);
     userService.bindUserWithProjectId(project.getId(), adminId);
     bindOrganizationWithProjectId(project.getId(), organizationId);
+//    删除redis缓存
+    userService.deleteRedisUserInfo(adminId);
     return project;
   };
   @Override
@@ -163,6 +170,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
     BeanUtils.copyProperties(request, project);
     project.setId(projectId);
     this.updateById(project);
+//    userService.deleteRedisUserInfo(adminId);
     return handleProject2VO(project);
   }
   @Override

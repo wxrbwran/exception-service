@@ -55,6 +55,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
       Integer[] users = {request.getAdmin()};
       organization.setUsers(users);
       this.save(organization);
+      userService.deleteRedisUserInfo(request.getAdmin());
 //      organizationMapper.insertSelective(organization);
       userService.bindUserWithOrganizationId(organization.getId(), request.getAdmin());
       return organization;

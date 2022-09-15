@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xzlcorp.exception.common.exception.XzlCorpException;
 import com.xzlcorp.exception.common.exception.XzlCorpExceptionEnum;
 import com.xzlcorp.exception.common.utils.Md5Utils;
+import com.xzlcorp.exception.common.utils.RedisConstants;
 import com.xzlcorp.exception.dashboard.mapper.UserMapper;
 import com.xzlcorp.exception.dashboard.model.pojo.Organization;
 import com.xzlcorp.exception.dashboard.model.pojo.Project;
@@ -21,6 +22,7 @@ import com.xzlcorp.exception.dashboard.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -38,6 +40,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService {
+
+  @Autowired
+  private StringRedisTemplate stringRedisTemplate;
 
   @Autowired
   private OrganizationService organizationService;
@@ -88,6 +93,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
   public List<User> getUserInfoByIds(Integer[] userIds) {
     List<User> users = this.listByIds(List.of(userIds));
     return users;
+  }
+
+  @Override
+  public void deleteRedisUserInfo(Integer userId) {
+    stringRedisTemplate.delete(RedisConstants.USER_INFO_KEY + userId);
   }
 
   @Override
