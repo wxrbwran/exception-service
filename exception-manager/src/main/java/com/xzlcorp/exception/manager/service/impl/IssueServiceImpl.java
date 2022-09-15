@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xzlcorp.exception.common.common.ApiRestResponse;
 import com.xzlcorp.exception.common.common.Constant;
 import com.xzlcorp.exception.common.enums.OhbugEventIndicesEnum;
 import com.xzlcorp.exception.common.model.pojo.event.Event;
@@ -395,12 +394,13 @@ public class IssueServiceImpl extends ServiceImpl<IssueMapper, Issue> implements
     Issue issue = issueService.getOne(queryWrapper);
     List<String> documentIds = Arrays.stream(issue.getEvents()).collect(Collectors.toList());
     String latestDocumentId = documentIds.get(documentIds.size() - 1);
-    return getEventByEventId(latestDocumentId, issueId, issue);
+    return getEventByIdAndIssueId(latestDocumentId, issueId, issue);
   }
 
 
 
-  private Event getEventByEventId(String latestDocumentId, Integer issueId, Issue issue) {
+  @Override
+  public Event getEventByIdAndIssueId(String latestDocumentId, Integer issueId, Issue issue) {
     Issue curIssue = null;
     if (issue != null) {
       curIssue = issue;

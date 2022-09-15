@@ -18,6 +18,6 @@ public interface ManagerFeignClient {
   @GetMapping("issues/event/latest")
   ApiRestResponse getLatestEventByIssueId(@RequestParam Integer issueId);
 
-  @GetMapping("issues/event/{id}")
-  ApiRestResponse getEventByIdAndEventId(@RequestParam Integer issueId, @PathVariable("id") Integer eventId);
+  @GetMapping("issues/event/{eventId}")
+  ApiRestResponse getEventByIdAndIssueId(@RequestParam Integer issueId, @PathVariable String eventId);
 }

@@ -33,13 +33,21 @@ public class EventController {
   @Autowired
   private ManagerFeignClient managerFeignClient;
 
-  @GetMapping("/latest")
+  @GetMapping("latest")
   public ApiRestResponse getLatestEventByIssueId(
 //          @PathVariable Integer eventId,
           @RequestParam(value = "issue_id") Integer issueId) {
     log.info("issueId, {}", issueId);
     return managerFeignClient.getLatestEventByIssueId(issueId);
-//    return ApiRestResponse.success();
+  }
+
+  @GetMapping("{eventId}")
+  public ApiRestResponse getEventByIdAndIssueId(
+      @PathVariable String eventId,
+      @RequestParam(value = "issue_id") Integer issueId) {
+    log.info("issueId, {}", issueId);
+    log.info("eventId, {}", eventId);
+    return managerFeignClient.getEventByIdAndIssueId(issueId, eventId);
   }
 
 }

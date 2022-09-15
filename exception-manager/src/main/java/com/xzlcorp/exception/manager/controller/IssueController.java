@@ -67,11 +67,10 @@ public class IssueController {
     return ApiRestResponse.success(issueService.getLatestEventByIssueId(issueId));
   }
 
-  @GetMapping("/event/{id}")
-  public ApiRestResponse getEventByIdAndIssueId(@RequestParam Integer issueId, @PathVariable("id") Integer eventId) {
+  @GetMapping("/event/{eventId}")
+  public ApiRestResponse getEventByIdAndIssueId(@RequestParam Integer issueId, @PathVariable("eventId") String eventId) {
     log.info("issueId, {}", issueId);
     log.info("eventId, {}", eventId);
-
-    return ApiRestResponse.success();
+    return ApiRestResponse.success(issueService.getEventByIdAndIssueId(eventId, issueId, null));
   }
 }

@@ -7,14 +7,14 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.6.194:5011
-#        server-addr: 10.33.28.92:30042
+#        server-addr: 192.168.6.194:5011
+        server-addr: ${nacos.address:10.33.28.92:30042}
         group: ${spring.profiles.active}
         namespace: ${spring.profiles.active}
         cluster-name: BJ
       config:
-        server-addr: 192.168.6.194:5011
-#        server-addr: 10.33.28.92:30042
+#        server-addr: 192.168.6.194:5011
+        server-addr: ${nacos.address:10.33.28.92:30042}
         file-extension: yaml
         namespace: ${spring.profiles.active}
 #    sentinel:

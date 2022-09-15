@@ -38,4 +38,6 @@ public interface IssueService extends IService<Issue> {
   Event getLatestEventByIssueId(Integer issueId);
 
   Issue getIssueById(Integer issueId);
+
+  Event getEventByIdAndIssueId(String latestDocumentId, Integer issueId, Issue issue);
 }
