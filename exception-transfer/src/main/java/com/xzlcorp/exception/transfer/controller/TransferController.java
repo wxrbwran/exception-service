@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransferController {
 
   @Autowired
-  private TransferService service;
+  private TransferService transferService;
 
   @ApiOperation(value = "上报", notes = "bug上报入口，进行分发处理", httpMethod = "POST")
   @PostMapping()
@@ -31,7 +31,7 @@ public class TransferController {
     String ipAddress = request.getRemoteAddr();
 //    log.info("ipAddress: {}", ipAddress);
 //    log.info("report: {}", event);
-    service.handleEvent(event, ipAddress);
+    transferService.handleEvent(event, ipAddress);
     return ApiRestResponse.success();
   }
 }

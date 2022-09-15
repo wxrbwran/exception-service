@@ -54,7 +54,7 @@ public class NotificationRule implements Serializable {
 
     /**
      * notification 静默期
-默认 10 分钟
+        默认 10 分钟
      */
     private Integer interval;
 

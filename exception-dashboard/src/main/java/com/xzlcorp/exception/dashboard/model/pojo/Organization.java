@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.xzlcorp.exception.common.utils.mybatis.IntArrayTypeHandler;
-import com.xzlcorp.exception.common.utils.mybatis.JsonbTypeHandler;
 import lombok.Data;
 
 /**

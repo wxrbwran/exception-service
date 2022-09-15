@@ -27,6 +27,9 @@ public class Constant {
 
   public static final long ONE_DAY_MILLS_SECOND = 86400000;
 
-
+//  rabbit
+  public static final String MQ_EXCHANGE_NAME = "exception.service";
+  public static final String MQ_QUEUE_NAME = "event";
+  public static final String MQ_TOPIC_KEY = "event.#";
 
 }
