@@ -20,8 +20,11 @@ import com.xzlcorp.exception.manager.model.pojo.Issue;
 import com.xzlcorp.exception.manager.model.request.CreateOrUpdateIssueByIntroRequest;
 import com.xzlcorp.exception.manager.service.IssueService;
 import lombok.extern.slf4j.Slf4j;
+<<<<<<< HEAD
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
+=======
+>>>>>>> direct
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -85,7 +88,11 @@ public class EventService {
     String documentId = topic + "--" + LocalDateTime.now();
     log.info("documentId: {}", documentId);
     indexRequest.index(OhbugEventIndicesEnum.ERROR.getIndex()).id(documentId);
+<<<<<<< HEAD
 //    indexRequest.index("xiaoran-test").id(documentId);
+=======
+
+>>>>>>> direct
     ObjectMapper objectMapper = new ObjectMapper();
     String eventJson = null;
     try {
@@ -114,6 +121,7 @@ public class EventService {
 //      @Override
 //      public void onSuccess(SendResult<String, String> result) {
 
+<<<<<<< HEAD
     log.info("消息发送成功, topic: {}", topic);
 
 
@@ -134,6 +142,28 @@ public class EventService {
     // 6. 根据 apiKey 拿到对应的 notification 配置
 
     // 7. 判断当前状态十分符合 notification 配置的要求，符合则通知 notifier 开始任务
+=======
+        log.info("消息发送成功, topic: {}", topic);
+
+
+        // 4. 更新 issue 的 events (postgres)
+        Document document = new Document();
+        document.setDocumentId(documentId);
+        document.setIndex(index);
+        CreateOrUpdateIssueByIntroRequest introRequest = new CreateOrUpdateIssueByIntroRequest();
+//        event, baseIssue, documentId, index
+        introRequest.setEvent(event);
+        introRequest.setBaseIssue(baseIssue);
+        introRequest.setDocumentId(documentId);
+        introRequest.setIndex(index);
+        Issue issue = issueService.updateIssueByIntro(introRequest);
+        // 5. 更新 organization 中的 count
+        dashboardClient.increaseEventCount(event.getApiKey());
+        // todo: 通知
+        // 6. 根据 apiKey 拿到对应的 notification 配置
+
+        // 7. 判断当前状态十分符合 notification 配置的要求，符合则通知 notifier 开始任务
+>>>>>>> direct
 //      }
 //    };
 //    log.info("发送的消息: {}", JSON.toJSONString(eventLikeWithIssueId));

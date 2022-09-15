@@ -8,11 +8,13 @@ spring:
     nacos:
       discovery:
         server-addr: 10.33.28.92:30042
+        #        server-addr: 192.168.6.194:5011
         namespace: ${spring.profiles.active}
         group: ${spring.profiles.active}
         cluster-name: BJ
       config:
         server-addr: 10.33.28.92:30042
+        #server-addr: 192.168.6.194:5011
         file-extension: yaml
         namespace: ${spring.profiles.active}
 
