@@ -106,19 +106,19 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
     Integer organizationId = request.getOrganization();
     User admin = userService.getUserInfoById(adminId);
     String apiKey = createApiKey(request);
-    NotificationSettingRequest notificationSettingRequest = new NotificationSettingRequest();
+    var notificationSettingRequest = new NotificationSettingRequest();
 
-    NotificationSettingWebHooks webhooks = new NotificationSettingWebHooks();
+    var webhooks = new NotificationSettingWebHooks();
     webhooks.setNotificationSettingWebHooks(new ArrayList<>());
     notificationSettingRequest.setWebhooks(webhooks);
 
-    NotificationSettingBrowser browser = new NotificationSettingBrowser();
+    var browser = new NotificationSettingBrowser();
     browser.setOpen(false);
     browser.setData(null);
     notificationSettingRequest.setBrowser(browser);
 
-    NotificationSettingEmails emails = new NotificationSettingEmails();
-    NotificationSettingEmail email = new NotificationSettingEmail();
+    var emails = new NotificationSettingEmails();
+    var email = new NotificationSettingEmail();
     if (admin.getEmail() != null) {
       email.setEmail(admin.getEmail());
       email.setOpen(true);
